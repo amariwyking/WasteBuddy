@@ -11,7 +11,6 @@
 WasteBuddy is a tool created to help people sort their trash and a platform for people to share DIY projects.
 
 ## App Evaluation
-[Evaluation of your app across the following attributes]
 - **Category:** Lifestyle/Reference
 - **Mobile:** How uniquely mobile is the product experience?
     - WasteBuddy will allow user's to scan barcodes on items using their phone camera, then tell them how to dispose of the product and how the product can be reused. Additionally, users that have created an account, can post images of their DIY projects using their phone camera. The app will also be able to use the user's location to determine best practice for waste disposal, as policies can vary based on location.

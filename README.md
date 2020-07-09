@@ -125,10 +125,99 @@ WasteBuddy is a tool created to help people sort their trash and a platform for 
 ### [BONUS] Interactive Prototype
 
 ## Schema 
-[This section will be completed in Unit 9]
+
 ### Models
-[Add table of models]
+
+#### User
+
+| Property           | Type           | Description                                       |
+|:------------------ |:-------------- |:------------------------------------------------- |
+| objectId           | String         | unique id for the user (default field)            |
+| email              | String         | email user has set for account                    |
+| name               | String         | display name of the user                          |
+| reputation         | Number         | total reputation points of the user               |
+| following          | Array\<String> | list of pointers to users they are following      |
+| followers          | Array\<String> | list of pointers to users that are following them |
+| createdProjects    | Array\<String> | list of pointers to Projects they have created    |
+| bookmarkedProjects | Array\<String> | list of pointers to Projects they have bookmarked |
+| createdAt          | DateTime       | date when user is created (default field)         |
+| updatedAt          | DateTime       | date when user is last updated (default field)    |
+
+---
+
+#### Item
+
+| Property    | Type            | Description                                   |
+| ----------- |:--------------- |:--------------------------------------------- |
+| objectId    | String          | unique id for the item                        |
+| barcodeId   | String          | unique barcode id for the item                |
+| name        | String          | display name of the item                      |
+| disposal    | String          | disposal method for this item                 |
+| description | String          | description of the item                       |
+| imageUrl    | String          | url for the image of the item                 |
+| author      | Pointer to User | objectId of user that submitted this item     |
+| createdAt   | DateTime        | date when user is created(default field)      |
+| updatedAt   | DateTime        | date when user is last updated(default field) |
+
+---
+
+#### Project
+
+| Property     | Type            | Description                                             |
+| ------------ |:--------------- |:------------------------------------------------------- |
+| objectId     | String          | unique id for the project                               |
+| name         | String          | display name of the project                             |
+| description  | String          | description of the project                              |
+| imageUrl     | String          | url for the image of the project                        |
+| videoUrl     | String          | url for the video tutorial of the project               |
+| likesCount   | Number          | number of likes for the project                         |
+| difficulty   | Number          | difficulty rating of the project                        |
+| projectSteps | Array\<String>  | array of Strings representing each step in project      |
+| itemsUsed    | Array\<String>  | array of pointers to Item that are used in this project |
+| author       | Pointer to User | pointer to User that submitted this project             |
+| createdAt    | DateTime        | date when user is created (default field)               |
+| updatedAt    | DateTime        | date when user is last updated (default field)          |
+
+
+
 ### Networking
-- [Add list of network requests by screen ]
+
+#### List of network requests by screen
+- Home Feed Screen
+	- (Read/GET) Query top items
+	- (Read/GET) Query top projects
+- Create Item Screen
+	- (Create/POST) Create a new item object
+
+- Create Project Screen
+	- (Create/POST) Create a new project object
+	- (Read/GET) Query items for autocomplete
+
+- Search Screen
+	- (Read/GET) Query commonly searched items
+
+- Results Screen
+	- (Read/GET) Query items based on user input
+
+- Scanner Screen
+	- (Read/GET) Query item where barcodeId matches input
+
+- Item Screen
+	- (Read/GET) Query the item from the database
+	- (Read/GET) Query projects that use this item
+
+- Project Screen
+	- (Read/GET) Query the project from the database
+	- (Update/PUT) Update number of likes
+	- (Update/PUT) Update user's saved projects
+	- (Update/PUT) Update user profile name
+
+- User Screen
+	- (Read/GET) Query logged in user object
+	- (Read/GET) Query projects created by logged in user
+	- (Update/PUT) Update user profile name
+	- (Update/PUT) Update user profile image
+
+
 - [Create basic snippets for each Parse network request]
 - [OPTIONAL: List endpoints if using existing API such as Yelp]

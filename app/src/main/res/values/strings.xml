@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">WasteBuddy</string>
+    <string name="email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="log_in_text">Log In</string>
+    <string name="sign_up_text">Sign Up</string>
+    <string name="guest_prompt_text">Continue as guest.</string>
+    <string name="confirm_passowrd_text">Confirm passowrd</string>
+    <string name="name_hint">Name</string>
 </resources>

@@ -1,0 +1,116 @@
+package com.example.wastebuddy;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.wastebuddy.databinding.ActivitySignUpBinding;
+import com.parse.ParseException;
+import com.parse.ParseUser;
+import com.parse.SignUpCallback;
+
+public class SignUpActivity extends AppCompatActivity {
+
+    private static final String TAG = "SignUpActivity";
+
+    ActivitySignUpBinding mBinding;
+
+    EditText mUsernameEditText;
+    EditText mEmailEditText;
+    EditText mPasswordEditText;
+    EditText mConfirmPasswordEditText;
+    Button mSignUpButton;
+    ProgressBar mProgressBar;
+    TextView guestTextView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mBinding = ActivitySignUpBinding.inflate(getLayoutInflater());
+        setContentView(mBinding.getRoot());
+
+        if (ParseUser.getCurrentUser() != null) {
+            goMainActivity();
+        }
+
+        bind();
+        setOnClickListeners();
+        mUsernameEditText.requestFocus();
+    }
+
+    private void setOnClickListeners() {
+        mSignUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i(TAG, "onClick login button");
+                String username = mUsernameEditText.getText().toString();
+                String password = mPasswordEditText.getText().toString();
+                signUpUser(username, password);
+            }
+        });
+
+
+        guestTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                goMainActivity();
+            }
+        });
+    }
+
+    private void bind() {
+        mEmailEditText = mBinding.emailEditText;
+        mUsernameEditText = mBinding.usernameEditText;
+        mPasswordEditText = mBinding.passwordEditText;
+        mConfirmPasswordEditText = mBinding.confirmPasswordEditText;
+        mSignUpButton = mBinding.signUpButton;
+        guestTextView = mBinding.logInTextView;
+        mProgressBar = mBinding.loadingProgressBar;
+    }
+
+    private void signUpUser(String username, String password) {
+        mProgressBar.setVisibility(ProgressBar.VISIBLE);
+        Log.i(TAG, "Attempting to sign user up" + username);
+        // Create the ParseUser
+        ParseUser user = new ParseUser();
+        // Set core properties
+        user.setUsername(mUsernameEditText.getText().toString());
+        user.setEmail(mEmailEditText.getText().toString());
+        user.setPassword(mPasswordEditText.getText().toString());
+//        user.setEmail("email@example.com");
+        // Invoke signUpInBackground
+        user.signUpInBackground(new SignUpCallback() {
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Issue with login: ", e);
+                    Toast.makeText(SignUpActivity.this, "Issue with sign up.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Toast.makeText(SignUpActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
+                goMainActivity();
+                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            }
+        });
+    }
+
+    private void goMainActivity() {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    private void goLoginActivity() {
+        Intent i = new Intent(this, LoginActivity.class);
+        startActivity(i);
+        finish();
+    }
+}

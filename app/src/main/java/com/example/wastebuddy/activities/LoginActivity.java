@@ -1,4 +1,4 @@
-package com.example.wastebuddy;
+package com.example.wastebuddy.activities;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.databinding.ActivityLoginBinding;
 import com.parse.LogInCallback;
 import com.parse.ParseException;

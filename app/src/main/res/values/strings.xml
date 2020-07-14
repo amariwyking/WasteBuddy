@@ -7,4 +7,16 @@
     <string name="guest_prompt_text">Continue as guest.</string>
     <string name="confirm_passowrd_text">Confirm passowrd</string>
     <string name="name_hint">Name</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_item_share_text">Share</string>
+    <string name="create_item_description_text">Description</string>
+    <string name="create_item_image_content_description">Provide an image for this item.</string>
+    <string name="create_item_name_text">Name</string>
+
+    <string-array name="disposal_array">
+        <item>Recycle</item>
+        <item>Compost</item>
+        <item>Landfill</item>
+        <item>Special</item>
+    </string-array>
 </resources>

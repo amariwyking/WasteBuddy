@@ -1,6 +1,5 @@
 package com.example.wastebuddy;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
         setContentView(mBinding.getRoot());
 
         if (ParseUser.getCurrentUser() != null) {
-            goMainActivity();
+            Navigation.goMainActivity(SignUpActivity.this);
         }
 
         bind();
@@ -61,7 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
         guestTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goMainActivity();
+                Navigation.goMainActivity(SignUpActivity.this);
             }
         });
     }
@@ -92,25 +91,15 @@ public class SignUpActivity extends AppCompatActivity {
                 if (e != null) {
                     Log.e(TAG, "Issue with login: ", e);
                     Toast.makeText(SignUpActivity.this, "Issue with sign up.", Toast.LENGTH_SHORT).show();
+                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                     return;
                 }
 
                 Toast.makeText(SignUpActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
-                goMainActivity();
+                Navigation.goMainActivity(SignUpActivity.this);
+
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
             }
         });
-    }
-
-    private void goMainActivity() {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        finish();
-    }
-
-    private void goLoginActivity() {
-        Intent i = new Intent(this, LoginActivity.class);
-        startActivity(i);
-        finish();
     }
 }

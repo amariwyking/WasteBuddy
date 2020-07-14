@@ -1,6 +1,5 @@
 package com.example.wastebuddy;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if user is already signed in
         if (ParseUser.getCurrentUser() != null) {
-            goMainActivity();
+            Navigation.goMainActivity(LoginActivity.this);
         }
 
         bind();
@@ -60,14 +59,14 @@ public class LoginActivity extends AppCompatActivity {
         mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goSignUpActivity();
+                Navigation.goSignUpActivity(LoginActivity.this);
             }
         });
 
         mGuestTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goMainActivity();
+                Navigation.goMainActivity(LoginActivity.this);
             }
         });
     }
@@ -91,26 +90,59 @@ public class LoginActivity extends AppCompatActivity {
                 // TODO: Show error a proper error message to the user
                 if (e != null) {
                     Log.e(TAG, "Issue with login: ", e);
-                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                    Toast.makeText(LoginActivity.this, "Issue with login :(", Toast.LENGTH_SHORT).show();
+                    loginNotifyResult("Issue with login :(");
                     return;
                 }
-                Toast.makeText(LoginActivity.this, "Success!", Toast.LENGTH_SHORT).show();
-                goMainActivity();
-                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                loginNotifyResult("Success!");
+                Navigation.goMainActivity(LoginActivity.this);
             }
         });
     }
 
-    private void goMainActivity() {
-        Intent i = new Intent(this, MainActivity.class);
-        startActivity(i);
-        finish();
-    }
-
-    private void goSignUpActivity() {
-        Intent i = new Intent(this, SignUpActivity.class);
-        startActivity(i);
-        finish();
+    private void loginNotifyResult(String s) {
+        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+        Toast.makeText(LoginActivity.this, s, Toast.LENGTH_SHORT).show();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

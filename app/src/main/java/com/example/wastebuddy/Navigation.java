@@ -3,6 +3,9 @@ package com.example.wastebuddy;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.example.wastebuddy.activities.MainActivity;
+import com.example.wastebuddy.activities.SignUpActivity;
+
 public class Navigation {
 
     public static void goMainActivity(Activity activity) {

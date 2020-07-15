@@ -2,15 +2,20 @@ package com.example.wastebuddy;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.databinding.ItemResultCardBinding;
+import com.example.wastebuddy.fragments.ItemDetailsFragment;
 import com.example.wastebuddy.models.Item;
 
 import java.util.List;
@@ -51,6 +56,27 @@ public class SearchItemsAdapter extends RecyclerView.Adapter<SearchItemsAdapter.
         public ViewHolder(@NonNull ItemResultCardBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+            setOnClickListener(binding);
+        }
+
+        private void setOnClickListener(@NonNull ItemResultCardBinding binding) {
+            binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+
+                    Item item = mItems.get(position);
+
+                    if (position != RecyclerView.NO_POSITION) {
+                        ItemDetailsFragment fragment = new ItemDetailsFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Item.KEY_OBJECT_ID, item.getObjectId());
+                        fragment.setArguments(bundle);
+                        switchContent(fragment);
+                    }
+                }
+            });
         }
 
         public void bind(Item item) {
@@ -59,6 +85,17 @@ public class SearchItemsAdapter extends RecyclerView.Adapter<SearchItemsAdapter.
 
             itemNameTextView.setText(item.getName());
             setDisposal(item, disposalImageView);
+        }
+
+
+        public void switchContent(Fragment fragment) {
+            if (mContext == null)
+                return;
+            if (mContext instanceof MainActivity) {
+                MainActivity mainActivity = (MainActivity) mContext;
+                mainActivity.replaceFragment(fragment);
+            }
+
         }
 
         private void setDisposal(Item item, ImageView disposalImageView) {

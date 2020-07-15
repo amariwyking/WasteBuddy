@@ -1,16 +1,21 @@
 package com.example.wastebuddy;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.databinding.ItemHomeItemCardBinding;
+import com.example.wastebuddy.fragments.ItemDetailsFragment;
 import com.example.wastebuddy.models.Item;
 import com.parse.ParseFile;
 
@@ -52,6 +57,27 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         public ViewHolder(@NonNull ItemHomeItemCardBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+            setOnClickListener(binding);
+        }
+
+        private void setOnClickListener(@NonNull com.example.wastebuddy.databinding.ItemHomeItemCardBinding binding) {
+            binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+
+                    Item item = mItems.get(position);
+
+                    if (position != RecyclerView.NO_POSITION) {
+                        ItemDetailsFragment fragment = new ItemDetailsFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Item.KEY_OBJECT_ID, item.getObjectId());
+                        fragment.setArguments(bundle);
+                        switchContent(fragment);
+                    }
+                }
+            });
         }
 
         public void bind(Item item) {
@@ -65,6 +91,16 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             if (image != null) {
                 Glide.with(mContext).load(image.getUrl()).into(itemImageView);
             }
+        }
+
+        public void switchContent(Fragment fragment) {
+            if (mContext == null)
+                return;
+            if (mContext instanceof MainActivity) {
+                MainActivity mainActivity = (MainActivity) mContext;
+                mainActivity.replaceFragment(fragment);
+            }
+
         }
     }
 }

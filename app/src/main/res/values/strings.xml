@@ -12,6 +12,8 @@
     <string name="create_item_description_text">Description</string>
     <string name="create_item_image_content_description">Provide an image for this item.</string>
     <string name="create_item_name_text">Name</string>
+    <string name="bottom_navigation_home">Home</string>
+    <string name="bottom_navigation_search">Search</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

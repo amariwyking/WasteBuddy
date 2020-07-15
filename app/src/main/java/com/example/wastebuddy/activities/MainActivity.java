@@ -1,21 +1,23 @@
 package com.example.wastebuddy.activities;
 
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.os.Bundle;
-import android.view.View;
-
-import com.example.wastebuddy.Navigation;
+import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.ActivityMainBinding;
-import com.example.wastebuddy.fragments.CreateItemFragment;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.wastebuddy.fragments.HomeFragment;
+import com.example.wastebuddy.fragments.SearchFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding mBinding;
-    FloatingActionButton mCreateItemButton;
+    BottomNavigationView mBottomNavigationView;
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
 
@@ -25,17 +27,33 @@ public class MainActivity extends AppCompatActivity {
         mBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
-        mCreateItemButton = mBinding.createItemButton;
-        mCreateItemButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                replaceFragment(new CreateItemFragment());
-                mCreateItemButton.hide();
-            }
-        });
+        mBottomNavigationView = mBinding.bottomNavigationView;
+        setBottomNavItemSelectedListener();
     }
 
     public void replaceFragment(Fragment fragment) {
         fragmentManager.beginTransaction().replace(mBinding.containerFrameLayout.getId(), fragment).commit();
+    }
+
+    private void setBottomNavItemSelectedListener() {
+        mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment fragment;
+                switch (item.getItemId()) {
+                    case R.id.homeMenuItem:
+                        fragment = new HomeFragment();
+                        break;
+                    case R.id.searchMenuItem:
+                    default:
+                        fragment = new SearchFragment();
+                        break;
+                }
+                fragmentManager.beginTransaction().replace(mBinding.containerFrameLayout.getId(), fragment).commit();
+                return true;
+            }
+        });
+        // Set default selection
+        mBottomNavigationView.setSelectedItemId(R.id.homeMenuItem);
     }
 }

@@ -41,7 +41,7 @@ import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
-public class CreateItemFragment extends Fragment {
+public class CreateItemFragment extends NewContentFragment {
 
     private static final String TAG = "NewItemFragment";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
@@ -52,11 +52,7 @@ public class CreateItemFragment extends Fragment {
     EditText mNameEditText;
     EditText mDescriptionEditText;
     Spinner mDisposalSpinner;
-    ImageView mImageView;
     Button mShareButton;
-
-    private File mPhotoFile;
-    public final String mPhotoFileName = "photo.jpg";
 
     public CreateItemFragment() {
         // Required empty public constructor
@@ -67,6 +63,8 @@ public class CreateItemFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         // Inflate the layout for this fragment
         mBinding = FragmentCreateItemBinding.inflate(inflater, container, false);
         mContext = getContext();
@@ -88,56 +86,6 @@ public class CreateItemFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         mBinding = null;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // by this point we have the camera photo on disk
-                Bitmap takenImage = rotateBitmapOrientation(mPhotoFile.getAbsolutePath());
-
-                // RESIZE BITMAP, see section below
-                // Load the taken image into a preview
-                mImageView.setPadding(0, 0, 0, 0);
-                mImageView.setImageBitmap(takenImage);
-            } else { // Result was a failure
-                Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    // Returns the File for a photo stored on disk given the fileName
-    private File getPhotoFileUri(String fileName) {
-        // Get safe storage directory for photos
-        // Use `getExternalFilesDir` on Context to access package-specific directories.
-        // This way, we don't need to request external read/write runtime permissions.
-        File mediaStorageDir = new File(mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
-
-        // Create the storage directory if it does not exist
-        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()) {
-            Log.d(TAG, "failed to create directory");
-        }
-
-        // Return the file target for the photo based on filename
-        return new File(mediaStorageDir.getPath() + File.separator + fileName);
-    }
-
-    private void launchCamera() {
-        // create Intent to take a picture and return control to the calling application
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Create a File reference for future access
-        mPhotoFile = getPhotoFileUri(mPhotoFileName);
-
-        // wrap File object into a content provider
-        Uri fileProvider = FileProvider.getUriForFile(Objects.requireNonNull(getActivity()), "com.example.fileprovider", mPhotoFile);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
-        if (intent.resolveActivity(mContext.getPackageManager()) != null) {
-            // Start the image capture intent to take photo
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        }
     }
 
     private void setOnClickListeners() {
@@ -170,10 +118,6 @@ public class CreateItemFragment extends Fragment {
                 saveItem(currentUser, mPhotoFile);
             }
         });
-    }
-
-    private void notifyInvalidField(String s) {
-        Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
     }
 
     private void saveItem(ParseUser currentUser, File mPhotoFile) {
@@ -213,32 +157,5 @@ public class CreateItemFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Apply the adapter to the spinner
         mDisposalSpinner.setAdapter(adapter);
-    }
-
-    private Bitmap rotateBitmapOrientation(String photoFilePath) {
-        // Create and configure BitmapFactory
-        BitmapFactory.Options bounds = new BitmapFactory.Options();
-        bounds.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(photoFilePath, bounds);
-        BitmapFactory.Options opts = new BitmapFactory.Options();
-        Bitmap bm = BitmapFactory.decodeFile(photoFilePath, opts);
-        // Read EXIF Data
-        ExifInterface exif = null;
-        try {
-            exif = new ExifInterface(photoFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String orientString = Objects.requireNonNull(exif).getAttribute(ExifInterface.TAG_ORIENTATION);
-        int orientation = orientString != null ? Integer.parseInt(orientString) : ExifInterface.ORIENTATION_NORMAL;
-        int rotationAngle = 0;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_90) rotationAngle = 90;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_180) rotationAngle = 180;
-        if (orientation == ExifInterface.ORIENTATION_ROTATE_270) rotationAngle = 270;
-        // Rotate Bitmap
-        Matrix matrix = new Matrix();
-        matrix.setRotate(rotationAngle, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-        // Return result
-        return Bitmap.createBitmap(bm, 0, 0, bounds.outWidth, bounds.outHeight, matrix, true);
     }
 }

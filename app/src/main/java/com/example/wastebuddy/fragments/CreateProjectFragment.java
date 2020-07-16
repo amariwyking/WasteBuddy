@@ -1,33 +1,34 @@
 package com.example.wastebuddy.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.media.Rating;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
-import androidx.fragment.app.Fragment;
 
-import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentCreateProjectBinding;
+import com.example.wastebuddy.models.Item;
+import com.example.wastebuddy.models.Project;
+import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
-import java.util.Objects;
+import java.io.File;
 
 public class CreateProjectFragment extends NewContentFragment {
+
+    private static final String TAG = "CreateProjectFragment";
 
     FragmentCreateProjectBinding mBinding;
 
@@ -36,7 +37,6 @@ public class CreateProjectFragment extends NewContentFragment {
     EditText mNameEditText;
     EditText mDescriptionEditText;
     RatingBar mRatingBar;
-    ImageView mImageView;
     Button mShareButton;
 
     public CreateProjectFragment() {
@@ -46,9 +46,11 @@ public class CreateProjectFragment extends NewContentFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
+
         mContext = getContext();
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_project, container, false);
+        mBinding = FragmentCreateProjectBinding.inflate(inflater, container, false);
+        return mBinding.getRoot();
     }
 
     @Override
@@ -94,7 +96,29 @@ public class CreateProjectFragment extends NewContentFragment {
                 }
 
                 ParseUser currentUser = ParseUser.getCurrentUser();
-//                saveItem(currentUser, mPhotoFile);
+                saveProject(currentUser, mPhotoFile);
+            }
+        });
+    }
+
+    private void saveProject(ParseUser currentUser, File mPhotoFile) {
+        Project project = new Project();
+        project.setName(mNameEditText.getText().toString());
+        project.setDifficulty((int) mRatingBar.getRating());
+        project.setDescription(mDescriptionEditText.getText().toString());
+        project.setImage(new ParseFile(mPhotoFile));
+        project.setAuthor(currentUser);
+        project.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e(TAG, "Error while saving project", e);
+                    Toast.makeText(getContext(), "Error while saving :(", Toast.LENGTH_SHORT).show();
+                }
+                Log.i(TAG, "Item saved successfully!");
+                mDescriptionEditText.setText("");
+                mImageView.setPadding(16, 16, 16, 16);
+                mImageView.setImageResource(R.drawable.ic_round_add_a_photo_64);
             }
         });
     }

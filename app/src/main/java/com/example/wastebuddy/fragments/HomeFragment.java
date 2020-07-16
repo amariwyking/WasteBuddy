@@ -78,7 +78,7 @@ public class HomeFragment extends Fragment {
         mCreateItemButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) Objects.requireNonNull(getActivity())).replaceFragment(new CreateItemFragment());
+                ((MainActivity) Objects.requireNonNull(getActivity())).replaceFragment(new CreateProjectFragment());
                 mCreateItemButton.hide();
             }
         });
@@ -102,6 +102,5 @@ public class HomeFragment extends Fragment {
                 mItemsAdapter.notifyDataSetChanged();
             }
         });
-
     }
 }

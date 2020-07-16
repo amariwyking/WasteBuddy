@@ -3,4 +3,10 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <color name="colorCompost">#44962A</color>
+    <color name="colorLandfill">#ADADAD</color>
+    <color name="colorRecycle">#5ACAFA</color>
+    <color name="colorSpecial">#FFFE55</color>
+    <color name="black">#000000</color>
 </resources>

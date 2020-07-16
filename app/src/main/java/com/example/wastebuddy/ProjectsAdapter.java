@@ -15,11 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.databinding.ItemHomeProjectCardBinding;
-//import com.example.wastebuddy.fragments.ProjectDetailsFragment;
 import com.example.wastebuddy.models.Project;
 import com.parse.ParseFile;
 
 import java.util.List;
+
+import com.example.wastebuddy.fragments.ProjectDetailsFragment;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHolder>{
 
@@ -58,27 +59,27 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
             super(binding.getRoot());
             this.binding = binding;
 
-//            setOnClickListener(binding);
+            setOnClickListener(binding);
         }
 
-//        private void setOnClickListener(@NonNull com.example.wastebuddy.databinding.ItemHomeProjectCardBinding binding) {
-//            binding.getRoot().setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    int position = getAdapterPosition();
-//
-//                    Project project = mProjects.get(position);
-//
-//                    if (position != RecyclerView.NO_POSITION) {
-//                        ProjectDetailsFragment fragment = new ProjectDetailsFragment();
-//                        Bundle bundle = new Bundle();
-//                        bundle.putString(Project.KEY_OBJECT_ID, project.getObjectId());
-//                        fragment.setArguments(bundle);
-//                        switchContent(fragment);
-//                    }
-//                }
-//            });
-//        }
+        private void setOnClickListener(@NonNull com.example.wastebuddy.databinding.ItemHomeProjectCardBinding binding) {
+            binding.getRoot().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+
+                    Project project = mProjects.get(position);
+
+                    if (position != RecyclerView.NO_POSITION) {
+                        ProjectDetailsFragment fragment = new ProjectDetailsFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString(Project.KEY_OBJECT_ID, project.getObjectId());
+                        fragment.setArguments(bundle);
+                        switchContent(fragment);
+                    }
+                }
+            });
+        }
 
         public void bind(Project project) {
             TextView projectNameTextView = binding.projectNameTextView;

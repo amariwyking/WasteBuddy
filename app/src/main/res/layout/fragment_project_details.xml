@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.ProjectDetailsFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/container_padding">
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="@dimen/project_details_name_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="@dimen/container_padding"
+            tools:text="Project Name" />
+
+
+        <ImageView
+            android:id="@+id/projectImageView"
+            android:layout_width="192dp"
+            android:layout_height="192dp"
+            android:layout_marginTop="@dimen/container_padding"
+            android:contentDescription="@string/item_card_image_view_description"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/container_padding"
+            app:layout_constraintBottom_toBottomOf="@+id/projectImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/projectImageView"
+            app:layout_constraintTop_toTopOf="@+id/projectImageView">
+
+            <TextView
+                android:id="@+id/authorTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/edit_text_margin_horizontal_small"
+                app:layout_constraintBottom_toTopOf="@+id/likesTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="Posted by User" />
+
+            <TextView
+                android:id="@+id/likesTextView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/text_padding_vertical"
+                android:textSize="@dimen/likes_count_text_size"
+                app:layout_constraintBottom_toTopOf="@+id/difficultyRatingBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/likeImageButton"
+                tools:text="57" />
+
+            <RatingBar
+                android:id="@+id/difficultyRatingBar"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:stepSize="1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:id="@+id/likeImageButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_round_favorite_border_24"
+                android:background="@android:color/transparent"
+                android:tint="@color/colorCompost"
+                app:layout_constraintBottom_toBottomOf="@+id/likesTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/likesTextView"
+                android:contentDescription="@string/like_project_image_button_description" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:layout_marginTop="@dimen/container_padding"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/projectImageView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

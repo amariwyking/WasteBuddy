@@ -16,6 +16,7 @@
     <string name="bottom_navigation_search">Search</string>
     <string name="item_card_image_view_description">Image of item</string>
     <string name="disposal_image_view_description">Disposal method image</string>
+    <string name="like_project_image_button_description">Like project image button</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

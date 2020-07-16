@@ -3,6 +3,7 @@ package com.example.wastebuddy;
 import android.app.Application;
 
 import com.example.wastebuddy.models.Item;
+import com.example.wastebuddy.models.Project;
 import com.parse.Parse;
 import com.parse.ParseObject;
 
@@ -13,6 +14,7 @@ public class ParseApplication extends Application {
 
         // Register your parse models
         ParseObject.registerSubclass(Item.class);
+        ParseObject.registerSubclass(Project.class);
 
         // set applicationId, and server server based on the values in the Heroku settings.
         // clientKey is not needed unless explicitly configured

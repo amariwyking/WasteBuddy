@@ -12,15 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.wastebuddy.HorizontalSpaceItemDecoration;
-import com.example.wastebuddy.ItemsAdapter;
 import com.example.wastebuddy.SearchItemsAdapter;
 import com.example.wastebuddy.VerticalSpaceItemDecoration;
-import com.example.wastebuddy.activities.MainActivity;
-import com.example.wastebuddy.databinding.FragmentHomeBinding;
 import com.example.wastebuddy.databinding.FragmentSearchBinding;
 import com.example.wastebuddy.models.Item;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -29,7 +24,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class SearchFragment extends Fragment {
 
@@ -40,9 +34,16 @@ public class SearchFragment extends Fragment {
     private RecyclerView mItemsRecyclerView;
     private SearchItemsAdapter mItemsAdapter;
     private List<Item> mItems;
+    public boolean mResultsShowing;
 
     public SearchFragment() {
         // Required empty public constructor
+    }
+
+    public SearchFragment(List<Item> items) {
+        // Required empty public constructor
+        mItems = items;
+        mResultsShowing = true;
     }
 
     @Override
@@ -59,7 +60,13 @@ public class SearchFragment extends Fragment {
 
         bind();
         configureRecyclerView();
-        queryItems();
+//        mItemsAdapter.notifyDataSetChanged();
+        if (!mResultsShowing) showRecentItems();
+    }
+
+    public void updateData(List<Item> items){
+        mItems.addAll(items);
+        mItemsAdapter.notifyDataSetChanged();
     }
 
     private void configureRecyclerView() {
@@ -74,7 +81,7 @@ public class SearchFragment extends Fragment {
         mItemsRecyclerView = mBinding.searchRecyclerView;
     }
 
-    private void queryItems() {
+    public void showRecentItems() {
         // Specify which class to query
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.include(Item.KEY_AUTHOR);
@@ -88,6 +95,7 @@ public class SearchFragment extends Fragment {
                 for (Item item : items) {
                     Log.i(TAG, "Item: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
                 }
+                mItems.clear();
                 mItems.addAll(items);
                 mItemsAdapter.notifyDataSetChanged();
             }

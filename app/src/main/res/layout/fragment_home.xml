@@ -13,12 +13,63 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/createItemButton"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
+            <TextView
+                android:id="@+id/itemsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/container_padding"
+                android:paddingVertical="@dimen/text_padding_vertical"
+                android:text="Items"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/itemsRecyclerView"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:id="@+id/createItemButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_round_add_24"
+                app:layout_constraintBottom_toBottomOf="@+id/itemsTextView"
+                app:layout_constraintStart_toEndOf="@+id/itemsTextView"
+                app:layout_constraintTop_toTopOf="@+id/itemsTextView" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/itemsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/container_padding"
+                android:clipToPadding="false"
+                android:paddingVertical="@dimen/recycler_view_padding_medium"
+                app:layout_constraintBottom_toTopOf="@+id/projectsTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/projectsTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/container_padding"
+                android:paddingVertical="@dimen/text_padding_vertical"
+                android:text="Projects"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@id/projectsRecyclerView"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <ImageButton
+                android:id="@+id/createProjectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_round_add_24"
+                app:layout_constraintBottom_toBottomOf="@+id/projectsTextView"
+                app:layout_constraintStart_toEndOf="@+id/projectsTextView"
+                app:layout_constraintTop_toTopOf="@+id/projectsTextView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/projectsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/container_padding"
@@ -30,18 +81,18 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/createItemButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:background="@drawable/ic_round_add_24"
-            android:clickable="true"
-            android:focusable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_round_add_24" />
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/createItemButton"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="@dimen/fab_margin"-->
+<!--            android:layout_marginBottom="@dimen/fab_margin"-->
+<!--            android:background="@drawable/ic_round_add_24"-->
+<!--            android:clickable="true"-->
+<!--            android:focusable="true"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:srcCompat="@drawable/ic_round_add_24" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

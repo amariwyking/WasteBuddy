@@ -31,7 +31,7 @@
             android:id="@+id/disposalSpinner"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/edit_text_padding_vertical"
+            android:layout_marginTop="@dimen/text_padding_vertical"
             app:layout_constraintEnd_toEndOf="@+id/nameEditText"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/nameEditText"

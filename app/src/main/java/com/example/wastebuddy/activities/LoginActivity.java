@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.databinding.ActivityLoginBinding;
+import com.google.android.material.textfield.TextInputLayout;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
 
     ActivityLoginBinding mBinding;
 
+    TextInputLayout mTextInputLayout;
     EditText mEmailEditText;
     EditText mPasswordEditText;
     Button mLoginButton;
@@ -42,11 +44,11 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         bind();
-        setOnclickListeners();
+        setOnClickListeners();
         mEmailEditText.requestFocus();
     }
 
-    private void setOnclickListeners() {
+    private void setOnClickListeners() {
         mLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void bind() {
+        mTextInputLayout = mBinding.textInputLayout;
         mEmailEditText = mBinding.emailEditText;
         mPasswordEditText = mBinding.passwordEditText;
         mLoginButton = mBinding.loginButton;
@@ -92,6 +95,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (e != null) {
                     Log.e(TAG, "Issue with login: ", e);
                     loginNotifyResult("Issue with login :(");
+                    mTextInputLayout.setError("Invalid username/password");
                     return;
                 }
                 loginNotifyResult("Success!");
@@ -105,45 +109,3 @@ public class LoginActivity extends AppCompatActivity {
         Toast.makeText(LoginActivity.this, s, Toast.LENGTH_SHORT).show();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

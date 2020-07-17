@@ -92,6 +92,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (e != null) {
                     Log.e(TAG, "Issue with login: ", e);
                     Toast.makeText(SignUpActivity.this, "Issue with sign up.", Toast.LENGTH_SHORT).show();
+                    mPasswordEditText.setError("Invalid username/password");
                     mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                     return;
                 }

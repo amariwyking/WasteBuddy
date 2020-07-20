@@ -68,6 +68,15 @@
                 app:layout_constraintStart_toEndOf="@+id/projectsTextView"
                 app:layout_constraintTop_toTopOf="@+id/projectsTextView" />
 
+            <TextView
+                android:id="@+id/moreProjectsTextView"
+                android:text="More Projects"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/projectsTextView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/projectsTextView" />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/projectsRecyclerView"
                 android:layout_width="match_parent"

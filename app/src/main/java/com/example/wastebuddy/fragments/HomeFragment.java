@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +41,7 @@ public class HomeFragment extends Fragment {
     FragmentHomeBinding mBinding;
     ImageButton mCreateItemButton;
     ImageButton mCreateProjectButton;
+    TextView mMoreProjectsTextView;
 
     private RecyclerView mItemsRecyclerView;
     private RecyclerView mProjectsRecyclerView;
@@ -90,6 +92,7 @@ public class HomeFragment extends Fragment {
         mCreateProjectButton = mBinding.createProjectButton;
         mItemsRecyclerView = mBinding.itemsRecyclerView;
         mProjectsRecyclerView = mBinding.projectsRecyclerView;
+        mMoreProjectsTextView = mBinding.moreProjectsTextView;
     }
 
     private void setOnClickListeners() {
@@ -104,6 +107,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 ((MainActivity) Objects.requireNonNull(getActivity())).replaceFragment(new CreateProjectFragment());
+            }
+        });
+
+        mMoreProjectsTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ((MainActivity) Objects.requireNonNull(getActivity())).replaceFragment(new ProjectsFeedFragment());
             }
         });
     }

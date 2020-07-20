@@ -1,10 +1,14 @@
 package com.example.wastebuddy;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.activities.SignUpActivity;
+import com.example.wastebuddy.fragments.UserFragment;
 
 public class Navigation {
 
@@ -18,5 +22,15 @@ public class Navigation {
         Intent i = new Intent(activity, SignUpActivity.class);
         activity.startActivity(i);
         activity.finish();
+    }
+
+    public static void switchFragment(Context context, Fragment fragment) {
+        if (context == null)
+            return;
+        if (context instanceof MainActivity) {
+            MainActivity mainActivity = (MainActivity) context;
+            mainActivity.replaceFragment(fragment);
+        }
+
     }
 }

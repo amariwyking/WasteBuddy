@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +17,10 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentProjectDetailsBinding;
 import com.example.wastebuddy.models.Project;
@@ -82,7 +86,8 @@ public class ProjectDetailsFragment extends Fragment {
     private void bindData() {
         // Bind the project data to the view elements
         mNameTextView.setText(mProject.getName());
-        mAuthorTextView.setText(mProject.getAuthor().getUsername());
+        Spanned username = Html.fromHtml(String.format("Posted by <b>%s</b>", mProject.getAuthor().getUsername()));
+        mAuthorTextView.setText(username);
         mLikesTextView.setText(String.valueOf(mProject.getLikes()));
         mDescriptionTextView.setText(mProject.getDescription());
         mDifficultyRatingBar.setRating(mProject.getDifficulty().floatValue());
@@ -129,6 +134,14 @@ public class ProjectDetailsFragment extends Fragment {
                 }
 
                 mLikesTextView.setText(String.valueOf(mProject.getLikes()));
+            }
+        });
+
+        mAuthorTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Toast.makeText(mContext, "Author was clicked", Toast.LENGTH_SHORT).show();
+                Navigation.switchFragment(mContext, new UserFragment());
             }
         });
     }

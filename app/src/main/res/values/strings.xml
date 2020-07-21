@@ -17,6 +17,8 @@
     <string name="item_card_image_view_description">Image of item</string>
     <string name="disposal_image_view_description">Disposal method image</string>
     <string name="like_project_image_button_description">Like project image button</string>
+    <string name="follow_button_text">Follow</string>
+    <string name="profile_image_view_description">Profile Image</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

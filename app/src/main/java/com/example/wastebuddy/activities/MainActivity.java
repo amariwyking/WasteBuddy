@@ -51,15 +51,22 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-        mBottomNavigationView = mBinding.bottomNavigationView;
-        setBottomNavItemSelectedListener();
 
         searchView = mBinding.persistentSearchView;
         mResults = new ArrayList<>();
         configureSearchView();
+
+        mBottomNavigationView = mBinding.bottomNavigationView;
+        setBottomNavItemSelectedListener();
     }
 
     public void replaceFragment(Fragment fragment) {
+        if (fragment instanceof HomeFragment || fragment instanceof SearchFragment) {
+            searchView.setVisibility(View.VISIBLE);
+        } else {
+            searchView.setVisibility(View.GONE);
+        }
+
         fragmentManager.beginTransaction().replace(mBinding.containerFrameLayout.getId(), fragment).commit();
     }
 
@@ -77,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                         fragment = new SearchFragment();
                         break;
                 }
-                fragmentManager.beginTransaction().replace(mBinding.containerFrameLayout.getId(), fragment).commit();
+                replaceFragment(fragment);
                 return true;
             }
         });

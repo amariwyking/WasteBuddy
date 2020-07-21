@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +19,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentProjectDetailsBinding;
 import com.example.wastebuddy.models.Project;
-import com.example.wastebuddy.models.Project;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -82,7 +84,8 @@ public class ProjectDetailsFragment extends Fragment {
     private void bindData() {
         // Bind the project data to the view elements
         mNameTextView.setText(mProject.getName());
-        mAuthorTextView.setText(mProject.getAuthor().getUsername());
+        Spanned username = Html.fromHtml(String.format("Posted by <b>%s</b>", mProject.getAuthor().getUsername()));
+        mAuthorTextView.setText(username);
         mLikesTextView.setText(String.valueOf(mProject.getLikes()));
         mDescriptionTextView.setText(mProject.getDescription());
         mDifficultyRatingBar.setRating(mProject.getDifficulty().floatValue());
@@ -129,6 +132,19 @@ public class ProjectDetailsFragment extends Fragment {
                 }
 
                 mLikesTextView.setText(String.valueOf(mProject.getLikes()));
+            }
+        });
+
+        mAuthorTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Toast.makeText(mContext, "Author was clicked", Toast.LENGTH_SHORT).show();
+                // Bundle Author and send to next fragment
+                Fragment fragment = new UserFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(ParseUser.KEY_OBJECT_ID, mProject.getAuthor().getObjectId());
+                fragment.setArguments(bundle);
+                Navigation.switchFragment(mContext, fragment);
             }
         });
     }

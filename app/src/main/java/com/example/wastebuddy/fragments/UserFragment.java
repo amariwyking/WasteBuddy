@@ -20,12 +20,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.example.wastebuddy.GridSpaceItemDecoration;
 import com.example.wastebuddy.ProjectsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentUserBinding;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
+import com.example.wastebuddy.models.User;
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
@@ -33,6 +33,8 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +52,7 @@ public class UserFragment extends Fragment {
     Button mFollowButton;
     RecyclerView mProjectsRecyclerView;
 
+    User mCurrentUser;
     ParseUser mUser;
     List<Project> mProjects;
     ProjectsAdapter mProjectsAdapter;
@@ -62,6 +65,7 @@ public class UserFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mBinding = FragmentUserBinding.inflate(inflater, container, false);
+        mCurrentUser = new User(ParseUser.getCurrentUser());
         mProjects = new ArrayList<>();
         mProjectsAdapter = new ProjectsAdapter(getContext(), mProjects);
         getUserFromDatabase();
@@ -72,6 +76,7 @@ public class UserFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind();
+        setonClickListeners();
     }
 
     private void getProfileImage() {
@@ -96,6 +101,7 @@ public class UserFragment extends Fragment {
     private void bind() {
         mUsernameTextView = mBinding.usernameTextView;
         mProfileImageView = mBinding.profileImageView;
+        mFollowButton = mBinding.followButton;
         mProjectsRecyclerView = mBinding.projectsRecyclerView;
         configureRecyclerView(mProjectsRecyclerView, mProjectsAdapter);
     }
@@ -103,6 +109,9 @@ public class UserFragment extends Fragment {
     private void bindData() {
         getProfileImage();
         mUsernameTextView.setText(mUser.getUsername());
+        mFollowButton.setText(isNotFollowing() ?
+                getResources().getText(R.string.follow_button_text) :
+                getResources().getText(R.string.unfollow_button_text));
         queryProjects();
     }
 
@@ -118,7 +127,8 @@ public class UserFragment extends Fragment {
                     return;
                 }
                 for (Project item : projects) {
-                    Log.i(TAG, "Project: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
+                    Log.i(TAG,
+                            "Project: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
                 }
                 mProjects.addAll(projects);
                 mProjectsAdapter.notifyDataSetChanged();
@@ -137,10 +147,89 @@ public class UserFragment extends Fragment {
         recyclerView.setClipChildren(false);
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
-            public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
+            public void getItemOffsets(@NotNull Rect outRect, @NotNull View view,
+                                       @NotNull RecyclerView parent,
+                                       @NotNull RecyclerView.State state) {
                 outRect.set(spacing, spacing, spacing, spacing);
             }
         });
-//        recyclerView.addItemDecoration(new GridSpaceItemDecoration(16));
+    }
+
+    private void setonClickListeners() {
+        mFollowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCurrentUser.fetch();
+                // Add currently viewed profile to current user's following list
+                if (isNotFollowing()) {
+                    follow();
+                } else {
+                    unfollow();
+                }
+            }
+        });
+    }
+
+    private boolean isNotFollowing() {
+        return !mCurrentUser.getFollowing().toString().contains(mUser.getUsername());
+    }
+
+    private void follow() {
+        mCurrentUser.follow(mUser);
+        mFollowButton.setText(getResources().getText(R.string.unfollow_button_text));
+    }
+
+    private void unfollow() {
+        mCurrentUser.unfollow(mUser);
+        mFollowButton.setText(getResources().getText(R.string.follow_button_text));
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

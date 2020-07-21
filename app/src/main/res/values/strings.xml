@@ -18,6 +18,7 @@
     <string name="disposal_image_view_description">Disposal method image</string>
     <string name="like_project_image_button_description">Like project image button</string>
     <string name="follow_button_text">Follow</string>
+    <string name="unfollow_button_text">Unfollow</string>
     <string name="profile_image_view_description">Profile Image</string>
 
     <string-array name="disposal_array">

@@ -17,18 +17,16 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentProjectDetailsBinding;
 import com.example.wastebuddy.models.Project;
-import com.example.wastebuddy.models.Project;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -141,7 +139,12 @@ public class ProjectDetailsFragment extends Fragment {
             @Override
             public void onClick(View view) {
 //                Toast.makeText(mContext, "Author was clicked", Toast.LENGTH_SHORT).show();
-                Navigation.switchFragment(mContext, new UserFragment());
+                // Bundle Author and send to next fragment
+                Fragment fragment = new UserFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(ParseUser.KEY_OBJECT_ID, mProject.getAuthor().getObjectId());
+                fragment.setArguments(bundle);
+                Navigation.switchFragment(mContext, fragment);
             }
         });
     }

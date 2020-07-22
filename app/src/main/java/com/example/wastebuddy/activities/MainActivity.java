@@ -1,5 +1,6 @@
 package com.example.wastebuddy.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -12,19 +13,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.ActivityMainBinding;
 import com.example.wastebuddy.fragments.HomeFragment;
+import com.example.wastebuddy.fragments.ScanFragment;
 import com.example.wastebuddy.fragments.SearchFragment;
 import com.example.wastebuddy.models.Item;
-import com.example.wastebuddy.models.Project;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.paulrybitskyi.persistentsearchview.PersistentSearchView;
 import com.paulrybitskyi.persistentsearchview.listeners.OnSearchConfirmedListener;
-import com.paulrybitskyi.persistentsearchview.utils.VoiceRecognitionDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
-
         searchView = mBinding.persistentSearchView;
         mResults = new ArrayList<>();
         configureSearchView();
@@ -67,7 +67,13 @@ public class MainActivity extends AppCompatActivity {
             searchView.setVisibility(View.GONE);
         }
 
-        fragmentManager.beginTransaction().replace(mBinding.containerFrameLayout.getId(), fragment).commit();
+        if (mBottomNavigationView.getVisibility() == View.GONE)
+            mBottomNavigationView.setVisibility(View.VISIBLE);
+
+        if (fragment instanceof ScanFragment) mBottomNavigationView.setVisibility(View.GONE);
+
+        fragmentManager.beginTransaction().replace(mBinding.containerFrameLayout.getId(),
+                fragment).commit();
     }
 
     private void setBottomNavItemSelectedListener() {
@@ -93,6 +99,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configureSearchView() {
+        searchView.setVoiceInputButtonEnabled(false);
+        searchView.setSuggestionsDisabled(true);
+        searchView.showRightButton();
+
+
         searchView.setOnLeftBtnClickListener(new View.OnClickListener() {
 
             @Override
@@ -104,18 +115,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
         searchView.setOnClearInputBtnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View view) {
                 // Handle the clear input button click
-//                mSearchFragment.mResultsShowing = false;
                 mSearchFragment.showRecentItems();
             }
 
         });
 
-        // Setting a delegate for the voice recognition input
-        searchView.setVoiceRecognitionDelegate(new VoiceRecognitionDelegate(this));
+        searchView.setOnRightBtnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Navigation.switchFragment(MainActivity.this, new ScanFragment());
+            }
+        });
+
+        searchView.setRightButtonDrawable(getDrawable(R.drawable.ic_barcode_scanner));
 
         searchView.setOnSearchConfirmedListener(new OnSearchConfirmedListener() {
 
@@ -137,7 +152,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Disabling the suggestions since they are unused in
         // the simple implementation
-        searchView.setSuggestionsDisabled(true);
     }
 
     private void query(String input) {
@@ -153,7 +167,8 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
                 for (Item item : items) {
-                    Log.i(TAG, "Item: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
+                    Log.i(TAG,
+                            "Item: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
                 }
                 mResults.clear();
                 mSearchFragment.updateData(items);

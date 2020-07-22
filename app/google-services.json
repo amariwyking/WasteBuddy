@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "814037770317",
+    "firebase_url": "https://wastebuddy-2ad40.firebaseio.com",
+    "project_id": "wastebuddy-2ad40",
+    "storage_bucket": "wastebuddy-2ad40.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:814037770317:android:342cfa550342498b8c7c04",
+        "android_client_info": {
+          "package_name": "com.example.wastebuddy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "814037770317-j50vek9nmmj9jug1u1f7r0r3hj01vvil.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wastebuddy",
+            "certificate_hash": "a9ff60cc94ca287639eed2b2ca9b635cd6cd5e91"
+          }
+        },
+        {
+          "client_id": "814037770317-gcur5dkbk6bhrrk8ti4l09j0lptk5tbo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFCkIxYu1ByYqDKIGUTMXMDDCZop1AF0U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "814037770317-gcur5dkbk6bhrrk8ti4l09j0lptk5tbo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

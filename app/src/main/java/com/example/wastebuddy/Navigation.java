@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.activities.SignUpActivity;
-import com.example.wastebuddy.fragments.UserFragment;
 
 public class Navigation {
 

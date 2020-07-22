@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment {
     private void bind() {
         mCreateItemButton = mBinding.createItemButton;
         mCreateProjectButton = mBinding.createProjectButton;
-        mItemsRecyclerView = mBinding.itemsRecyclerView;
+        mItemsRecyclerView = mBinding.topItemsRecyclerView;
         mProjectsRecyclerView = mBinding.projectsRecyclerView;
         mMoreProjectsTextView = mBinding.moreProjectsTextView;
     }

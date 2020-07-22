@@ -23,10 +23,10 @@
                 android:id="@+id/profileImageView"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
+                android:contentDescription="@string/profile_image_view_description"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:mipmap/sym_def_app_icon"
-                android:contentDescription="@string/profile_image_view_description" />
+                app:srcCompat="@android:mipmap/sym_def_app_icon" />
 
             <TextView
                 android:id="@+id/usernameTextView"
@@ -43,9 +43,11 @@
                 android:id="@+id/followButton"
                 android:layout_width="128dp"
                 android:layout_height="0dp"
+                android:backgroundTint="@color/colorAccent"
+                android:includeFontPadding="false"
                 android:textAllCaps="false"
                 android:textSize="16sp"
-                android:includeFontPadding="false"
+                android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="@+id/profileImageView"
                 app:layout_constraintStart_toStartOf="@+id/usernameTextView"
                 app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
@@ -55,8 +57,8 @@
             android:id="@+id/projectsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:clipToPadding="false"
             android:clipChildren="false"
+            android:clipToPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

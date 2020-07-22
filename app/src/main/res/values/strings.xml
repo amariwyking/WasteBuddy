@@ -20,6 +20,11 @@
     <string name="follow_button_text">Follow</string>
     <string name="unfollow_button_text">Unfollow</string>
     <string name="profile_image_view_description">Profile Image</string>
+    <string name="create_project_button_description">Create Project Button</string>
+    <string name="create_item_button_description">Create Item Button</string>
+    <string name="top_projects_text_view">Projects</string>
+    <string name="top_items_text_view">Items</string>
+    <string name="more_projects_text_view">More Projects</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

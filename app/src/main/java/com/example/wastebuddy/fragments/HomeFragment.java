@@ -22,10 +22,8 @@ import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.databinding.FragmentHomeBinding;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;

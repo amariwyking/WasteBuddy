@@ -25,6 +25,10 @@
     <string name="top_projects_text_view">Projects</string>
     <string name="top_items_text_view">Items</string>
     <string name="more_projects_text_view">More Projects</string>
+    <string name="create_item_barcode_text">Barcode:</string>
+    <string name="barcode_scanner_reticle_description">Barcode scanner reticle</string>
+    <string name="close_button_description">Close button</string>
+    <string name="button_scan_barcode_description">Scan barcode</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

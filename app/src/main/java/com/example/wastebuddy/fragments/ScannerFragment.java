@@ -1,24 +1,9 @@
 package com.example.wastebuddy.fragments;
 
-import android.Manifest;
 import android.content.Context;
 import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.camera.core.Camera;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageAnalysis;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageProxy;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.util.DisplayMetrics;
@@ -26,12 +11,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.WindowManager;
+import android.widget.ImageButton;
 
-import com.example.wastebuddy.Navigation;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.camera.core.Camera;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageProxy;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+
+import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentScanBinding;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
@@ -39,31 +35,41 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 
-import java.io.File;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ScanFragment extends Fragment {
+public class ScannerFragment extends DialogFragment {
 
     FragmentScanBinding mBinding;
 
     private static String TAG = "ScanFragment";
 
-    private PreviewView mPreviewView;
+    PreviewView mPreviewView;
+    ImageButton mCloseButton;
 
     FirebaseVisionBarcodeDetector mDetector;
     FirebaseVisionBarcodeDetectorOptions mOptions;
 
-    public ScanFragment() {
+
+    public ScannerFragment() {
         // Required empty public constructor
     }
 
+    public interface BarcodeListener {
+        void onBarcodeObserved(String barcode);
+    }
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Objects.requireNonNull(getActivity()).getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT);
+
         // Inflate the layout for this fragment
         mBinding = FragmentScanBinding.inflate(inflater, container, false);
         return mBinding.getRoot();
@@ -73,7 +79,7 @@ public class ScanFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind();
-
+        setOnClickListeners();
 
         mOptions = new FirebaseVisionBarcodeDetectorOptions.Builder()
                 .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_UPC_A)
@@ -84,24 +90,31 @@ public class ScanFragment extends Fragment {
         mPreviewView.post(this::startImageAnalysis);
     }
 
+    @Override
+    public int getTheme() {
+        return R.style.ScannerTheme;
+    }
+
     private void bind() {
         mPreviewView = mBinding.previewView;
+        mCloseButton = mBinding.closeButton;
     }
 
     private void bindPreview(ProcessCameraProvider cameraProvider) {
+        // Set up the camera preview
         Executor executor = Executors.newSingleThreadExecutor();
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        mBinding.previewView.getDisplay().getRealMetrics(displayMetrics);
-
-        CameraSelector cameraSelector = new CameraSelector.Builder()
+        CameraSelector cameraSelector = new CameraSelector
+                .Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
 
-        Preview preview = new Preview.Builder()
+        Preview preview = new Preview
+                .Builder()
                 .build();
 
-        ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
+        ImageAnalysis imageAnalysis = new ImageAnalysis
+                .Builder()
                 .setImageQueueDepth(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build();
 
@@ -119,9 +132,13 @@ public class ScanFragment extends Fragment {
         preview.setSurfaceProvider(mBinding.previewView.createSurfaceProvider());
     }
 
+    private void setOnClickListeners() {
+        mCloseButton.setOnClickListener(view -> dismiss());
+    }
+
     private void startImageAnalysis() {
         ListenableFuture<ProcessCameraProvider> cameraProviderFuture =
-                ProcessCameraProvider.getInstance(getContext());
+                ProcessCameraProvider.getInstance(Objects.requireNonNull(getContext()));
 
         // Check for CameraProvider availability
         cameraProviderFuture.addListener(() -> {
@@ -135,8 +152,14 @@ public class ScanFragment extends Fragment {
         }, ContextCompat.getMainExecutor(getContext()));
     }
 
+    // Send the observed barcode back to the parent fragment via the listener
+    public void sendBackResult(String barcode) {
+        BarcodeListener listener = (BarcodeListener) getTargetFragment();
+        Objects.requireNonNull(listener).onBarcodeObserved(barcode);
+        dismiss();
+    }
+
     class MachineLearningAnalyzer implements ImageAnalysis.Analyzer {
-        private long lastAnalyzedTimestamp = 0L;
         private boolean resultsFound = false;
 
         @Override
@@ -145,22 +168,12 @@ public class ScanFragment extends Fragment {
         public void analyze(@NonNull ImageProxy imageProxy) {
             if (hasHalfSecondPassed()) {
                 Image mediaImage = imageProxy.getImage();
-                int degrees = imageProxy.getImageInfo().getRotationDegrees();
 
                 FirebaseVisionImage visionImage =
-                        FirebaseVisionImage.fromMediaImage(mediaImage, 0);
-                mDetector.detectInImage(visionImage).addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
-                    @Override
-                    public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
-                        interpretResults(firebaseVisionBarcodes);
-                    }
-                })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.d(TAG, "onFailure: ");
-                            }
-                        });
+                        FirebaseVisionImage.fromMediaImage(Objects.requireNonNull(mediaImage), 0);
+                mDetector.detectInImage(visionImage)
+                        .addOnSuccessListener(this::interpretResults)
+                        .addOnFailureListener(e -> Log.d(TAG, "onFailure: "));
             }
 
             imageProxy.close();
@@ -175,10 +188,10 @@ public class ScanFragment extends Fragment {
         }
 
         private void onBarcodeObserved(String barcode) {
-            if (barcode != null && !barcode.isEmpty() && !resultsFound){
+            if (barcode != null && !barcode.isEmpty() && !resultsFound) {
                 resultsFound = true;
                 Vibrator vibrator =
-                        (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+                        (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
                 if (Build.VERSION.SDK_INT >= 26) {
                     vibrator.vibrate(VibrationEffect.createOneShot(250,
                             VibrationEffect.DEFAULT_AMPLITUDE));
@@ -187,17 +200,13 @@ public class ScanFragment extends Fragment {
                 }
 
                 Log.i(TAG, "Barcode: " + barcode);
-
-//                Bundle bundle = new Bundle();
-//                bundle.putString("barcode", barcode);
-//                CreateItemFragment fragment = new CreateItemFragment();
-//                fragment.setArguments(bundle);
-//                Navigation.switchFragment(getContext(), fragment);
+                sendBackResult(barcode);
             }
         }
 
         private boolean hasHalfSecondPassed() {
             long currentTimeMillis = System.currentTimeMillis();
+            long lastAnalyzedTimestamp = 0L;
             return (currentTimeMillis - lastAnalyzedTimestamp >= 500);
         }
     }

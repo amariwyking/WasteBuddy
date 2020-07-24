@@ -26,14 +26,18 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentScanBinding;
+import com.example.wastebuddy.models.Item;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.parse.ParseException;
+import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -49,15 +53,31 @@ public class ScannerFragment extends DialogFragment {
 
     private static String TAG = "ScanFragment";
 
+    public static final String TASK = "task";
+    public static final int TASK_READ = 0;
+    public static final int TASK_SEARCH = 1;
+
     PreviewView mPreviewView;
     ImageButton mCloseButton;
 
     FirebaseVisionBarcodeDetector mDetector;
     FirebaseVisionBarcodeDetectorOptions mOptions;
 
+    boolean mBarcodeKnown;
+
 
     public ScannerFragment() {
         // Required empty public constructor
+    }
+
+    public static ScannerFragment newInstance(int task) {
+
+        Bundle args = new Bundle();
+        args.putInt("task", task);
+
+        ScannerFragment fragment = new ScannerFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     public interface BarcodeListener {
@@ -161,6 +181,7 @@ public class ScannerFragment extends DialogFragment {
 
     class MachineLearningAnalyzer implements ImageAnalysis.Analyzer {
         private boolean resultsFound = false;
+        long lastAnalyzedTimestamp = 0L;
 
         @Override
         @androidx.camera.core.ExperimentalGetImage
@@ -190,24 +211,53 @@ public class ScannerFragment extends DialogFragment {
         private void onBarcodeObserved(String barcode) {
             if (barcode != null && !barcode.isEmpty() && !resultsFound) {
                 resultsFound = true;
+
+                Log.i(TAG, "Barcode: " + barcode);
+
+                checkBarcode(barcode);
+                if (!mBarcodeKnown) {
+                    return;
+                }
+
                 Vibrator vibrator =
                         (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
                 if (Build.VERSION.SDK_INT >= 26) {
                     vibrator.vibrate(VibrationEffect.createOneShot(250,
-                            VibrationEffect.DEFAULT_AMPLITUDE));
+                            15));
                 } else {
                     vibrator.vibrate(250);
                 }
 
-                Log.i(TAG, "Barcode: " + barcode);
+                closeScanner(barcode);
+            }
+        }
+
+        private void closeScanner(String barcode) {
+            if (Objects.requireNonNull(getArguments()).getInt(TASK) == TASK_READ) {
                 sendBackResult(barcode);
+            } else if (getArguments().getInt(TASK) == TASK_SEARCH) {
+                Navigation.switchFragment(getContext(),
+                        ItemDetailsFragment.newInstance(Item.KEY_BARCODE_ID, barcode));
             }
         }
 
         private boolean hasHalfSecondPassed() {
-            long currentTimeMillis = System.currentTimeMillis();
-            long lastAnalyzedTimestamp = 0L;
-            return (currentTimeMillis - lastAnalyzedTimestamp >= 500);
+            long currentTimestamp = System.currentTimeMillis();
+            if (currentTimestamp - lastAnalyzedTimestamp >= 500) {
+                lastAnalyzedTimestamp = currentTimestamp;
+                return true;
+            }
+            return false;
+        }
+    }
+
+    private void checkBarcode(String barcode) {
+        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+        query.whereEqualTo(Item.KEY_BARCODE_ID, barcode);
+        try {
+            mBarcodeKnown = query.find().size() != 0;
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 }

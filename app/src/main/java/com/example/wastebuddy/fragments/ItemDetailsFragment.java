@@ -19,15 +19,22 @@ import com.bumptech.glide.Glide;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentItemDetailsBinding;
 import com.example.wastebuddy.models.Item;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+import java.util.Objects;
+
 public class ItemDetailsFragment extends Fragment {
 
     private static final String TAG = "ItemDetailsFragment";
+
+    public static final String BARCODE_ID = "barcodeId";
+    public static final String OBJECT_ID = "objectId";
 
     FragmentItemDetailsBinding mBinding;
     Context mContext;
@@ -43,6 +50,16 @@ public class ItemDetailsFragment extends Fragment {
 
     public ItemDetailsFragment() {
         // Required empty public constructor
+    }
+
+    public static ItemDetailsFragment newInstance(String key, String id) {
+
+        Bundle args = new Bundle();
+        args.putString(key, id);
+
+        ItemDetailsFragment fragment = new ItemDetailsFragment();
+        fragment.setArguments(args);
+        return fragment;
     }
 
     @Override
@@ -63,8 +80,7 @@ public class ItemDetailsFragment extends Fragment {
 
         try {
             getItem();
-            Log.i(TAG, "Found item with the Object ID: " + mItemId);
-            bindData();
+//            Log.i(TAG, "Found item with the Object ID: " + mItemId);
         } catch (ParseException e) {
             e.printStackTrace();
             Log.e(TAG, "Could not find item with the Object ID: " + mItemId, e);
@@ -86,16 +102,16 @@ public class ItemDetailsFragment extends Fragment {
 
     private void setDisposal(Item item, ImageView disposalImageView) {
         switch (item.getDisposal().toLowerCase()) {
-            case "recycle" :
+            case "recycle":
                 disposalImageView.setBackground(mContext.getDrawable(R.color.colorRecycle));
                 break;
-            case "compost" :
+            case "compost":
                 disposalImageView.setBackground(mContext.getDrawable(R.color.colorCompost));
                 break;
-            case "landfill" :
+            case "landfill":
                 disposalImageView.setBackground(mContext.getDrawable(R.color.colorLandfill));
                 break;
-            case "special" :
+            case "special":
                 disposalImageView.setBackground(mContext.getDrawable(R.color.colorSpecial));
                 disposalImageView.setColorFilter(Color.BLACK);
                 break;
@@ -115,6 +131,17 @@ public class ItemDetailsFragment extends Fragment {
         // Specify which class to query
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.include(Item.KEY_AUTHOR);
-        mItem = query.get(mItemId);
+
+        if (Objects.requireNonNull(getArguments()).getString(Item.KEY_OBJECT_ID) != null) {
+            mItem = query.get(mItemId);
+            bindData();
+        } else if (getArguments().getString(Item.KEY_BARCODE_ID) != null) {
+            String barcode = getArguments().getString(Item.KEY_BARCODE_ID);
+            query.whereEqualTo(Item.KEY_BARCODE_ID, barcode);
+            query.findInBackground((objects, e) -> {
+                mItem = objects.get(0);
+                bindData();
+            });
+        }
     }
 }

@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
     final FragmentManager fragmentManager = getSupportFragmentManager();
 
+    Fragment mActiveFragment;
     SearchFragment mSearchFragment;
 
     ActivityMainBinding mBinding;
@@ -66,23 +67,24 @@ public class MainActivity extends AppCompatActivity {
 
         if (fragment instanceof ScannerFragment) mBottomNavigationView.setVisibility(View.GONE);
 
-        fragmentManager.beginTransaction().replace(mBinding.containerFrameLayout.getId(),
-                fragment).commit();
+        fragmentManager
+                .beginTransaction()
+                .replace(mBinding.containerFrameLayout.getId(), fragment)
+                .commit();
     }
 
     private void setBottomNavItemSelectedListener() {
         mBottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            Fragment fragment;
             switch (item.getItemId()) {
                 case R.id.homeMenuItem:
-                    fragment = new HomeFragment();
+                    mActiveFragment = new HomeFragment();
                     break;
                 case R.id.searchMenuItem:
                 default:
-                    fragment = new SearchFragment();
+                    mActiveFragment = new SearchFragment();
                     break;
             }
-            replaceFragment(fragment);
+            replaceFragment(mActiveFragment);
             return true;
         });
         // Set default selection
@@ -105,7 +107,8 @@ public class MainActivity extends AppCompatActivity {
             mSearchFragment.showRecentItems();
         });
 
-        searchView.setOnRightBtnClickListener(view -> Navigation.switchFragment(MainActivity.this, new ScannerFragment()));
+        searchView.setOnRightBtnClickListener(view -> Navigation.switchFragment(MainActivity.this
+                , ScannerFragment.newInstance(ScannerFragment.TASK_SEARCH)));
 
         searchView.setRightButtonDrawable(getDrawable(R.drawable.ic_barcode_scanner_icon));
 

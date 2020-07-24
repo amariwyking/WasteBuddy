@@ -109,7 +109,7 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
     }
 
     private void launchScanFragment() {
-        ScannerFragment scannerFragment = new ScannerFragment();
+        ScannerFragment scannerFragment = ScannerFragment.newInstance(ScannerFragment.TASK_READ);
         String tag = ScannerFragment.class.getSimpleName();
 
         scannerFragment.setTargetFragment(this, BARCODE_REQUEST_CODE);

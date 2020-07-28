@@ -46,6 +46,7 @@ dependencies {
     implementation "androidx.cardview:cardview:1.0.0"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.exifinterface:exifinterface:1.2.0'// for logging API calls to LogCat
+    implementation 'org.apache.directory.studio:org.apache.commons.io:2.4'
 
     // add the Firebase SDK for Google Analytics
     implementation 'com.google.firebase:firebase-analytics:17.4.4'

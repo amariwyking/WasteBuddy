@@ -8,95 +8,111 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/container_padding">
-
-        <TextView
-            android:id="@+id/nameTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="@dimen/project_details_name_text_size"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="@dimen/container_padding"
-            tools:text="Project Name" />
-
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/projectImageView"
-            android:layout_width="192dp"
-            android:layout_height="192dp"
-            android:layout_marginTop="@dimen/container_padding"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:contentDescription="@string/item_card_image_view_description"
-            app:layout_constraintDimensionRatio="1:1"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="16:9"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nameTextView" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/container_padding"
-            app:layout_constraintBottom_toBottomOf="@+id/projectImageView"
+            android:padding="@dimen/margin_padding_size_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/projectImageView"
-            app:layout_constraintTop_toTopOf="@+id/projectImageView">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/projectImageView">
 
             <TextView
                 android:id="@+id/authorTextView"
-                android:textSize="16dp"
+                style="@style/TextAppearance.MaterialComponents.Overline"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/edit_text_margin_horizontal_small"
-                app:layout_constraintBottom_toTopOf="@+id/likesTextView"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Posted by User" />
 
             <TextView
-                android:id="@+id/likesTextView"
+                android:id="@+id/nameTextView"
+                style="@style/textAppearanceHeadline4"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/text_padding_vertical"
-                android:textSize="@dimen/likes_count_text_size"
-                app:layout_constraintBottom_toTopOf="@+id/difficultyRatingBar"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/likeImageButton"
-                tools:text="57" />
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/authorTextView"
+                tools:text="Project Name" />
 
-            <RatingBar
-                android:id="@+id/difficultyRatingBar"
+            <TextView
+                android:id="@+id/likesTextView"
+                style="@style/textAppearanceHeadline6"
                 android:layout_width="0dp"
-                android:layout_height="64dp"
-                android:stepSize="1"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                app:layout_constraintEnd_toStartOf="@+id/likeImageButton"
+                app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+                tools:text="57" />
 
             <ImageButton
                 android:id="@+id/likeImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_round_favorite_border_24"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/like_project_image_button_description"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_round_favorite_border_24"
                 android:tint="@color/colorCompost"
                 app:layout_constraintBottom_toBottomOf="@+id/likesTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/likesTextView"
-                android:contentDescription="@string/like_project_image_button_description" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/likesTextView" />
 
-        <TextView
-            android:id="@+id/descriptionTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginTop="@dimen/container_padding"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/projectImageView" />
+            <TextView
+                android:id="@+id/difficultyTextView"
+                style="@style/textAppearanceHeadline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/difficulty_hard"
+                android:textColor="@color/colorDifficulty5"
+                app:layout_constraintBottom_toBottomOf="@+id/likesTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/likesTextView" />
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                style="@style/textAppearanceBody1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/likesTextView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/itemsRecyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/stepsRecyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemsRecyclerView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -48,8 +48,6 @@ public class ProjectDetailsFragment extends Fragment {
     ImageView mProjectImageView;
     ImageButton mLikeImageButton;
 
-    RatingBar mDifficultyRatingBar;
-
     public ProjectDetailsFragment() {
         // Required empty public constructor
     }
@@ -88,7 +86,6 @@ public class ProjectDetailsFragment extends Fragment {
         mAuthorTextView.setText(username);
         mLikesTextView.setText(String.valueOf(mProject.getLikes()));
         mDescriptionTextView.setText(mProject.getDescription());
-        mDifficultyRatingBar.setRating(mProject.getDifficulty().floatValue());
 
         ParseFile image = mProject.getImage();
 
@@ -104,7 +101,6 @@ public class ProjectDetailsFragment extends Fragment {
         mDescriptionTextView = mBinding.descriptionTextView;
         mProjectImageView = mBinding.projectImageView;
         mLikeImageButton = mBinding.likeImageButton;
-        mDifficultyRatingBar = mBinding.difficultyRatingBar;
     }
 
     protected void getProject() throws ParseException {
@@ -115,37 +111,30 @@ public class ProjectDetailsFragment extends Fragment {
     }
 
     private void setOnClickListeners() {
-        mLikeImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mLikeImageButton.setSelected(!mLikeImageButton.isSelected());
+        mLikeImageButton.setOnClickListener(view -> {
+            mLikeImageButton.setSelected(!mLikeImageButton.isSelected());
 
-                if (mLikeImageButton.isSelected()) {
-                    //Handle selected state change
-                    mLikeImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_round_favorite_fill_24));
-                    mProject.increment(Project.KEY_LIKES);
+            if (mLikeImageButton.isSelected()) {
+                //Handle selected state change
+                mLikeImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_round_favorite_fill_24));
+                mProject.increment(Project.KEY_LIKES);
 
-                } else {
-                    //Handle de-select state change
-                    mLikeImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_round_favorite_border_24));
-                    mProject.increment(Project.KEY_LIKES, -1);
-                }
-
-                mLikesTextView.setText(String.valueOf(mProject.getLikes()));
+            } else {
+                //Handle de-select state change
+                mLikeImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_round_favorite_border_24));
+                mProject.increment(Project.KEY_LIKES, -1);
             }
+
+            mLikesTextView.setText(String.valueOf(mProject.getLikes()));
         });
 
-        mAuthorTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                Toast.makeText(mContext, "Author was clicked", Toast.LENGTH_SHORT).show();
-                // Bundle Author and send to next fragment
-                Fragment fragment = new UserFragment();
-                Bundle bundle = new Bundle();
-                bundle.putString(ParseUser.KEY_OBJECT_ID, mProject.getAuthor().getObjectId());
-                fragment.setArguments(bundle);
-                Navigation.switchFragment(mContext, fragment);
-            }
+        mAuthorTextView.setOnClickListener(view -> {
+            // Bundle Author and send to next fragment
+            Fragment fragment = new UserFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(ParseUser.KEY_OBJECT_ID, mProject.getAuthor().getObjectId());
+            fragment.setArguments(bundle);
+            Navigation.switchFragment(mContext, fragment);
         });
     }
 }

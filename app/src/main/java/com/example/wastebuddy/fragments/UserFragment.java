@@ -33,8 +33,6 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,12 +86,9 @@ public class UserFragment extends Fragment {
         ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
         query.whereEqualTo(ParseUser.KEY_OBJECT_ID, userId);
         if (getArguments() != null) {
-            query.getInBackground(userId, new GetCallback<ParseUser>() {
-                @Override
-                public void done(ParseUser object, ParseException e) {
-                    mUser = object;
-                    bindData();
-                }
+            query.getInBackground(userId, (object, e) -> {
+                mUser = object;
+                bindData();
             });
         }
     }
@@ -119,20 +114,17 @@ public class UserFragment extends Fragment {
         // Specify which class to query
         ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
         query.include(Item.KEY_AUTHOR);
-        query.findInBackground(new FindCallback<Project>() {
-            @Override
-            public void done(List<Project> projects, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Problem  with getting projects", e);
-                    return;
-                }
-                for (Project item : projects) {
-                    Log.i(TAG,
-                            "Project: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
-                }
-                mProjects.addAll(projects);
-                mProjectsAdapter.notifyDataSetChanged();
+        query.findInBackground((projects, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Problem  with getting projects", e);
+                return;
             }
+            for (Project item : projects) {
+                Log.i(TAG,
+                        "Project: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
+            }
+            mProjects.addAll(projects);
+            mProjectsAdapter.notifyDataSetChanged();
         });
     }
 
@@ -140,7 +132,7 @@ public class UserFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-        final int spacing = getResources().getDimensionPixelSize(R.dimen.recycler_spacing) / 2;
+        final int spacing = getResources().getDimensionPixelSize(R.dimen.margin_padding_size_medium) / 2;
 
         recyclerView.setPadding(spacing, spacing, spacing, spacing);
         recyclerView.setClipToPadding(false);
@@ -156,16 +148,13 @@ public class UserFragment extends Fragment {
     }
 
     private void setonClickListeners() {
-        mFollowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCurrentUser.fetch();
-                // Add currently viewed profile to current user's following list
-                if (isNotFollowing()) {
-                    follow();
-                } else {
-                    unfollow();
-                }
+        mFollowButton.setOnClickListener(view -> {
+            mCurrentUser.fetch();
+            // Add currently viewed profile to current user's following list
+            if (isNotFollowing()) {
+                follow();
+            } else {
+                unfollow();
             }
         });
     }

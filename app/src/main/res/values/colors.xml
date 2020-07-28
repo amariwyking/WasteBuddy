@@ -9,4 +9,10 @@
     <color name="colorRecycle">#5ACAFA</color>
     <color name="colorSpecial">#FFFE55</color>
     <color name="black">#000000</color>
+
+    <color name="colorDifficulty1">#00D9FF</color>
+    <color name="colorDifficulty2">#00E808</color>
+    <color name="colorDifficulty3">#FFE500</color>
+    <color name="colorDifficulty4">#FF7700</color>
+    <color name="colorDifficulty5">#FF006A</color>
 </resources>

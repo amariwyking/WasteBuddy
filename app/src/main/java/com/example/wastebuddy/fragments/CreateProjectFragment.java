@@ -70,12 +70,7 @@ public class CreateProjectFragment extends NewContentFragment {
     }
 
     private void setOnClickListeners() {
-        mImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchCamera();
-            }
-        });
+        mImageView.setOnClickListener(this);
 
         mShareButton.setOnClickListener(new View.OnClickListener() {
             @Override

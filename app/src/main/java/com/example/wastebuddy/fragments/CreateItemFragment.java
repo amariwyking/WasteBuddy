@@ -83,7 +83,7 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
     }
 
     private void setOnClickListeners() {
-        mImageView.setOnClickListener(view -> launchCamera());
+        mImageView.setOnClickListener(this);
 
         mShareButton.setOnClickListener(view -> {
             if (mNameEditText.getText().toString().isEmpty()) {

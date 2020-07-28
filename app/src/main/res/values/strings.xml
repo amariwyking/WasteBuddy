@@ -29,6 +29,8 @@
     <string name="barcode_scanner_reticle_description">Barcode scanner reticle</string>
     <string name="close_button_description">Close button</string>
     <string name="button_scan_barcode_description">Scan barcode</string>
+    <string name="menu_item_camera">Camera</string>
+    <string name="menu_item_gallery">Gallery</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

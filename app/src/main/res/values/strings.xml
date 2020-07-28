@@ -31,6 +31,7 @@
     <string name="button_scan_barcode_description">Scan barcode</string>
     <string name="menu_item_camera">Camera</string>
     <string name="menu_item_gallery">Gallery</string>
+    <string name="error_404">Error 404</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

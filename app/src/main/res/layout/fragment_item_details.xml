@@ -70,6 +70,20 @@
             app:layout_constraintTop_toBottomOf="@+id/itemImageCardView"
             />
 
+        <TextView
+            android:id="@+id/item_not_found_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize="@dimen/error_text_size_extra_large"
+            android:text="@string/error_404"
+            android:textAlignment="center"
+            android:textColor="@color/design_default_color_error"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,14 +20,12 @@ import com.bumptech.glide.Glide;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentItemDetailsBinding;
 import com.example.wastebuddy.models.Item;
-import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
 import java.util.Objects;
 
 public class ItemDetailsFragment extends Fragment {
@@ -44,8 +43,10 @@ public class ItemDetailsFragment extends Fragment {
 
     TextView mNameTextView;
     TextView mDescriptionTextView;
+    TextView mItemNotFoundTextView;
     ImageView mDisposalImageView;
     ImageView mItemImageView;
+    CardView mItemImageCardView;
     RecyclerView mRecyclerView;
 
     public ItemDetailsFragment() {
@@ -123,25 +124,41 @@ public class ItemDetailsFragment extends Fragment {
     private void bindViews() {
         mNameTextView = mBinding.itemNameTextView;
         mDescriptionTextView = mBinding.descriptionTextView;
+        mItemNotFoundTextView = mBinding.itemNotFoundTextView;
         mDisposalImageView = mBinding.disposalImageView;
         mItemImageView = mBinding.itemImageView;
+        mItemImageCardView = mBinding.itemImageCardView;
     }
 
-    protected void getItem() throws ParseException {
+    private void getItem() throws ParseException {
         // Specify which class to query
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.include(Item.KEY_AUTHOR);
 
         if (Objects.requireNonNull(getArguments()).getString(Item.KEY_OBJECT_ID) != null) {
+            // Query using the object id if it exists
             mItem = query.get(mItemId);
             bindData();
         } else if (getArguments().getString(Item.KEY_BARCODE_ID) != null) {
+            // Object id is not available. Query using barcode id.
             String barcode = getArguments().getString(Item.KEY_BARCODE_ID);
             query.whereEqualTo(Item.KEY_BARCODE_ID, barcode);
             query.findInBackground((objects, e) -> {
-                mItem = objects.get(0);
-                bindData();
+                if (!objects.isEmpty()) {
+                    // Item with barcode is found
+                    mItem = objects.get(0);
+                    bindData();
+                } else {
+                    itemNotFound();
+                }
             });
         }
+    }
+
+    private void itemNotFound() {
+        mNameTextView.setVisibility(View.GONE);
+        mDescriptionTextView.setVisibility(View.GONE);
+        mItemImageCardView.setVisibility(View.GONE);
+        mItemNotFoundTextView.setVisibility(View.VISIBLE);
     }
 }

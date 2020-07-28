@@ -6,13 +6,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -216,18 +216,11 @@ public class ScannerFragment extends DialogFragment {
 
                 checkBarcode(barcode);
                 if (!mBarcodeKnown) {
-                    return;
+                    Toast.makeText(getContext(), "Unknown barcode", Toast.LENGTH_SHORT).show();
+                    onBarcodeObserved(barcode);
                 }
 
-                Vibrator vibrator =
-                        (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
-                if (Build.VERSION.SDK_INT >= 26) {
-                    vibrator.vibrate(VibrationEffect.createOneShot(250,
-                            15));
-                } else {
-                    vibrator.vibrate(250);
-                }
-
+                vibrate();
                 closeScanner(barcode);
             }
         }
@@ -248,6 +241,17 @@ public class ScannerFragment extends DialogFragment {
                 return true;
             }
             return false;
+        }
+    }
+
+    private void vibrate() {
+        Vibrator vibrator =
+                (Vibrator) Objects.requireNonNull(getActivity()).getSystemService(Context.VIBRATOR_SERVICE);
+        if (Build.VERSION.SDK_INT >= 26) {
+            vibrator.vibrate(VibrationEffect.createOneShot(250,
+                    15));
+        } else {
+            vibrator.vibrate(250);
         }
     }
 

@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.wastebuddy.GridSpaceItemDecoration;
 import com.example.wastebuddy.ProjectsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentProjectsFeedBinding;
@@ -67,7 +66,7 @@ public class ProjectsFeedFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-        final int spacing = getResources().getDimensionPixelSize(R.dimen.recycler_spacing) / 2;
+        final int spacing = getResources().getDimensionPixelSize(R.dimen.margin_padding_size_medium) / 2;
 
         recyclerView.setPadding(spacing, spacing, spacing, spacing);
         recyclerView.setClipToPadding(false);
@@ -83,16 +82,13 @@ public class ProjectsFeedFragment extends Fragment {
     private void queryProjects() {
         // Specify which class to query
         ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
-        query.findInBackground(new FindCallback<Project>() {
-            @Override
-            public void done(List<Project> projects, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Problem  with getting projects", e);
-                    return;
-                }
-                mProjects.addAll(projects);
-                mProjectsAdapter.notifyDataSetChanged();
+        query.findInBackground((projects, e) -> {
+            if (e != null) {
+                Log.e(TAG, "Problem  with getting projects", e);
+                return;
             }
+            mProjects.addAll(projects);
+            mProjectsAdapter.notifyDataSetChanged();
         });
     }
 }

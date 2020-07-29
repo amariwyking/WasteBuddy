@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +23,7 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
+import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
@@ -46,7 +46,6 @@ public class ItemDetailsFragment extends Fragment {
     TextView mItemNotFoundTextView;
     ImageView mDisposalImageView;
     ImageView mItemImageView;
-    CardView mItemImageCardView;
     RecyclerView mRecyclerView;
 
     public ItemDetailsFragment() {
@@ -90,7 +89,7 @@ public class ItemDetailsFragment extends Fragment {
 
     private void bindData() {
         // Bind the item data to the view elements
-        mNameTextView.setText(mItem.getName());
+        mNameTextView.setText(WordUtils.capitalizeFully(mItem.getName()));
         mDescriptionTextView.setText(mItem.getDescription());
         setDisposal(mItem, mDisposalImageView);
 
@@ -104,16 +103,20 @@ public class ItemDetailsFragment extends Fragment {
     private void setDisposal(Item item, ImageView disposalImageView) {
         switch (item.getDisposal().toLowerCase()) {
             case "recycle":
-                disposalImageView.setBackground(mContext.getDrawable(R.color.colorRecycle));
+                disposalImageView.setBackgroundTintList(getResources().getColorStateList(R.color.colorRecycle));
+                disposalImageView.setImageResource(R.drawable.ic_recycle_24);
                 break;
             case "compost":
-                disposalImageView.setBackground(mContext.getDrawable(R.color.colorCompost));
+                disposalImageView.setBackgroundTintList(getResources().getColorStateList(R.color.colorCompost));
+                disposalImageView.setImageResource(R.drawable.ic_round_compost_24);
                 break;
             case "landfill":
-                disposalImageView.setBackground(mContext.getDrawable(R.color.colorLandfill));
+                disposalImageView.setBackgroundTintList(getResources().getColorStateList(R.color.colorLandfill));
+                disposalImageView.setImageResource(R.drawable.ic_round_trash_24);
                 break;
             case "special":
-                disposalImageView.setBackground(mContext.getDrawable(R.color.colorSpecial));
+                disposalImageView.setBackgroundTintList(getResources().getColorStateList(R.color.colorSpecial));
+                disposalImageView.setImageResource(R.drawable.ic_round_warning_24);
                 disposalImageView.setColorFilter(Color.BLACK);
                 break;
             default:
@@ -127,7 +130,6 @@ public class ItemDetailsFragment extends Fragment {
         mItemNotFoundTextView = mBinding.itemNotFoundTextView;
         mDisposalImageView = mBinding.disposalImageView;
         mItemImageView = mBinding.itemImageView;
-        mItemImageCardView = mBinding.itemImageCardView;
     }
 
     private void getItem() throws ParseException {
@@ -158,7 +160,6 @@ public class ItemDetailsFragment extends Fragment {
     private void itemNotFound() {
         mNameTextView.setVisibility(View.GONE);
         mDescriptionTextView.setVisibility(View.GONE);
-        mItemImageCardView.setVisibility(View.GONE);
         mItemNotFoundTextView.setVisibility(View.VISIBLE);
     }
 }

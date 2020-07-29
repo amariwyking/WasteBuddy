@@ -4,87 +4,94 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
     tools:context=".fragments.ItemDetailsFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/margin_padding_size_medium">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/itemNameTextView"
+        <ImageView
+            android:id="@+id/itemImageView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="36sp"
-            app:layout_constraintStart_toStartOf="@id/itemImageCardView"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Item Name" />
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/itemImageCardView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            app:cardCornerRadius="8dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/project_image_view_description"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/itemNameTextView">
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="320dp"
-                android:layout_height="192dp">
-
-                <ImageView
-                    android:id="@+id/disposalImageView"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:src="@drawable/ic_round_trash_24"
-                    android:padding="@dimen/margin_padding_size_medium"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/itemImageView"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="@string/disposal_image_view_description"/>
-
-                <ImageView
-                    android:id="@+id/itemImageView"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:contentDescription="@string/item_card_image_view_description"/>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <TextView
-            android:id="@+id/descriptionTextView"
+        <View
+            android:id="@+id/view"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="@+id/itemImageCardView"
-            app:layout_constraintStart_toStartOf="@+id/itemImageCardView"
-            app:layout_constraintTop_toBottomOf="@+id/itemImageCardView"
-            />
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/itemImageView" />
 
-        <TextView
-            android:id="@+id/item_not_found_text_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:textSize="@dimen/error_text_size_extra_large"
-            android:text="@string/error_404"
-            android:textAlignment="center"
-            android:textColor="@color/design_default_color_error"
+        <ImageView
+            android:id="@+id/disposalImageView"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:padding="@dimen/margin_padding_size_medium"
+            android:foregroundGravity="center"
+            android:background="@drawable/item_details_disposal_background"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:contentDescription="@string/item_card_image_view_description"
+            app:layout_constraintBottom_toBottomOf="@+id/view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="@dimen/margin_padding_size_medium"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/disposalImageView">
+
+            <TextView
+                android:id="@+id/itemNameTextView"
+                style="@style/textAppearanceHeadline4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Item Name" />
+
+            <TextView
+                android:id="@+id/descriptionTextView"
+                style="@style/textAppearanceBody1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemNameTextView" />
+
+            <TextView
+                android:id="@+id/item_not_found_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/error_404"
+                android:textAlignment="center"
+                android:textColor="@color/design_default_color_error"
+                android:textSize="@dimen/error_text_size_extra_large"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 </FrameLayout>
+

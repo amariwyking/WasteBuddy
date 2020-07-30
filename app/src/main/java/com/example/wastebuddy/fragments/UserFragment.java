@@ -3,13 +3,6 @@ package com.example.wastebuddy.fragments;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +10,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -26,9 +26,6 @@ import com.example.wastebuddy.databinding.FragmentUserBinding;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
 import com.example.wastebuddy.models.User;
-import com.parse.FindCallback;
-import com.parse.GetCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -43,7 +40,6 @@ public class UserFragment extends Fragment {
     private static final String TAG = "UserFragment";
 
     FragmentUserBinding mBinding;
-    Context mContext;
 
     ImageView mProfileImageView;
     TextView mUsernameTextView;
@@ -104,9 +100,7 @@ public class UserFragment extends Fragment {
     private void bindData() {
         getProfileImage();
         mUsernameTextView.setText(mUser.getUsername());
-        mFollowButton.setText(isNotFollowing() ?
-                getResources().getText(R.string.follow_button_text) :
-                getResources().getText(R.string.unfollow_button_text));
+        mFollowButton.setText(getFollowingStatus());
         queryProjects();
     }
 
@@ -132,7 +126,8 @@ public class UserFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
-        final int spacing = getResources().getDimensionPixelSize(R.dimen.margin_padding_size_medium) / 2;
+        final int spacing =
+                getResources().getDimensionPixelSize(R.dimen.margin_padding_size_medium) / 2;
 
         recyclerView.setPadding(spacing, spacing, spacing, spacing);
         recyclerView.setClipToPadding(false);
@@ -149,18 +144,26 @@ public class UserFragment extends Fragment {
 
     private void setonClickListeners() {
         mFollowButton.setOnClickListener(view -> {
-            mCurrentUser.fetch();
-            // Add currently viewed profile to current user's following list
-            if (isNotFollowing()) {
-                follow();
+            if (!User.isSignedIn()) {
+                Toast.makeText(getContext(), "Not Signed In", Toast.LENGTH_SHORT).show();
             } else {
-                unfollow();
+                toggleFollowing();
             }
         });
     }
 
-    private boolean isNotFollowing() {
-        return !mCurrentUser.getFollowing().toString().contains(mUser.getUsername());
+    private void toggleFollowing() {
+        mCurrentUser.fetch();
+        // Follow or unfollow
+        if (isFollowing()) {
+            unfollow();
+        } else {
+            follow();
+        }
+    }
+
+    private boolean isFollowing() {
+        return mCurrentUser.getFollowing().toString().contains(mUser.getUsername());
     }
 
     private void follow() {
@@ -171,6 +174,19 @@ public class UserFragment extends Fragment {
     private void unfollow() {
         mCurrentUser.unfollow(mUser);
         mFollowButton.setText(getResources().getText(R.string.follow_button_text));
+    }
+
+    @NotNull
+    private CharSequence getFollowingStatus() {
+        if (!User.isSignedIn()) {
+            return getResources().getText(R.string.follow_button_text);
+        }
+
+        if (isFollowing()) {
+            return getResources().getText(R.string.unfollow_button_text);
+        }
+
+        return getResources().getText(R.string.follow_button_text);
     }
 }
 

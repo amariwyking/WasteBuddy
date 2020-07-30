@@ -2,8 +2,6 @@ package com.example.wastebuddy.models;
 
 import com.parse.ParseClassName;
 import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
@@ -73,5 +71,9 @@ public class User {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isSignedIn() {
+        return ParseUser.getCurrentUser() != null;
     }
 }

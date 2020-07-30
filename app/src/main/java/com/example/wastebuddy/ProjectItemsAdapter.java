@@ -2,6 +2,7 @@ package com.example.wastebuddy;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wastebuddy.databinding.ItemProjectItemTagBinding;
+import com.example.wastebuddy.fragments.ItemDetailsFragment;
 import com.example.wastebuddy.models.Item;
 import com.parse.ParseQuery;
 
@@ -38,10 +40,7 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.getInBackground(mItemIdList.get(position), (object, e) -> {
-            holder.bind(object);
-            notifyDataSetChanged();
-        });
+        query.getInBackground(mItemIdList.get(position), (object, e) -> holder.bind(object));
     }
 
     @Override
@@ -56,6 +55,8 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
         public ViewHolder(@NonNull ItemProjectItemTagBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+            setOnClickListener(binding);
         }
 
         public void bind(Item item) {
@@ -63,6 +64,22 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
 
             itemNameTextView.setText(item.getName());
             setDisposal(item, itemNameTextView);
+        }
+
+        private void setOnClickListener(@NonNull ItemProjectItemTagBinding binding) {
+            binding.getRoot().setOnClickListener(view -> {
+                int position = getAdapterPosition();
+
+                String itemId = mItemIdList.get(position);
+
+                if (position != RecyclerView.NO_POSITION) {
+                    ItemDetailsFragment fragment = new ItemDetailsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Item.KEY_OBJECT_ID, itemId);
+                    fragment.setArguments(bundle);
+                    Navigation.switchFragment(mContext, fragment);
+                }
+            });
         }
 
         private void setDisposal(Item item, TextView textView) {

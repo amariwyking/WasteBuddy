@@ -1,30 +1,30 @@
 package com.example.wastebuddy;
 
+import android.content.Context;
 import android.graphics.Rect;
 import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 public class GridSpaceItemDecoration extends RecyclerView.ItemDecoration {
 
-    private final int space;
-
-    public GridSpaceItemDecoration(int spaceWidth) {
-        this.space = spaceWidth;
+    public GridSpaceItemDecoration() {
     }
 
-    @Override
-    public void getItemOffsets(Rect outRect, View view,
-                               RecyclerView parent, RecyclerView.State state) {
-        outRect.left = space;
-        outRect.right = space;
-        outRect.bottom = space;
+    public static void spaceEvenly(Context context, RecyclerView recyclerView) {
+        int spacing =
+                context.getResources().getDimensionPixelSize(R.dimen.margin_padding_size_medium) / 2;
 
-        // Add top margin only for the first item to avoid double space between items
-        if (parent.getChildLayoutPosition(view) == 0) {
-//            outRect.top = space;
-        } else {
-            outRect.top = 0;
-        }
+        recyclerView.setPadding(spacing, spacing, spacing, spacing);
+        recyclerView.setClipToPadding(false);
+        recyclerView.setClipChildren(false);
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
+                outRect.set(spacing, spacing, spacing, spacing);
+            }
+        });
     }
 }

@@ -1,12 +1,8 @@
 package com.example.wastebuddy.fragments;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -15,11 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.wastebuddy.Navigation;
+import com.example.wastebuddy.ProjectItemsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentProjectDetailsBinding;
 import com.example.wastebuddy.models.Project;
@@ -47,6 +49,9 @@ public class ProjectDetailsFragment extends Fragment {
 
     ImageView mProjectImageView;
     ImageButton mLikeImageButton;
+
+    RecyclerView mItemsRecyclerView;
+    ProjectItemsAdapter mItemsAdapter;
 
     public ProjectDetailsFragment() {
         // Required empty public constructor
@@ -79,13 +84,28 @@ public class ProjectDetailsFragment extends Fragment {
         }
     }
 
+    private void bindViews() {
+        mNameTextView = mBinding.nameTextView;
+        mAuthorTextView = mBinding.authorTextView;
+        mLikesTextView = mBinding.likesTextView;
+        mDescriptionTextView = mBinding.descriptionTextView;
+        mProjectImageView = mBinding.projectImageView;
+        mLikeImageButton = mBinding.likeImageButton;
+        mItemsRecyclerView = mBinding.itemsRecyclerView;
+    }
+
     private void bindData() {
         // Bind the project data to the view elements
         mNameTextView.setText(mProject.getName());
-        Spanned username = Html.fromHtml(String.format("Posted by <b>%s</b>", mProject.getAuthor().getUsername()));
+        Spanned username = Html.fromHtml(String.format("Posted by <b>%s</b>",
+                mProject.getAuthor().getUsername()));
         mAuthorTextView.setText(username);
         mLikesTextView.setText(String.valueOf(mProject.getLikes()));
         mDescriptionTextView.setText(mProject.getDescription());
+
+        if (mProject.getItems() != null) {
+            loadItems();
+        }
 
         ParseFile image = mProject.getImage();
 
@@ -94,13 +114,26 @@ public class ProjectDetailsFragment extends Fragment {
         }
     }
 
-    private void bindViews() {
-        mNameTextView = mBinding.nameTextView;
-        mAuthorTextView = mBinding.authorTextView;
-        mLikesTextView = mBinding.likesTextView;
-        mDescriptionTextView = mBinding.descriptionTextView;
-        mProjectImageView = mBinding.projectImageView;
-        mLikeImageButton = mBinding.likeImageButton;
+    @SuppressWarnings("unchecked")
+    private void loadItems() {
+        mItemsAdapter = new ProjectItemsAdapter(getContext(), mProject.getItems());
+        mItemsRecyclerView.setAdapter(mItemsAdapter);
+        mItemsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        final int spacing =
+                getResources().getDimensionPixelSize(R.dimen.margin_padding_size_medium) / 2;
+
+        mItemsRecyclerView.setPadding(spacing, spacing, spacing, spacing);
+        mItemsRecyclerView.setClipToPadding(false);
+        mItemsRecyclerView.setClipChildren(false);
+        mItemsRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(@NotNull Rect outRect, @NotNull View view,
+                                       @NotNull RecyclerView parent,
+                                       @NotNull RecyclerView.State state) {
+                outRect.set(spacing, spacing, spacing, spacing);
+            }
+        });
     }
 
     protected void getProject() throws ParseException {

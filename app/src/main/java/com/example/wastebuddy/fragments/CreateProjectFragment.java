@@ -1,7 +1,6 @@
 package com.example.wastebuddy.fragments;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -20,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.example.wastebuddy.GridSpaceItemDecoration;
 import com.example.wastebuddy.ProjectItemsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentCreateProjectBinding;
@@ -52,7 +52,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
     RecyclerView mItemsRecyclerView;
 
-    List<Item> mItemList;
+    List<String> mItemIdList;
     ProjectItemsAdapter mItemsAdapter;
 
     public CreateProjectFragment() {
@@ -75,23 +75,13 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
         bind();
 
-        mItemList = new ArrayList<>();
+        mItemIdList = new ArrayList<>();
 
-        mItemsAdapter = new ProjectItemsAdapter(getContext(), mItemList);
+        mItemsAdapter = new ProjectItemsAdapter(getContext(), mItemIdList);
         mItemsRecyclerView.setAdapter(mItemsAdapter);
         mItemsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        final int spacing = getResources().getDimensionPixelSize(R.dimen.margin_padding_size_medium) / 2;
-
-        mItemsRecyclerView.setPadding(spacing, spacing, spacing, spacing);
-        mItemsRecyclerView.setClipToPadding(false);
-        mItemsRecyclerView.setClipChildren(false);
-        mItemsRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-            @Override
-            public void getItemOffsets(@NotNull Rect outRect, @NotNull View view, @NotNull RecyclerView parent, @NotNull RecyclerView.State state) {
-                outRect.set(spacing, spacing, spacing, spacing);
-            }
-        });
+        GridSpaceItemDecoration.spaceEvenly(Objects.requireNonNull(getContext()), mItemsRecyclerView);
 
         setOnClickListeners();
     }
@@ -103,7 +93,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
         query.findInBackground((objects, e) -> {
             if (!objects.isEmpty()) {
                 // Item with barcode is found
-                mItemList.add(objects.get(0));
+                mItemIdList.add(objects.get(0).getObjectId());
                 mItemsAdapter.notifyDataSetChanged();
             } else {
                 Toast.makeText(mContext, "There is no item with this barcode in the database.", Toast.LENGTH_SHORT).show();
@@ -152,7 +142,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
         project.setName(mNameEditText.getText().toString());
 //        project.setDifficulty((int) mRatingBar.getRating());
         project.setDescription(mDescriptionEditText.getText().toString());
-        project.setItems(getListOfId());
+        project.setItems(mItemIdList);
         project.setImage(new ParseFile(mPhotoFile));
         project.setAuthor(currentUser);
         project.saveInBackground(e -> {
@@ -172,16 +162,6 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
         mImageView.setPadding(16, 16, 16, 16);
         mImageView.setImageResource(R.drawable.ic_round_add_a_photo_64);
 
-    }
-
-    private List<String> getListOfId() {
-        List<String> itemIdList = new ArrayList<>();
-
-        for (Item item : mItemList) {
-            itemIdList.add(item.getObjectId());
-        }
-
-        return itemIdList;
     }
 
     private void showAddItemDialog() {

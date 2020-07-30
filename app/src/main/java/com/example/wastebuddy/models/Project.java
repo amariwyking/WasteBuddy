@@ -5,7 +5,6 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import java.sql.Array;
 import java.util.List;
 
 @ParseClassName("Project")
@@ -16,7 +15,7 @@ public class Project extends ParseObject {
     public static final String KEY_STEPS = "steps";
     public static final String KEY_DIFFICULTY= "difficulty";
     public static final String KEY_LIKES= "likesCount";
-    public static final String KEY_ITEMS= "";
+    public static final String KEY_ITEMS= "items";
     public static final String KEY_IMAGE = "image";
     public static final String KEY_AUTHOR = "author";
 

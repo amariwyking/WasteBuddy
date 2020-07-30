@@ -19,22 +19,22 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="@dimen/margin_padding_size_small"
             android:ems="10"
-            android:inputType="textPersonName"
             android:hint="@string/create_item_name_text"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName"
             app:layout_constraintEnd_toStartOf="@+id/imageView"
             app:layout_constraintHorizontal_bias="0.094"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:importantForAutofill="no"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:numStars="4"
-            android:stepSize="1"
-            android:rating="2"
             android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:numStars="4"
+            android:rating="2"
+            android:stepSize="1"
             app:layout_constraintStart_toStartOf="@+id/nameEditText"
             app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
@@ -43,11 +43,11 @@
             android:layout_width="128dp"
             android:layout_height="128dp"
             android:background="@android:color/darker_gray"
+            android:contentDescription="@string/create_item_image_content_description"
             android:padding="@dimen/margin_padding_size_medium"
             android:src="@drawable/ic_round_add_a_photo_64"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/create_item_image_content_description" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/descriptionEditText"
@@ -61,11 +61,52 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/descriptionEditText">
+
+            <TextView
+                android:id="@+id/addItemTextView"
+                style="@style/textAppearanceHeadline6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Item"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageButton
+                android:id="@+id/addItemImageButton"
+                android:layout_width="@dimen/standard_touch_size"
+                android:layout_height="@dimen/standard_touch_size"
+                android:background="@android:color/transparent"
+                android:src="@drawable/ic_round_add_24"
+                app:layout_constraintBottom_toBottomOf="@+id/addItemTextView"
+                app:layout_constraintStart_toEndOf="@+id/addItemTextView"
+                app:layout_constraintTop_toTopOf="@+id/addItemTextView" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/itemsRecyclerView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/shareButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+
         <Button
             android:id="@+id/shareButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@color/secondaryColor"
             android:text="@string/create_item_share_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

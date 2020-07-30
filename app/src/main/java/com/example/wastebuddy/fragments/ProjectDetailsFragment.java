@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.example.wastebuddy.ProjectItemsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentProjectDetailsBinding;
 import com.example.wastebuddy.models.Project;
+import com.example.wastebuddy.models.User;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -38,6 +40,7 @@ public class ProjectDetailsFragment extends Fragment {
 
     FragmentProjectDetailsBinding mBinding;
     Context mContext;
+    User mCurrentUser;
 
     Project mProject;
     String mProjectId;
@@ -62,6 +65,7 @@ public class ProjectDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         mBinding = FragmentProjectDetailsBinding.inflate(inflater, container, false);
         mContext = getContext();
+        mCurrentUser = new User(ParseUser.getCurrentUser());
         // Inflate the layout for this fragment
         bindViews();
         setOnClickListeners();
@@ -101,6 +105,7 @@ public class ProjectDetailsFragment extends Fragment {
                 mProject.getAuthor().getUsername()));
         mAuthorTextView.setText(username);
         mLikesTextView.setText(String.valueOf(mProject.getLikes()));
+        setLikeState();
         mDescriptionTextView.setText(mProject.getDescription());
 
         if (mProject.getItems() != null) {
@@ -112,6 +117,14 @@ public class ProjectDetailsFragment extends Fragment {
         if (image != null) {
             Glide.with(this).load(image.getUrl()).into(mProjectImageView);
         }
+    }
+
+    private void setLikeState() {
+        mLikeImageButton.setImageDrawable(isLiked()
+                ? mContext.getDrawable(R.drawable.ic_round_favorite_fill_24)
+                : mContext.getDrawable(R.drawable.ic_round_favorite_border_24));
+
+        mLikesTextView.setText(String.valueOf(mProject.getLikes()));
     }
 
     @SuppressWarnings("unchecked")
@@ -147,18 +160,12 @@ public class ProjectDetailsFragment extends Fragment {
         mLikeImageButton.setOnClickListener(view -> {
             mLikeImageButton.setSelected(!mLikeImageButton.isSelected());
 
-            if (mLikeImageButton.isSelected()) {
-                //Handle selected state change
-                mLikeImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_round_favorite_fill_24));
-                mProject.increment(Project.KEY_LIKES);
-
-            } else {
-                //Handle de-select state change
-                mLikeImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_round_favorite_border_24));
-                mProject.increment(Project.KEY_LIKES, -1);
+            if (!User.isSignedIn()) {
+                Toast.makeText(getContext(), "Not Signed In", Toast.LENGTH_SHORT).show();
+                return;
             }
 
-            mLikesTextView.setText(String.valueOf(mProject.getLikes()));
+            toggleLike();
         });
 
         mAuthorTextView.setOnClickListener(view -> {
@@ -169,5 +176,43 @@ public class ProjectDetailsFragment extends Fragment {
             fragment.setArguments(bundle);
             Navigation.switchFragment(mContext, fragment);
         });
+    }
+
+    private void toggleLike() {
+        mCurrentUser.fetch();
+
+        try {
+            mProject = mProject.fetch();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        // Like or unlike
+        if (isLiked()) {
+            unlike();
+            mLikeImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_round_favorite_border_24));
+            mProject.unlike();
+        } else {
+            like();
+            mLikeImageButton.setImageDrawable(mContext.getDrawable(R.drawable.ic_round_favorite_fill_24));
+            mProject.like();
+        }
+
+        mLikesTextView.setText(String.valueOf(mProject.getLikes()));
+    }
+
+    private boolean isLiked() {
+        return mCurrentUser
+                .getLikedProjects()
+                .toString()
+                .contains(mProject.getObjectId());
+    }
+
+    private void like() {
+        mCurrentUser.likeProject(mProjectId);
+    }
+
+    private void unlike() {
+        mCurrentUser.unlikeProject(mProjectId);
     }
 }

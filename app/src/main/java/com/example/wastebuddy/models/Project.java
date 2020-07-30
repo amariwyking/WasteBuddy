@@ -1,6 +1,7 @@
 package com.example.wastebuddy.models;
 
 import com.parse.ParseClassName;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
@@ -56,11 +57,13 @@ public class Project extends ParseObject {
     }
 
     public void like() {
-        put(KEY_LIKES, getLikes() + 1);
+        increment(KEY_LIKES);
+        saveInBackground();
     }
 
     public void unlike() {
-        put(KEY_LIKES, getLikes() - 1);
+        increment(KEY_LIKES, -1);
+        saveInBackground();
     }
 
     public List getItems() {

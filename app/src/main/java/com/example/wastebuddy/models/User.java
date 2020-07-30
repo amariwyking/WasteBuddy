@@ -14,6 +14,7 @@ public class User {
     public static final String KEY_USERNAME = "username";
     public static final String KEY_FOLLOWERS = "followers";
     public static final String KEY_FOLLOWING = "following";
+    public static final String KEY_LIKED_PROJECTS = "likedProjects";
 
     public User(ParseUser obj) {
         user = obj;
@@ -43,6 +44,37 @@ public class User {
     public void setFollowing(JSONArray following) {
         user.put(KEY_FOLLOWING, following);
         user.saveInBackground();
+    }
+
+    public JSONArray getLikedProjects() {
+        return user.getJSONArray(KEY_LIKED_PROJECTS);
+    }
+
+    public void setLikedProjects(JSONArray likedProjects) {
+        user.put(KEY_LIKED_PROJECTS, likedProjects);
+        user.saveInBackground();
+    }
+
+    public void likeProject(String projectId) {
+        JSONArray likedProjects = getLikedProjects();
+        likedProjects.put(projectId);
+        setLikedProjects(likedProjects);
+    }
+
+    public void unlikeProject(String projectId) {
+        String oldLikedProjects = getLikedProjects().toString();
+
+        String regex1 = String.format(",\"%s\"", projectId);
+        String regex2 = String.format("\"%s\"", projectId);
+
+        String newLikedProjects = oldLikedProjects
+                .replaceAll(regex1, "")
+                .replaceAll(regex2, "");
+        try {
+            setLikedProjects(new JSONArray(newLikedProjects));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public void follow(ParseUser user) {

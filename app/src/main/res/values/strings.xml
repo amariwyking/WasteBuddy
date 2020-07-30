@@ -34,6 +34,11 @@
     <string name="menu_item_gallery">Gallery</string>
     <string name="error_404">Error 404</string>
     <string name="difficulty_hard">Hard</string>
+    <string name="item_barcode">Item Barcode</string>
+    <string name="scan_button_text">Scan</string>
+    <string name="confirm_button_text">Confirm</string>
+    <string name="cancel_button_text">Cancel</string>
+    <string name="barcode_example_text">Ex. 0 12345 56789 0</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

@@ -11,17 +11,20 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wastebuddy.databinding.ItemProjectItemTagBinding;
 import com.example.wastebuddy.models.Item;
+import com.parse.ParseQuery;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapter.ViewHolder> {
 
     private Context mContext;
-    private List<Item> mItems;
+    private List<String> mItemIdList;
 
-    public ProjectItemsAdapter(Context mContext, List<Item> mItems) {
+    public ProjectItemsAdapter(Context mContext, @NotNull List<String> itemIdList) {
         this.mContext = mContext;
-        this.mItems = mItems;
+        this.mItemIdList = itemIdList;
     }
 
     @NonNull
@@ -34,13 +37,16 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Item item = mItems.get(position);
-        holder.bind(item);
+        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+        query.getInBackground(mItemIdList.get(position), (object, e) -> {
+            holder.bind(object);
+            notifyDataSetChanged();
+        });
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mItemIdList.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -61,16 +67,16 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
 
         private void setDisposal(Item item, TextView textView) {
             switch (item.getDisposal().toLowerCase()) {
-                case "recycle" :
+                case "recycle":
                     textView.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorRecycle));
                     break;
-                case "compost" :
+                case "compost":
                     textView.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorCompost));
                     break;
-                case "landfill" :
+                case "landfill":
                     textView.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorLandfill));
                     break;
-                case "special" :
+                case "special":
                     textView.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorSpecial));
                     textView.setTextColor(Color.BLACK);
                     break;

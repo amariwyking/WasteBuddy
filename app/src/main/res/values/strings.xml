@@ -39,6 +39,7 @@
     <string name="confirm_button_text">Confirm</string>
     <string name="cancel_button_text">Cancel</string>
     <string name="barcode_example_text">Ex. 0 12345 56789 0</string>
+    <string name="projects_with_item_text">Projects with this item…</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

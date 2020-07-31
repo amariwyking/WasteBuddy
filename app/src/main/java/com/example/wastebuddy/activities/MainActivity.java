@@ -16,9 +16,13 @@ import com.example.wastebuddy.databinding.ActivityMainBinding;
 import com.example.wastebuddy.fragments.HomeFragment;
 import com.example.wastebuddy.fragments.ScannerFragment;
 import com.example.wastebuddy.fragments.SearchFragment;
+import com.example.wastebuddy.fragments.UserFragment;
 import com.example.wastebuddy.models.Item;
+import com.example.wastebuddy.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.parse.Parse;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 import com.paulrybitskyi.persistentsearchview.PersistentSearchView;
 
 import java.util.ArrayList;
@@ -52,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
         configureSearchView();
 
         mBottomNavigationView = mBinding.bottomNavigationView;
+        mBottomNavigationView.inflateMenu(User.isSignedIn()
+                ? R.menu.bottom_navigation_menu
+                : R.menu.bottom_navigation_menu_guest);
         setBottomNavItemSelectedListener();
     }
 
@@ -80,9 +87,16 @@ public class MainActivity extends AppCompatActivity {
                     mActiveFragment = new HomeFragment();
                     break;
                 case R.id.searchMenuItem:
-                default:
                     mActiveFragment = new SearchFragment();
                     break;
+                case R.id.profileMenuItem:
+                    UserFragment fragment = new UserFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(ParseUser.KEY_OBJECT_ID,
+                            ParseUser.getCurrentUser().getObjectId());
+                    fragment.setArguments(bundle);
+                    mActiveFragment = fragment;
+                default:
             }
             replaceFragment(mActiveFragment);
             return true;

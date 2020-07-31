@@ -1,6 +1,6 @@
 package com.example.wastebuddy.fragments;
 
-import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,8 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.ProjectsAdapter;
 import com.example.wastebuddy.R;
+import com.example.wastebuddy.activities.LoginActivity;
 import com.example.wastebuddy.databinding.FragmentUserBinding;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
@@ -41,8 +43,9 @@ public class UserFragment extends Fragment {
 
     FragmentUserBinding mBinding;
 
-    ImageView mProfileImageView;
+    //    ImageView mProfileImageView;
     TextView mUsernameTextView;
+    Button mLogoutButton;
     Button mFollowButton;
     RecyclerView mProjectsRecyclerView;
 
@@ -51,8 +54,11 @@ public class UserFragment extends Fragment {
     List<Project> mProjects;
     ProjectsAdapter mProjectsAdapter;
 
+    boolean showingProfile;
+
     public UserFragment() {
     }
+
 
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
@@ -60,10 +66,18 @@ public class UserFragment extends Fragment {
         // Inflate the layout for this fragment
         mBinding = FragmentUserBinding.inflate(inflater, container, false);
         mCurrentUser = new User(ParseUser.getCurrentUser());
+
+        // Check if we are showing the profile of the current user
+        showingProfile = isShowingProfile();
+
         mProjects = new ArrayList<>();
         mProjectsAdapter = new ProjectsAdapter(getContext(), mProjects);
         getUserFromDatabase();
         return mBinding.getRoot();
+    }
+
+    private boolean isShowingProfile() {
+        return User.isSignedIn() && getArguments().getString(ParseUser.KEY_OBJECT_ID).equals(mCurrentUser.getObjectId());
     }
 
     @Override
@@ -73,9 +87,12 @@ public class UserFragment extends Fragment {
         setonClickListeners();
     }
 
-    private void getProfileImage() {
-        Glide.with(Objects.requireNonNull(getContext())).load(mProfileImageView.getDrawable()).transform(new CircleCrop()).into(mProfileImageView);
-    }
+//    private void getProfileImage() {
+//        Glide.with(Objects.requireNonNull(getContext()))
+//                .load(mProfileImageView.getDrawable())
+//                .transform(new CircleCrop())
+//                .into(mProfileImageView);
+//    }
 
     private void getUserFromDatabase() {
         String userId = Objects.requireNonNull(getArguments()).getString(ParseUser.KEY_OBJECT_ID);
@@ -91,14 +108,18 @@ public class UserFragment extends Fragment {
 
     private void bind() {
         mUsernameTextView = mBinding.usernameTextView;
-        mProfileImageView = mBinding.profileImageView;
+//        mProfileImageView = mBinding.profileImageView;
+        mLogoutButton = mBinding.logoutButton;
         mFollowButton = mBinding.followButton;
         mProjectsRecyclerView = mBinding.projectsRecyclerView;
         configureRecyclerView(mProjectsRecyclerView, mProjectsAdapter);
     }
 
     private void bindData() {
-        getProfileImage();
+        if (!showingProfile) mFollowButton.setVisibility(View.VISIBLE);
+        else mLogoutButton.setVisibility(View.VISIBLE);
+
+//        getProfileImage();
         mUsernameTextView.setText(mUser.getUsername());
         mFollowButton.setText(getFollowingStatus());
         queryProjects();
@@ -149,6 +170,13 @@ public class UserFragment extends Fragment {
             } else {
                 toggleFollowing();
             }
+        });
+
+        mLogoutButton.setOnClickListener(view -> {
+            ParseUser.logOut();
+            Intent intent = new Intent(getContext(), LoginActivity.class);
+            startActivity(intent);
+            Objects.requireNonNull(getActivity()).finish();
         });
     }
 

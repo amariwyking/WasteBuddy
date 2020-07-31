@@ -120,11 +120,16 @@ public class ProjectDetailsFragment extends Fragment {
     }
 
     private void setLikeState() {
+        mLikesTextView.setText(String.valueOf(mProject.getLikes()));
+
+        if (!User.isSignedIn()) {
+            mContext.getDrawable(R.drawable.ic_round_favorite_fill_24);
+            return;
+        }
+
         mLikeImageButton.setImageDrawable(isLiked()
                 ? mContext.getDrawable(R.drawable.ic_round_favorite_fill_24)
                 : mContext.getDrawable(R.drawable.ic_round_favorite_border_24));
-
-        mLikesTextView.setText(String.valueOf(mProject.getLikes()));
     }
 
     @SuppressWarnings("unchecked")

@@ -20,7 +20,6 @@ import com.example.wastebuddy.fragments.UserFragment;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.parse.Parse;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.paulrybitskyi.persistentsearchview.PersistentSearchView;
@@ -77,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager
                 .beginTransaction()
                 .replace(mBinding.containerFrameLayout.getId(), fragment)
+                .addToBackStack(null)
                 .commit();
     }
 

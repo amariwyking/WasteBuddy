@@ -54,6 +54,8 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((MainActivity) Objects.requireNonNull(getActivity())).showBottomNav();
+
         // Inflate the layout for this fragment
         mBinding = FragmentHomeBinding.inflate(inflater, container, false);
         return mBinding.getRoot();

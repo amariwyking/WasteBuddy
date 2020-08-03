@@ -2,6 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemCardView"
     android:layout_width="@dimen/item_card_size"
     android:layout_height="@dimen/item_card_size"
     android:clickable="true"

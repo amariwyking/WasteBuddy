@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +43,8 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ProjectsAdapter.ViewHolder holder, int position) {
+        holder.binding.itemCardView.setAnimation(AnimationUtils.loadAnimation(mContext,
+                R.anim.fade_in));
         Project project = mProjects.get(position);
         holder.bind(project);
     }
@@ -63,20 +66,17 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
         }
 
         private void setOnClickListener(@NonNull com.example.wastebuddy.databinding.ItemHomeProjectCardBinding binding) {
-            binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
+            binding.getRoot().setOnClickListener(view -> {
+                int position = getAdapterPosition();
 
-                    Project project = mProjects.get(position);
+                Project project = mProjects.get(position);
 
-                    if (position != RecyclerView.NO_POSITION) {
-                        ProjectDetailsFragment fragment = new ProjectDetailsFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(Project.KEY_OBJECT_ID, project.getObjectId());
-                        fragment.setArguments(bundle);
-                        switchContent(fragment);
-                    }
+                if (position != RecyclerView.NO_POSITION) {
+                    ProjectDetailsFragment fragment = new ProjectDetailsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Project.KEY_OBJECT_ID, project.getObjectId());
+                    fragment.setArguments(bundle);
+                    switchContent(fragment);
                 }
             });
         }

@@ -2,12 +2,13 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemCardView"
     android:layout_width="@dimen/item_card_size"
     android:layout_height="@dimen/item_card_size"
-    card_view:cardCornerRadius="16dp"
-    card_view:cardElevation="2dp"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    card_view:cardCornerRadius="16dp"
+    card_view:cardElevation="2dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,8 +31,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:maxLines="1"
             android:ellipsize="end"
+            android:maxLines="1"
             android:paddingHorizontal="8dp"
             android:paddingVertical="4dp"
             android:textSize="@dimen/item_card_text_size"

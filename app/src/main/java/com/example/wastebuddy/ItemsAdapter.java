@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,6 +43,8 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.binding.itemCardView.setAnimation(AnimationUtils.loadAnimation(mContext,
+                R.anim.fade_in));
         Item item = mItems.get(position);
         holder.bind(item);
     }
@@ -62,20 +66,17 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
         }
 
         private void setOnClickListener(@NonNull com.example.wastebuddy.databinding.ItemHomeItemCardBinding binding) {
-            binding.getRoot().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
+            binding.getRoot().setOnClickListener(view -> {
+                int position = getAdapterPosition();
 
-                    Item item = mItems.get(position);
+                Item item = mItems.get(position);
 
-                    if (position != RecyclerView.NO_POSITION) {
-                        ItemDetailsFragment fragment = new ItemDetailsFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString(Item.KEY_OBJECT_ID, item.getObjectId());
-                        fragment.setArguments(bundle);
-                        switchContent(fragment);
-                    }
+                if (position != RecyclerView.NO_POSITION) {
+                    ItemDetailsFragment fragment = new ItemDetailsFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Item.KEY_OBJECT_ID, item.getObjectId());
+                    fragment.setArguments(bundle);
+                    switchContent(fragment);
                 }
             });
         }

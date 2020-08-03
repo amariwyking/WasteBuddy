@@ -19,12 +19,13 @@
 
             <TextView
                 android:id="@+id/itemsTextView"
+                style="@style/textAppearanceHeadline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/margin_padding_size_medium"
                 android:paddingVertical="@dimen/margin_padding_size_small"
                 android:text="@string/top_items_text_view"
-                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/topItemsRecyclerView"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -33,16 +34,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_round_add_24"
+                android:contentDescription="@string/create_item_button_description"
                 app:layout_constraintBottom_toBottomOf="@+id/itemsTextView"
                 app:layout_constraintStart_toEndOf="@+id/itemsTextView"
-                app:layout_constraintTop_toTopOf="@+id/itemsTextView"
-                android:contentDescription="@string/create_item_button_description" />
+                app:layout_constraintTop_toTopOf="@+id/itemsTextView" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topItemsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium"
                 android:clipToPadding="false"
                 android:paddingVertical="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toTopOf="@+id/topProjectsTextView"
@@ -51,12 +51,13 @@
 
             <TextView
                 android:id="@+id/topProjectsTextView"
+                style="@style/textAppearanceHeadline5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/margin_padding_size_medium"
                 android:paddingVertical="@dimen/margin_padding_size_small"
                 android:text="@string/top_projects_text_view"
-                android:textSize="16sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/projectsRecyclerView"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -65,10 +66,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_round_add_24"
+                android:contentDescription="@string/create_project_button_description"
                 app:layout_constraintBottom_toBottomOf="@+id/topProjectsTextView"
                 app:layout_constraintStart_toEndOf="@+id/topProjectsTextView"
-                app:layout_constraintTop_toTopOf="@+id/topProjectsTextView"
-                android:contentDescription="@string/create_project_button_description" />
+                app:layout_constraintTop_toTopOf="@+id/topProjectsTextView" />
 
             <TextView
                 android:id="@+id/moreProjectsTextView"
@@ -85,7 +86,7 @@
                 android:id="@+id/projectsRecyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_padding_size_medium"
+                android:layout_marginBottom="12dp"
                 android:clipToPadding="false"
                 android:paddingVertical="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toBottomOf="parent"

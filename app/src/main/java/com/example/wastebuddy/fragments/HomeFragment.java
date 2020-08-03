@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.wastebuddy.HomeProjectsAdapter;
 import com.example.wastebuddy.HorizontalSpaceItemDecoration;
 import com.example.wastebuddy.ItemsAdapter;
 import com.example.wastebuddy.ProjectsAdapter;
@@ -43,7 +44,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView mItemsRecyclerView;
     private RecyclerView mProjectsRecyclerView;
     private ItemsAdapter mItemsAdapter;
-    private ProjectsAdapter mProjectsAdapter;
+    private HomeProjectsAdapter mProjectsAdapter;
     private List<Item> mItems;
     private List<Project> mProjects;
 
@@ -73,7 +74,7 @@ public class HomeFragment extends Fragment {
         configureRecyclerView(mItemsRecyclerView, mItemsAdapter);
 
         mProjects = new ArrayList<>();
-        mProjectsAdapter = new ProjectsAdapter(getContext(), mProjects);
+        mProjectsAdapter = new HomeProjectsAdapter(getContext(), mProjects);
         configureRecyclerView(mProjectsRecyclerView, mProjectsAdapter);
 
         queryItems();
@@ -86,7 +87,7 @@ public class HomeFragment extends Fragment {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 RecyclerView.HORIZONTAL, false));
-        recyclerView.addItemDecoration(new HorizontalSpaceItemDecoration(32));
+        recyclerView.addItemDecoration(new HorizontalSpaceItemDecoration(64));
     }
 
     private void bind() {

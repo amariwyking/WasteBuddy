@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,83 +15,84 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.wastebuddy.activities.MainActivity;
-import com.example.wastebuddy.databinding.ItemHomeItemCardBinding;
-import com.example.wastebuddy.fragments.ItemDetailsFragment;
-import com.example.wastebuddy.models.Item;
+import com.example.wastebuddy.databinding.ItemHomeProjectCardBinding;
+import com.example.wastebuddy.models.Project;
 import com.parse.ParseFile;
-
-import org.apache.commons.text.WordUtils;
 
 import java.util.List;
 
-public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> {
+import com.example.wastebuddy.fragments.ProjectDetailsFragment;
+
+import org.apache.commons.text.WordUtils;
+
+public class HomeProjectsAdapter extends RecyclerView.Adapter<HomeProjectsAdapter.ViewHolder>{
 
     private Context mContext;
-    private List<Item> mItems;
+    private List<Project> mProjects;
 
-    public ItemsAdapter(Context mContext, List<Item> mItems) {
-        this.mContext = mContext;
-        this.mItems = mItems;
+    public HomeProjectsAdapter(Context context, List<Project> projects) {
+        this.mContext = context;
+        this.mProjects = projects;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemHomeItemCardBinding itemBinding = ItemHomeItemCardBinding
+        ItemHomeProjectCardBinding projectBinding = ItemHomeProjectCardBinding
                 .inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new ViewHolder(itemBinding);
+        return new ViewHolder(projectBinding);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull HomeProjectsAdapter.ViewHolder holder, int position) {
         holder.binding.itemCardView.setAnimation(AnimationUtils.loadAnimation(mContext,
                 R.anim.fade_in));
-        Item item = mItems.get(position);
-        holder.bind(item);
+        Project project = mProjects.get(position);
+        holder.bind(project);
     }
 
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return mProjects.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemHomeItemCardBinding binding;
+        private final ItemHomeProjectCardBinding binding;
 
-        public ViewHolder(@NonNull ItemHomeItemCardBinding binding) {
+        public ViewHolder(@NonNull ItemHomeProjectCardBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 
             setOnClickListener(binding);
         }
 
-        private void setOnClickListener(@NonNull com.example.wastebuddy.databinding.ItemHomeItemCardBinding binding) {
+        private void setOnClickListener(@NonNull com.example.wastebuddy.databinding.ItemHomeProjectCardBinding binding) {
             binding.getRoot().setOnClickListener(view -> {
                 int position = getAdapterPosition();
 
-                Item item = mItems.get(position);
+                Project project = mProjects.get(position);
 
                 if (position != RecyclerView.NO_POSITION) {
-                    ItemDetailsFragment fragment = new ItemDetailsFragment();
+                    ProjectDetailsFragment fragment = new ProjectDetailsFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString(Item.KEY_OBJECT_ID, item.getObjectId());
+                    bundle.putString(Project.KEY_OBJECT_ID, project.getObjectId());
                     fragment.setArguments(bundle);
                     switchContent(fragment);
                 }
             });
         }
 
-        public void bind(Item item) {
-            TextView itemNameTextView = binding.itemNameTextView;
-            ImageView itemImageView = binding.itemImageView;
+        public void bind(Project project) {
+            TextView projectNameTextView = binding.projectNameTextView;
+            ImageView projectImageView = binding.projectImageView;
 
-            itemNameTextView.setText(WordUtils.capitalizeFully(item.getName()));
+            projectNameTextView.setText(WordUtils.capitalizeFully(project.getName()));
 
-            ParseFile image = item.getImage();
+            ParseFile image = project.getImage();
 
             if (image != null) {
-                Glide.with(mContext).load(image.getUrl()).into(itemImageView);
+                Glide.with(mContext).load(image.getUrl()).into(projectImageView);
             }
         }
 
@@ -106,4 +106,5 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
         }
     }
+
 }

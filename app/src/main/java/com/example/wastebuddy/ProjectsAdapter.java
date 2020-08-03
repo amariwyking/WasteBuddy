@@ -15,13 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.wastebuddy.activities.MainActivity;
-import com.example.wastebuddy.databinding.ItemHomeProjectCardBinding;
+import com.example.wastebuddy.databinding.ItemProjectItemCardBinding;
 import com.example.wastebuddy.models.Project;
 import com.parse.ParseFile;
 
 import java.util.List;
 
 import com.example.wastebuddy.fragments.ProjectDetailsFragment;
+
+import org.apache.commons.text.WordUtils;
 
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHolder>{
 
@@ -36,7 +38,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemHomeProjectCardBinding projectBinding = ItemHomeProjectCardBinding
+        ItemProjectItemCardBinding projectBinding = ItemProjectItemCardBinding
                 .inflate(LayoutInflater.from(parent.getContext()), parent, false);
         return new ViewHolder(projectBinding);
     }
@@ -56,16 +58,16 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ItemHomeProjectCardBinding binding;
+        private final ItemProjectItemCardBinding binding;
 
-        public ViewHolder(@NonNull ItemHomeProjectCardBinding binding) {
+        public ViewHolder(@NonNull ItemProjectItemCardBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 
             setOnClickListener(binding);
         }
 
-        private void setOnClickListener(@NonNull com.example.wastebuddy.databinding.ItemHomeProjectCardBinding binding) {
+        private void setOnClickListener(@NonNull com.example.wastebuddy.databinding.ItemProjectItemCardBinding binding) {
             binding.getRoot().setOnClickListener(view -> {
                 int position = getAdapterPosition();
 
@@ -85,7 +87,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
             TextView projectNameTextView = binding.projectNameTextView;
             ImageView projectImageView = binding.projectImageView;
 
-            projectNameTextView.setText(project.getName());
+            projectNameTextView.setText(WordUtils.capitalizeFully(project.getName()));
 
             ParseFile image = project.getImage();
 

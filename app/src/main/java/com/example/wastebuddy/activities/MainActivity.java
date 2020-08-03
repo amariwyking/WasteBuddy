@@ -116,10 +116,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Left button click", Toast.LENGTH_SHORT).show();
         });
 
-        searchView.setOnClearInputBtnClickListener(view -> {
-            // Handle the clear input button click
-            mSearchFragment.showRecentItems();
-        });
 
         searchView.setOnRightBtnClickListener(view -> Navigation.switchFragment(MainActivity.this
                 , ScannerFragment.newInstance(ScannerFragment.TASK_SEARCH)));

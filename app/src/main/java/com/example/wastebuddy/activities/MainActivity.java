@@ -63,15 +63,15 @@ public class MainActivity extends AppCompatActivity {
 
     public void replaceFragment(Fragment fragment) {
         if (fragment instanceof HomeFragment || fragment instanceof SearchFragment) {
-            searchView.setVisibility(View.VISIBLE);
+            showSearchView();
         } else {
-            searchView.setVisibility(View.GONE);
+            hideSearchView();
         }
 
         if (mBottomNavigationView.getVisibility() == View.GONE)
-            mBottomNavigationView.setVisibility(View.VISIBLE);
+            showBottomNav();
 
-        if (fragment instanceof ScannerFragment) mBottomNavigationView.setVisibility(View.GONE);
+        if (fragment instanceof ScannerFragment) hideBottomNav();
 
         fragmentManager
                 .beginTransaction()
@@ -160,5 +160,25 @@ public class MainActivity extends AppCompatActivity {
             mResults.clear();
             mSearchFragment.updateData(items);
         });
+    }
+
+    public void showBottomNav() {
+        if (mBottomNavigationView.getVisibility() == View.GONE)
+            mBottomNavigationView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideBottomNav() {
+        if (mBottomNavigationView.getVisibility() == View.VISIBLE)
+            mBottomNavigationView.setVisibility(View.GONE);
+    }
+
+    public void showSearchView() {
+        if (searchView.getVisibility() == View.GONE)
+            searchView.setVisibility(View.VISIBLE);
+    }
+
+    public void hideSearchView() {
+        if (searchView.getVisibility() == View.VISIBLE)
+            searchView.setVisibility(View.GONE);
     }
 }

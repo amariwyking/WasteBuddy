@@ -36,6 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static com.parse.Parse.getApplicationContext;
+
 public class CreateProjectFragment extends NewContentFragment implements AddItemFragment.AddItemDialogListener {
 
     private static final String TAG = "CreateProjectFragment";
@@ -77,7 +79,16 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
         mItemIdList = new ArrayList<>();
 
-        mItemsAdapter = new ProjectItemsAdapter(getContext(), mItemIdList);
+        ProjectItemsAdapter.OnLongClickListener onLongClickListener = position -> {
+            // Delete the item from the model
+            mItemIdList.remove(position);
+
+            // Notify the adapter
+            mItemsAdapter.notifyItemRemoved(position);
+            Toast.makeText(getApplicationContext(), "Item was removed", Toast.LENGTH_SHORT).show();
+        };
+
+        mItemsAdapter = new ProjectItemsAdapter(getContext(), mItemIdList, onLongClickListener);
         mItemsRecyclerView.setAdapter(mItemsAdapter);
         mItemsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 

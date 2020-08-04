@@ -5,119 +5,157 @@
     android:id="@+id/containerConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
+    android:background="@drawable/wastebin_photo_cropped"
     tools:context=".activities.LoginActivity">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.7"
+        android:src="@drawable/gradient_overlay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/textInputConstraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_padding_size_medium"
         android:padding="@dimen/margin_padding_size_medium"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/textInputContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:errorEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailEditTextLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColorHint="@color/primaryColor"
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="@color/secondaryColor"
+                app:boxStrokeWidth="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/emailEditText"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:autofillHints="emailAddress"
-                    android:background="@drawable/onboard_edit_text"
                     android:hint="@string/email_hint"
                     android:inputType="textEmailAddress"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp"
                     android:selectAllOnFocus="true"
-                    android:textCursorDrawable="@drawable/color_cursor"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textAppearance="@style/textAppearanceSubtitle1"
+                    android:textColor="@color/primaryColor"
+                    android:textCursorDrawable="@drawable/color_cursor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordEditTextLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                android:textColorHint="@color/primaryColor"
+                app:boxBackgroundMode="outline"
+                app:boxStrokeColor="@color/secondaryColor"
+                app:boxStrokeWidth="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/emailEditTextLayout">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordEditText"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     android:layout_marginBottom="16dp"
                     android:autofillHints="password"
-                    android:background="@drawable/onboard_edit_text"
                     android:hint="@string/password_hint"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
-                    android:paddingHorizontal="16dp"
-                    android:paddingVertical="8dp"
                     android:selectAllOnFocus="true"
-                    android:textCursorDrawable="@drawable/color_cursor"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/emailEditText" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    android:textAppearance="@style/textAppearanceSubtitle1"
+                    android:textColor="@color/primaryColor"
+                    android:textCursorDrawable="@drawable/color_cursor" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
             android:id="@+id/loginButton"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:layout_gravity="start"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="64dp"
-            android:backgroundTint="@color/colorAccent"
-            android:elevation="0dp"
+            android:backgroundTint="@color/secondaryColor"
             android:text="@string/log_in_text"
-            android:textAllCaps="false"
+            android:textAppearance="@style/textAppearanceHeadline6"
             android:textColor="@android:color/white"
+            app:cornerRadius="128dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textInputLayout" />
+            app:layout_constraintTop_toBottomOf="@id/textInputContainer" />
 
         <Button
             android:id="@+id/signUpButton"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:layout_gravity="start"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="64dp"
-            android:backgroundTint="@color/colorPrimaryDark"
-            android:elevation="0dp"
             android:text="@string/sign_up_text"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
+            android:textAppearance="@style/textAppearanceHeadline6"
+            android:textColor="@color/primaryColor"
+            app:cornerRadius="128dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginButton" />
+            app:layout_constraintTop_toBottomOf="@id/loginButton"
+            app:rippleColor="#1FFFFFFF"
+            app:strokeColor="@color/primaryColor"
+            app:strokeWidth="2dp" />
 
-        <ProgressBar
-            android:id="@+id/loadingProgressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/guest_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+        android:alpha="0.8"
         android:paddingVertical="8dp"
         android:text="@string/guest_prompt_text"
         android:textAlignment="center"
+        android:textColor="@color/primaryColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

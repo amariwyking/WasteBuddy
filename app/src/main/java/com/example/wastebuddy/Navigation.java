@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.wastebuddy.activities.LoginActivity;
 import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.activities.SignUpActivity;
 
@@ -19,6 +20,12 @@ public class Navigation {
 
     public static void goSignUpActivity(Activity activity) {
         Intent i = new Intent(activity, SignUpActivity.class);
+        activity.startActivity(i);
+        activity.finish();
+    }
+
+    public static void goLoginActivity(Activity activity) {
+        Intent i = new Intent(activity, LoginActivity.class);
         activity.startActivity(i);
         activity.finish();
     }

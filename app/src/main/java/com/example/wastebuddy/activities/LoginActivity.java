@@ -1,8 +1,11 @@
 package com.example.wastebuddy.activities;
 
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -35,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         mBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
 
@@ -49,33 +53,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setOnClickListeners() {
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(TAG, "onClick login button");
-                String email = mEmailEditText.getText().toString();
-                String password = mPasswordEditText.getText().toString();
-                loginUser(email, password);
-            }
+        mLoginButton.setOnClickListener(view -> {
+            Log.i(TAG, "onClick login button");
+            String email = mEmailEditText.getText().toString();
+            String password = mPasswordEditText.getText().toString();
+            loginUser(email, password);
         });
 
-        mSignUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.goSignUpActivity(LoginActivity.this);
-            }
-        });
+        mSignUpButton.setOnClickListener(view -> Navigation.goSignUpActivity(LoginActivity.this));
 
-        mGuestTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.goMainActivity(LoginActivity.this);
-            }
-        });
+        mGuestTextView.setOnClickListener(view -> Navigation.goMainActivity(LoginActivity.this));
     }
 
     private void bind() {
-        mTextInputLayout = mBinding.textInputLayout;
+        mTextInputLayout = mBinding.passwordEditTextLayout;
         mEmailEditText = mBinding.emailEditText;
         mPasswordEditText = mBinding.passwordEditText;
         mLoginButton = mBinding.loginButton;
@@ -88,19 +79,16 @@ public class LoginActivity extends AppCompatActivity {
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
         Log.i(TAG, "Attempting to login user " + email);
         // check credentials and progress user
-        ParseUser.logInInBackground(email, password, new LogInCallback() {
-            @Override
-            public void done(ParseUser user, ParseException e) {
-                // TODO: Show error a proper error message to the user
-                if (e != null) {
-                    Log.e(TAG, "Issue with login: ", e);
-                    loginNotifyResult("Issue with login :(");
-                    mTextInputLayout.setError("Invalid username/password");
-                    return;
-                }
-                loginNotifyResult("Success!");
-                Navigation.goMainActivity(LoginActivity.this);
+        ParseUser.logInInBackground(email, password, (user, e) -> {
+            // TODO: Show error a proper error message to the user
+            if (e != null) {
+                Log.e(TAG, "Issue with login: ", e);
+                loginNotifyResult("Issue with login :(");
+                mTextInputLayout.setError("Invalid username/password");
+                return;
             }
+            loginNotifyResult("Success!");
+            Navigation.goMainActivity(LoginActivity.this);
         });
     }
 

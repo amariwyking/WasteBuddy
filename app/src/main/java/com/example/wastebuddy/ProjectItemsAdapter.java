@@ -5,14 +5,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.wastebuddy.databinding.ItemProjectItemTagBinding;
 import com.example.wastebuddy.fragments.ItemDetailsFragment;
 import com.example.wastebuddy.models.Item;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;
@@ -72,10 +75,17 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
         }
 
         public void bind(Item item) {
-            TextView itemNameTextView = binding.itemNameTextView;
+            ImageView imageView = binding.disposalImageView;
+            TextView textView = binding.itemNameTextView;
 
-            itemNameTextView.setText(item.getName());
-            setDisposal(item, itemNameTextView);
+            ParseFile image = item.getImage();
+
+            if (image != null) {
+                Glide.with(mContext).load(image.getUrl()).into(imageView);
+            }
+
+            textView.setText(item.getName());
+//            setDisposal(item, textView);
         }
 
         private void setOnClickListener(@NonNull ItemProjectItemTagBinding binding) {

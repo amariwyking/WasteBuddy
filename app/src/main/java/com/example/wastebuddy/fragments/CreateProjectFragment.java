@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -48,7 +49,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
     EditText mNameEditText;
     EditText mDescriptionEditText;
-    RatingBar mRatingBar;
+//    RatingBar mRatingBar;
     Button mShareButton;
     ImageButton mAddItemImageButton;
 
@@ -90,7 +91,8 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
         mItemsAdapter = new ProjectItemsAdapter(getContext(), mItemIdList, onLongClickListener);
         mItemsRecyclerView.setAdapter(mItemsAdapter);
-        mItemsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                RecyclerView.VERTICAL, false));
 
         GridSpaceItemDecoration.spaceEvenly(Objects.requireNonNull(getContext()), mItemsRecyclerView);
 
@@ -106,6 +108,8 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
                 // Item with barcode is found
                 mItemIdList.add(objects.get(0).getObjectId());
                 mItemsAdapter.notifyDataSetChanged();
+                mBinding.scrollView.setSmoothScrollingEnabled(true);
+                mBinding.scrollView.post(() -> mBinding.scrollView.fullScroll(View.FOCUS_DOWN));
             } else {
                 Toast.makeText(mContext, "There is no item with this barcode in the database.", Toast.LENGTH_SHORT).show();
             }
@@ -115,7 +119,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
     private void bind() {
         mNameEditText = mBinding.nameEditText;
         mDescriptionEditText = mBinding.descriptionEditText;
-        mRatingBar = mBinding.ratingBar;
+//        mRatingBar = mBinding.ratingBar;
         mImageView = mBinding.imageView;
         mShareButton = mBinding.shareButton;
         mAddItemImageButton = mBinding.addItemImageButton;
@@ -171,8 +175,10 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
         mNameEditText.setText("");
         mDescriptionEditText.setText("");
         mImageView.setPadding(16, 16, 16, 16);
+        mImageView.setBackgroundColor(getResources().getColor(R.color.primaryDarkColor));
         mImageView.setImageResource(R.drawable.ic_round_add_a_photo_64);
-
+        mItemIdList.clear();
+        mItemsAdapter.notifyDataSetChanged();
     }
 
     private void showAddItemDialog() {

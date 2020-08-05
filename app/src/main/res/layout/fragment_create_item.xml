@@ -4,100 +4,169 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/margin_padding_size_medium"
     tools:context=".fragments.CreateItemFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="@dimen/margin_padding_size_medium">
-
-        <EditText
-            android:id="@+id/nameEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="@dimen/margin_padding_size_small"
-            android:ems="10"
-            android:hint="@string/create_item_name_text"
-            android:importantForAutofill="no"
-            android:inputType="textPersonName"
-            app:layout_constraintEnd_toStartOf="@+id/imageView"
-            app:layout_constraintHorizontal_bias="0.094"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/barcodeTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_padding_size_small"
-            android:ems="10"
-            android:hint="@string/create_item_barcode_text"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@+id/nameEditText"
-            app:layout_constraintTop_toBottomOf="@+id/nameEditText" />
-
-        <Spinner
-            android:id="@+id/disposalSpinner"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="@+id/nameEditText"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/nameEditText"
-            app:layout_constraintTop_toBottomOf="@+id/barcodeTextView" />
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="128dp"
-            android:layout_height="128dp"
-            android:background="@android:color/darker_gray"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@color/primaryDarkColor"
             android:contentDescription="@string/create_item_image_content_description"
             android:padding="@dimen/margin_padding_size_medium"
             android:src="@drawable/ic_round_add_a_photo_64"
+            app:layout_constraintDimensionRatio="16:9"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <ImageView
+            android:id="@+id/disposalImageView"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginStart="@dimen/margin_padding_size_medium"
+            android:background="@drawable/item_details_disposal_background"
+            android:contentDescription="@string/item_card_image_view_description"
+            android:padding="@dimen/margin_padding_size_medium"
+            android:src="@drawable/ic_unknown_disposal_24px"
+            app:layout_constraintBottom_toBottomOf="@+id/view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/view" />
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/barcodeInputLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
+            app:boxStrokeColor="@color/secondaryColor"
+            app:boxStrokeWidth="2dp"
+            app:endIconDrawable="@drawable/ic_barcode_scanner_icon"
+            app:endIconMode="custom"
+            app:hintTextColor="@color/secondaryColor"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/disposalImageView"
+            app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/barcodeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/create_item_barcode_text"
+                android:inputType="number"
+                android:textAppearance="@style/textAppearanceBody2" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <ImageButton
             android:id="@+id/barcodeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_padding_size_medium"
+            android:layout_marginEnd="@dimen/margin_padding_size_medium"
             android:background="@android:color/transparent"
             android:contentDescription="@string/button_scan_barcode_description"
             android:src="@drawable/ic_barcode_scanner_icon"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-        <EditText
-            android:id="@+id/descriptionEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_padding_size_medium"
-            android:ems="10"
-            android:hint="@string/create_item_description_text"
-            android:importantForAutofill="no"
-            android:inputType="textPersonName"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/disposalImageView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/barcodeButton" />
+            app:layout_constraintTop_toBottomOf="@id/view" />
 
-        <Button
-            android:id="@+id/shareButton"
-            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-            android:layout_width="0dp"
-            android:layout_height="64dp"
-            android:layout_gravity="start"
-            android:backgroundTint="@color/secondaryColor"
-            android:text="@string/new_content_save_text"
-            android:textAppearance="@style/textAppearanceHeadline6"
-            android:textColor="@android:color/white"
-            app:cornerRadius="128dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="@dimen/margin_padding_size_medium"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/disposalImageView">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/nameInputLayout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:boxStrokeColor="@color/secondaryColor"
+                app:boxStrokeWidth="2dp"
+                app:hintTextColor="@color/secondaryColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:hint="@string/create_item_name_text"
+                    android:importantForAutofill="no"
+                    android:inputType="textPersonName"
+                    android:textAppearance="@style/textAppearanceBody1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Spinner
+                android:id="@+id/disposalSpinner"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="@+id/nameInputLayout"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/nameInputLayout"
+                app:layout_constraintTop_toBottomOf="@+id/textField" />
 
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/textField"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="128dp"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
+                app:boxStrokeColor="@color/secondaryColor"
+                app:boxStrokeWidth="2dp"
+                app:hintTextColor="@color/secondaryColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nameInputLayout">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/descriptionEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:gravity="start"
+                    android:hint="@string/create_item_description_text"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    android:lines="5"
+                    android:maxLines="10"
+                    android:textAppearance="@style/textAppearanceBody1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/shareButton"
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:layout_width="0dp"
+                android:layout_height="64dp"
+                android:layout_gravity="start"
+                android:backgroundTint="@color/secondaryColor"
+                android:text="@string/new_content_save_text"
+                android:textAppearance="@style/textAppearanceHeadline6"
+                android:textColor="@android:color/white"
+                app:cornerRadius="128dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

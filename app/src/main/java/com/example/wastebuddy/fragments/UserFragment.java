@@ -77,7 +77,7 @@ public class UserFragment extends Fragment {
     }
 
     private boolean isShowingProfile() {
-        return User.isSignedIn() && getArguments().getString(ParseUser.KEY_OBJECT_ID).equals(mCurrentUser.getObjectId());
+        return User.isSignedIn() && Objects.equals(Objects.requireNonNull(getArguments()).getString(ParseUser.KEY_OBJECT_ID), mCurrentUser.getObjectId());
     }
 
     @Override

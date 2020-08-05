@@ -49,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
 
         bind();
         setOnClickListeners();
-        mEmailEditText.requestFocus();
     }
 
     private void setOnClickListeners() {
@@ -83,17 +82,12 @@ public class LoginActivity extends AppCompatActivity {
             // TODO: Show error a proper error message to the user
             if (e != null) {
                 Log.e(TAG, "Issue with login: ", e);
-                loginNotifyResult("Issue with login :(");
+                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 mTextInputLayout.setError("Invalid username/password");
                 return;
             }
-            loginNotifyResult("Success!");
             Navigation.goMainActivity(LoginActivity.this);
         });
     }
 
-    private void loginNotifyResult(String s) {
-        mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-        Toast.makeText(LoginActivity.this, s, Toast.LENGTH_SHORT).show();
-    }
 }

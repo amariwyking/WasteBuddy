@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/primaryColor</item>
         <item name="colorPrimaryDark">@color/primaryDarkColor</item>
         <item name="colorAccent">@color/secondaryColor</item>
+<!--        <item name="colorError">#FF8629</item>-->
 
         <item name="android:textColor">@android:color/black</item>
     </style>

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -58,7 +57,6 @@ public class ScannerFragment extends DialogFragment {
     public static final int TASK_SEARCH = 1;
 
     PreviewView mPreviewView;
-    ImageButton mCloseButton;
 
     FirebaseVisionBarcodeDetector mDetector;
     FirebaseVisionBarcodeDetectorOptions mOptions;
@@ -99,7 +97,6 @@ public class ScannerFragment extends DialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         bind();
-        setOnClickListeners();
 
         mOptions = new FirebaseVisionBarcodeDetectorOptions.Builder()
                 .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_UPC_A)
@@ -117,7 +114,6 @@ public class ScannerFragment extends DialogFragment {
 
     private void bind() {
         mPreviewView = mBinding.previewView;
-        mCloseButton = mBinding.closeButton;
     }
 
     private void bindPreview(ProcessCameraProvider cameraProvider) {
@@ -150,10 +146,6 @@ public class ScannerFragment extends DialogFragment {
 
         camera.getCameraControl().enableTorch(true);
         preview.setSurfaceProvider(mBinding.previewView.createSurfaceProvider());
-    }
-
-    private void setOnClickListeners() {
-        mCloseButton.setOnClickListener(view -> dismiss());
     }
 
     private void startImageAnalysis() {

@@ -27,6 +27,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText mEmailEditText;
     EditText mPasswordEditText;
     EditText mConfirmPasswordEditText;
+    Button mLoginButton;
     Button mSignUpButton;
     ProgressBar mProgressBar;
     TextView guestTextView;
@@ -47,23 +48,17 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void setOnClickListeners() {
-        mSignUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i(TAG, "onClick login button");
-                String username = mUsernameEditText.getText().toString();
-                String password = mPasswordEditText.getText().toString();
-                signUpUser(username, password);
-            }
+        mSignUpButton.setOnClickListener(view -> {
+            Log.i(TAG, "onClick login button");
+            String username = mUsernameEditText.getText().toString();
+            String password = mPasswordEditText.getText().toString();
+            signUpUser(username, password);
         });
 
+        mLoginButton.setOnClickListener(view -> Navigation.goLoginActivity(SignUpActivity.this));
 
-        guestTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Navigation.goMainActivity(SignUpActivity.this);
-            }
-        });
+
+        guestTextView.setOnClickListener(view -> Navigation.goMainActivity(SignUpActivity.this));
     }
 
     private void bind() {
@@ -71,6 +66,7 @@ public class SignUpActivity extends AppCompatActivity {
         mUsernameEditText = mBinding.usernameEditText;
         mPasswordEditText = mBinding.passwordEditText;
         mConfirmPasswordEditText = mBinding.confirmPasswordEditText;
+        mLoginButton = mBinding.loginButton;
         mSignUpButton = mBinding.signUpButton;
         guestTextView = mBinding.logInTextView;
         mProgressBar = mBinding.loadingProgressBar;
@@ -87,21 +83,19 @@ public class SignUpActivity extends AppCompatActivity {
         user.setPassword(mPasswordEditText.getText().toString());
 //        user.setEmail("email@example.com");
         // Invoke signUpInBackground
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with login: ", e);
-                    Toast.makeText(SignUpActivity.this, "Issue with sign up.", Toast.LENGTH_SHORT).show();
-                    mPasswordEditText.setError("Invalid username/password");
-                    mProgressBar.setVisibility(ProgressBar.INVISIBLE);
-                    return;
-                }
-
-                Toast.makeText(SignUpActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
-                Navigation.goMainActivity(SignUpActivity.this);
-
+        user.signUpInBackground(e -> {
+            if (e != null) {
+                Log.e(TAG, "Issue with login: ", e);
+                Toast.makeText(SignUpActivity.this, "Issue with sign up.", Toast.LENGTH_SHORT).show();
+                mPasswordEditText.setError("Invalid username/password");
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                return;
             }
+
+            Toast.makeText(SignUpActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
+            Navigation.goMainActivity(SignUpActivity.this);
+
+            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
         });
     }
 }

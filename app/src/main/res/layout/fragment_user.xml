@@ -19,38 +19,50 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <ImageView
-                android:id="@+id/profileImageView"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:contentDescription="@string/profile_image_view_description"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:mipmap/sym_def_app_icon" />
+            <!--            <ImageView-->
+            <!--                android:id="@+id/profileImageView"-->
+            <!--                android:layout_width="64dp"-->
+            <!--                android:layout_height="64dp"-->
+            <!--                android:contentDescription="@string/profile_image_view_description"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent"-->
+            <!--                app:srcCompat="@android:mipmap/sym_def_app_icon" />-->
 
             <TextView
                 android:id="@+id/usernameTextView"
-                android:layout_width="0dp"
+                style="@style/textAppearanceHeadline5"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_padding_size_medium"
-                android:textSize="@dimen/profile_name_text_size"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/profileImageView"
-                app:layout_constraintTop_toTopOf="@+id/profileImageView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:text="Username" />
 
             <Button
                 android:id="@+id/followButton"
                 android:layout_width="128dp"
                 android:layout_height="0dp"
-                android:backgroundTint="@color/colorAccent"
+                android:backgroundTint="@color/secondaryColor"
                 android:includeFontPadding="false"
                 android:textAllCaps="false"
-                android:textSize="16sp"
                 android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="@+id/profileImageView"
+                android:textSize="16sp"
+                android:visibility="visible"
                 app:layout_constraintStart_toStartOf="@+id/usernameTextView"
                 app:layout_constraintTop_toBottomOf="@+id/usernameTextView" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/logoutButton"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:height="@dimen/standard_touch_size"
+                android:text="@string/log_out_button_text"
+                android:textColor="@color/primaryTextColor"
+                android:visibility="gone"
+                app:icon="@drawable/ic_round_logout_24px"
+                app:iconTint="@color/primaryTextColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.recyclerview.widget.RecyclerView

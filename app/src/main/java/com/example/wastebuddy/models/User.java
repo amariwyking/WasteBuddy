@@ -55,6 +55,10 @@ public class User {
         user.saveInBackground();
     }
 
+    public String getObjectId() {
+        return user.getObjectId();
+    }
+
     public void likeProject(String projectId) {
         JSONArray likedProjects = getLikedProjects();
         likedProjects.put(projectId);

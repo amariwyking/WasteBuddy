@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/itemCardView"
-    android:layout_width="@dimen/item_card_size"
+    android:layout_width="@dimen/item_card_size_medium"
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
@@ -33,14 +33,15 @@
             android:layout_height="wrap_content"
             android:ellipsize="none"
             android:fadingEdgeLength="40dp"
-            android:padding="8dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
             android:requiresFadingEdge="horizontal"
             android:singleLine="true"
-            android:textSize="@dimen/text_size_small"
+            android:textSize="@dimen/text_size_micro"
             android:textStyle="bold"
+            card_view:layout_constraintTop_toBottomOf="@id/projectImageView"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toBottomOf="@id/projectImageView"
             tools:text="Plastic bottle" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

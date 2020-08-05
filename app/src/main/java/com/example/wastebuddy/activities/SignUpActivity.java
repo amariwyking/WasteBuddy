@@ -1,21 +1,20 @@
 package com.example.wastebuddy.activities;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.databinding.ActivitySignUpBinding;
-import com.parse.ParseException;
+import com.google.android.material.textfield.TextInputLayout;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -27,6 +26,8 @@ public class SignUpActivity extends AppCompatActivity {
     EditText mEmailEditText;
     EditText mPasswordEditText;
     EditText mConfirmPasswordEditText;
+    TextInputLayout mEmailLayout;
+    TextInputLayout mConfirmPasswordLayout;
     Button mLoginButton;
     Button mSignUpButton;
     ProgressBar mProgressBar;
@@ -44,21 +45,34 @@ public class SignUpActivity extends AppCompatActivity {
 
         bind();
         setOnClickListeners();
-        mUsernameEditText.requestFocus();
     }
 
     private void setOnClickListeners() {
         mSignUpButton.setOnClickListener(view -> {
             Log.i(TAG, "onClick login button");
-            String username = mUsernameEditText.getText().toString();
-            String password = mPasswordEditText.getText().toString();
-            signUpUser(username, password);
+            if (isInputValid()) signUpUser();
         });
 
         mLoginButton.setOnClickListener(view -> Navigation.goLoginActivity(SignUpActivity.this));
 
-
         guestTextView.setOnClickListener(view -> Navigation.goMainActivity(SignUpActivity.this));
+    }
+
+    // Returns false if a field has invalid information
+    private boolean isInputValid() {
+        if (isInvalidEmail()) {
+            mEmailLayout.setError("Please provide a valid email");
+            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            return false;
+        }
+
+        if (passwordsDoNotMatch()) {
+            mConfirmPasswordLayout.setError("Passwords do not match");
+            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            return false;
+        }
+
+        return true;
     }
 
     private void bind() {
@@ -66,36 +80,43 @@ public class SignUpActivity extends AppCompatActivity {
         mUsernameEditText = mBinding.usernameEditText;
         mPasswordEditText = mBinding.passwordEditText;
         mConfirmPasswordEditText = mBinding.confirmPasswordEditText;
+        mEmailLayout = mBinding.emailEditTextLayout;
+        mConfirmPasswordLayout = mBinding.confirmPasswordEditTextLayout;
         mLoginButton = mBinding.loginButton;
         mSignUpButton = mBinding.signUpButton;
         guestTextView = mBinding.logInTextView;
         mProgressBar = mBinding.loadingProgressBar;
     }
 
-    private void signUpUser(String username, String password) {
+    private void signUpUser() {
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
-        Log.i(TAG, "Attempting to sign user up" + username);
+        Log.i(TAG, "Attempting to sign user up" + mUsernameEditText.getText().toString());
         // Create the ParseUser
         ParseUser user = new ParseUser();
         // Set core properties
         user.setUsername(mUsernameEditText.getText().toString());
         user.setEmail(mEmailEditText.getText().toString());
         user.setPassword(mPasswordEditText.getText().toString());
-//        user.setEmail("email@example.com");
+
         // Invoke signUpInBackground
         user.signUpInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Issue with login: ", e);
-                Toast.makeText(SignUpActivity.this, "Issue with sign up.", Toast.LENGTH_SHORT).show();
-                mPasswordEditText.setError("Invalid username/password");
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
                 return;
             }
 
-            Toast.makeText(SignUpActivity.this, "Sign up successful", Toast.LENGTH_SHORT).show();
-            Navigation.goMainActivity(SignUpActivity.this);
-
             mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+            Navigation.goMainActivity(SignUpActivity.this);
         });
+    }
+
+    private boolean passwordsDoNotMatch() {
+        return !mConfirmPasswordEditText.getText().equals(mPasswordEditText.getText());
+    }
+
+    public boolean isInvalidEmail() {
+        String str = mEmailEditText.getText().toString();
+        return !(!TextUtils.isEmpty(str) && Patterns.EMAIL_ADDRESS.matcher(str).matches());
     }
 }

@@ -53,9 +53,9 @@
             android:layout_marginHorizontal="@dimen/margin_padding_size_medium"
             app:boxStrokeColor="@color/secondaryColor"
             app:boxStrokeWidth="2dp"
-            app:hintTextColor="@color/secondaryColor"
             app:endIconDrawable="@drawable/ic_barcode_scanner_icon"
             app:endIconMode="custom"
+            app:hintTextColor="@color/secondaryColor"
             app:layout_constraintBottom_toTopOf="@+id/constraintLayout4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/disposalImageView"
@@ -111,7 +111,7 @@
                     android:hint="@string/create_item_name_text"
                     android:importantForAutofill="no"
                     android:inputType="textPersonName"
-                    android:textAppearance="@style/textAppearanceHeadline5" />
+                    android:textAppearance="@style/textAppearanceBody1" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Spinner
@@ -130,7 +130,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="128dp"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:layout_marginTop="@dimen/margin_padding_size_medium"
                 app:boxStrokeColor="@color/secondaryColor"
                 app:boxStrokeWidth="2dp"
                 app:hintTextColor="@color/secondaryColor"
@@ -151,7 +151,6 @@
                     android:maxLines="10"
                     android:textAppearance="@style/textAppearanceBody1" />
             </com.google.android.material.textfield.TextInputLayout>
-
 
             <Button
                 android:id="@+id/shareButton"

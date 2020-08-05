@@ -11,7 +11,7 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.7"
+        android:alpha="0.9"
         android:src="@drawable/gradient_overlay"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +46,6 @@
             android:layout_marginTop="@dimen/margin_padding_size_medium"
             android:textColorHint="@color/primaryColor"
             app:boxBackgroundMode="outline"
-
             app:boxStrokeColor="@color/secondaryColor"
             app:boxStrokeWidth="2dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +74,6 @@
             android:textColorHint="@color/primaryColor"
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="@color/secondaryColor"
-
             app:boxStrokeWidth="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +102,6 @@
             android:textColorHint="@color/primaryColor"
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="@color/secondaryColor"
-
             app:boxStrokeWidth="2dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +114,6 @@
                 android:layout_marginTop="16dp"
                 android:autofillHints="newPassword"
                 android:hint="@string/password_hint"
-                android:imeOptions="actionDone"
                 android:inputType="textPassword"
                 android:selectAllOnFocus="true"
                 android:textAppearance="@style/textAppearanceSubtitle1"
@@ -132,7 +128,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_padding_size_medium"
             android:textColorHint="@color/primaryColor"
-
             app:boxBackgroundMode="outline"
             app:boxStrokeColor="@color/secondaryColor"
             app:boxStrokeWidth="2dp"

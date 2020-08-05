@@ -48,6 +48,8 @@
     <string name="disposal_special">Special</string>
 
     <string name="log_out_button_text">Log out</string>
+    <string name="add_item_text">Add Item</string>
+    <string name="add_button_content_description">Add button with plus sign</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

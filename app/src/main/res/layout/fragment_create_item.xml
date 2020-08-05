@@ -85,14 +85,18 @@
 
         <Button
             android:id="@+id/shareButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="128dp"
-            android:backgroundTint="@color/colorAccent"
-            android:text="@string/create_item_share_text"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_gravity="start"
+            android:backgroundTint="@color/secondaryColor"
+            android:text="@string/new_content_save_text"
+            android:textAppearance="@style/textAppearanceHeadline6"
+            android:textColor="@android:color/white"
+            app:cornerRadius="128dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/descriptionEditText" />
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

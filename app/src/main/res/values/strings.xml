@@ -8,7 +8,7 @@
     <string name="confirm_password_text">Confirm password</string>
     <string name="name_hint">Name</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="create_item_share_text">Share</string>
+    <string name="new_content_save_text">Save</string>
     <string name="create_item_description_text">Description</string>
     <string name="create_item_image_content_description">Provide an image for this item.</string>
     <string name="create_item_name_text">Name</string>
@@ -41,6 +41,8 @@
     <string name="barcode_example_text">Ex. 0 12345 56789 0</string>
     <string name="projects_with_item_text">Projects with this item…</string>
     <string name="log_out_button_text">Log out</string>
+    <string name="add_item_text">Add Item</string>
+    <string name="add_button_content_description">Add button with plus sign</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

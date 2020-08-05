@@ -75,7 +75,7 @@
                 style="@style/textAppearanceHeadline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Item"
+                android:text="@string/add_item_text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -88,7 +88,8 @@
                 android:src="@drawable/ic_round_add_24"
                 app:layout_constraintBottom_toBottomOf="@+id/addItemTextView"
                 app:layout_constraintStart_toEndOf="@+id/addItemTextView"
-                app:layout_constraintTop_toTopOf="@+id/addItemTextView" />
+                app:layout_constraintTop_toTopOf="@+id/addItemTextView"
+                android:contentDescription="@string/add_button_content_description" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -104,10 +105,15 @@
 
         <Button
             android:id="@+id/shareButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+            android:layout_width="0dp"
+            android:layout_height="64dp"
+            android:layout_gravity="start"
             android:backgroundTint="@color/secondaryColor"
-            android:text="@string/create_item_share_text"
+            android:text="@string/new_content_save_text"
+            android:textAppearance="@style/textAppearanceHeadline6"
+            android:textColor="@android:color/white"
+            app:cornerRadius="128dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

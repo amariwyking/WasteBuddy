@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/recycle_item"
+        android:title="@string/disposal_recycle" />
+    <item android:id="@+id/compost_item"
+        android:title="@string/disposal_compost" />
+    <item android:id="@+id/landfill_item"
+        android:title="@string/disposal_landfill" />
+    <item android:id="@+id/special_item"
+        android:title="@string/disposal_special" />
+</menu>

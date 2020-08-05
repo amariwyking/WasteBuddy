@@ -63,6 +63,8 @@ public class NewContentFragment extends Fragment implements PopupMenu.OnMenuItem
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
+            mImageView.setBackgroundColor(getResources().getColor(R.color.primaryColor));
+
             switch (requestCode) {
                 case TAKE_PHOTO_CODE:
                     // by this point we have the camera photo on disk
@@ -72,14 +74,13 @@ public class NewContentFragment extends Fragment implements PopupMenu.OnMenuItem
                     mImageView.setPadding(0, 0, 0, 0);
                     mImageView.setImageBitmap(takenImage);
                     break;
-            }
-            if (requestCode == PICK_PHOTO_CODE) {
-                Uri imageUri = Objects.requireNonNull(data).getData();
-                Bitmap chosenImage = loadFromUri(imageUri);
+                case PICK_PHOTO_CODE:
+                    Uri imageUri = Objects.requireNonNull(data).getData();
+                    Bitmap chosenImage = loadFromUri(imageUri);
 
-                // Load the taken image into a preview
-                mImageView.setPadding(0, 0, 0, 0);
-                mImageView.setImageBitmap(chosenImage);
+                    // Load the taken image into a preview
+                    mImageView.setPadding(0, 0, 0, 0);
+                    mImageView.setImageBitmap(chosenImage);
             }
         }
     }
@@ -199,7 +200,7 @@ public class NewContentFragment extends Fragment implements PopupMenu.OnMenuItem
     // Create listener for image view to display menu
     @Override
     public void onClick(View view) {
-        PopupMenu popup = new PopupMenu(getContext(), view);
+        PopupMenu popup = new PopupMenu(Objects.requireNonNull(getContext()), view);
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.add_photo_menu);
         popup.show();

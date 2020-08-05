@@ -40,6 +40,12 @@
     <string name="cancel_button_text">Cancel</string>
     <string name="barcode_example_text">Ex. 0 12345 56789 0</string>
     <string name="projects_with_item_text">Projects with this item…</string>
+    <string name="new_content_save_text">Save</string>
+
+    <string name="disposal_recycle">Recycle</string>
+    <string name="disposal_compost">Compost</string>
+    <string name="disposal_landfill">Landfill</string>
+    <string name="disposal_special">Special</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

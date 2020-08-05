@@ -10,13 +10,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.PopupMenu;
 
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentCreateItemBinding;
 import com.example.wastebuddy.models.Item;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.parse.ParseFile;
 import com.parse.ParseUser;
 
@@ -33,14 +37,18 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
     FragmentCreateItemBinding mBinding;
     Context mContext;
 
-    EditText mNameEditText;
+    TextInputLayout mBarcodeInputLayout;
+    TextInputEditText mBarcodeEditText;
+    TextInputEditText mNameEditText;
     Spinner mDisposalSpinner;
-    TextView mBarcodeTextView;
     EditText mDescriptionEditText;
     ImageButton mBarcodeButton;
     Button mShareButton;
 
+    ImageView mDisposalImageView;
+
     String mBarcode = "";
+    String mDisposal = "";
 
     public CreateItemFragment() {
         // Required empty public constructor
@@ -73,7 +81,7 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
     @Override
     public void onResume() {
         super.onResume();
-        mBarcodeTextView.setText(mBarcode);
+        mBarcodeEditText.setText(mBarcode);
     }
 
     @Override
@@ -85,8 +93,46 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
     private void setOnClickListeners() {
         mImageView.setOnClickListener(this);
 
+        mDisposalImageView.setOnClickListener(view -> {
+            PopupMenu popup = new PopupMenu(Objects.requireNonNull(getContext()), view);
+            popup.setOnMenuItemClickListener(item -> {
+                switch (item.getItemId()) {
+                    case R.id.recycle_item:
+                        mDisposal =
+                                CreateItemFragment.this.getResources().getString(R.string.disposal_recycle);
+                        mDisposalImageView.setBackgroundTintList(CreateItemFragment.this.getResources().getColorStateList(R.color.colorRecycle));
+                        mDisposalImageView.setImageResource(R.drawable.ic_recycle_24);
+                        break;
+                    case R.id.compost_item:
+                        mDisposal =
+                                CreateItemFragment.this.getResources().getString(R.string.disposal_compost);
+                        mDisposalImageView.setBackgroundTintList(CreateItemFragment.this.getResources().getColorStateList(R.color.colorCompost));
+                        mDisposalImageView.setImageResource(R.drawable.ic_round_compost_24);
+                        break;
+                    case R.id.landfill_item:
+                        mDisposal =
+                                CreateItemFragment.this.getResources().getString(R.string.disposal_landfill);
+                        mDisposalImageView.setBackgroundTintList(CreateItemFragment.this.getResources().getColorStateList(R.color.colorLandfill));
+                        mDisposalImageView.setImageResource(R.drawable.ic_round_trash_24);
+                        break;
+                    case R.id.special_item:
+                        mDisposal =
+                                CreateItemFragment.this.getResources().getString(R.string.disposal_special);
+                        mDisposalImageView.setBackgroundTintList(CreateItemFragment.this.getResources().getColorStateList(R.color.colorSpecial));
+                        mDisposalImageView.setImageResource(R.drawable.ic_round_warning_24);
+//                            mDisposalImageView.setColorFilter(Color.BLACK);
+                        break;
+                    default:
+                        return false;
+                }
+                return true;
+            });
+            popup.inflate(R.menu.disposal_menu);
+            popup.show();
+        });
+
         mShareButton.setOnClickListener(view -> {
-            if (mNameEditText.getText().toString().isEmpty()) {
+            if (Objects.requireNonNull(mNameEditText.getText()).toString().isEmpty()) {
                 notifyInvalidField("Name cannot be empty");
                 return;
             }
@@ -101,9 +147,12 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
                 return;
             }
 
+
             ParseUser currentUser = ParseUser.getCurrentUser();
             saveItem(currentUser, mPhotoFile);
         });
+
+        mBarcodeInputLayout.setEndIconOnClickListener(view -> launchScanFragment());
 
         mBarcodeButton.setOnClickListener(view -> launchScanFragment());
     }
@@ -118,7 +167,7 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
 
     private void saveItem(ParseUser currentUser, File mPhotoFile) {
         Item item = new Item();
-        item.setName(mNameEditText.getText().toString());
+        item.setName(Objects.requireNonNull(mNameEditText.getText()).toString());
         item.setDisposal(mDisposalSpinner.getSelectedItem().toString());
         item.setDescription(mDescriptionEditText.getText().toString());
         item.setBarcodeId(mBarcode);
@@ -132,16 +181,21 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
             Log.i(TAG, "Item saved successfully!");
             mNameEditText.setText("");
             mDescriptionEditText.setText("");
-            mBarcodeTextView.setVisibility(View.GONE);
+            mBarcodeEditText.setText("");
+            mDisposalImageView.setBackground(getResources().getDrawable(R.drawable.item_details_disposal_background));
+            mDisposalImageView.setImageResource(R.drawable.ic_unknown_disposal_24px);
             mImageView.setPadding(16, 16, 16, 16);
+            mImageView.setBackgroundColor(getResources().getColor(R.color.primaryDarkColor));
             mImageView.setImageResource(R.drawable.ic_round_add_a_photo_64);
         });
     }
 
     private void bind() {
+        mBarcodeInputLayout = mBinding.barcodeInputLayout;
+        mBarcodeEditText = mBinding.barcodeEditText;
         mNameEditText = mBinding.nameEditText;
         mDisposalSpinner = mBinding.disposalSpinner;
-        mBarcodeTextView = mBinding.barcodeTextView;
+        mDisposalImageView = mBinding.disposalImageView;
         mDescriptionEditText = mBinding.descriptionEditText;
         mImageView = mBinding.imageView;
         mBarcodeButton = mBinding.barcodeButton;
@@ -160,7 +214,6 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
     @Override
     public void onBarcodeObserved(String barcode) {
         mBarcode = barcode;
-        mBarcodeTextView.setText(String.format("Barcode: %s", barcode));
-        mBarcodeTextView.setVisibility(View.VISIBLE);
+        mBarcodeEditText.setText(barcode);
     }
 }

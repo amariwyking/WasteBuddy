@@ -34,7 +34,7 @@
             android:paddingVertical="4dp"
             android:requiresFadingEdge="horizontal"
             android:singleLine="true"
-            android:textAppearance="@style/textAppearanceHeadline6"
+            android:textAppearance="@style/textAppearanceSubtitle1"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toEndOf="@+id/disposalImageView"

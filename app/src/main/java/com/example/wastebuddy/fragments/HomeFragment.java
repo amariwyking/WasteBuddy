@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.wastebuddy.HomeProjectsAdapter;
 import com.example.wastebuddy.HorizontalSpaceItemDecoration;
 import com.example.wastebuddy.ItemsAdapter;
-import com.example.wastebuddy.ProjectsAdapter;
 import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.databinding.FragmentHomeBinding;
 import com.example.wastebuddy.models.Item;
@@ -56,6 +55,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ((MainActivity) Objects.requireNonNull(getActivity())).showBottomNav();
+        ((MainActivity) Objects.requireNonNull(getActivity())).showSearchView();
 
         // Inflate the layout for this fragment
         mBinding = FragmentHomeBinding.inflate(inflater, container, false);

@@ -17,8 +17,6 @@ import com.example.wastebuddy.VerticalSpaceItemDecoration;
 import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.databinding.FragmentSearchBinding;
 import com.example.wastebuddy.models.Item;
-import com.parse.FindCallback;
-import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +50,7 @@ public class SearchFragment extends Fragment {
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ((MainActivity) Objects.requireNonNull(getActivity())).showBottomNav();
-
+        ((MainActivity) Objects.requireNonNull(getActivity())).showSearchView();
 
         // Inflate the layout for this fragment
         mBinding = FragmentSearchBinding.inflate(inflater, container, false);

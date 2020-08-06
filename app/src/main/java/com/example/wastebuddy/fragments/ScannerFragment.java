@@ -1,6 +1,8 @@
 package com.example.wastebuddy.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -55,6 +58,7 @@ public class ScannerFragment extends DialogFragment {
     public static final String TASK = "task";
     public static final int TASK_READ = 0;
     public static final int TASK_SEARCH = 1;
+    private static final int CAMERA_REQUEST_CODE = 4702;
 
     PreviewView mPreviewView;
 
@@ -98,13 +102,47 @@ public class ScannerFragment extends DialogFragment {
         super.onViewCreated(view, savedInstanceState);
         bind();
 
-        mOptions = new FirebaseVisionBarcodeDetectorOptions.Builder()
-                .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_UPC_A)
-                .build();
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+            mOptions = new FirebaseVisionBarcodeDetectorOptions.Builder()
+                    .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_UPC_A)
+                    .build();
 
-        mDetector = FirebaseVision.getInstance().getVisionBarcodeDetector(mOptions);
+            mDetector = FirebaseVision.getInstance().getVisionBarcodeDetector(mOptions);
 
-        mPreviewView.post(this::startImageAnalysis);
+            mPreviewView.post(this::startImageAnalysis);
+            return;
+        }
+
+        requestPermissions(new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == CAMERA_REQUEST_CODE && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            exitScanner();
+        } else {
+            mOptions = new FirebaseVisionBarcodeDetectorOptions.Builder()
+                    .setBarcodeFormats(FirebaseVisionBarcode.FORMAT_UPC_A)
+                    .build();
+
+            mDetector = FirebaseVision.getInstance().getVisionBarcodeDetector(mOptions);
+
+            mPreviewView.post(this::startImageAnalysis);
+        }
+    }
+
+    private void exitScanner() {
+        int task = Objects.requireNonNull(getArguments()).getInt(TASK);
+
+        if (task == TASK_READ) {
+            Objects.requireNonNull(getFragmentManager()).beginTransaction().remove(this).commit();
+        } else if (task == TASK_SEARCH) {
+            Objects.requireNonNull(getActivity()).getSupportFragmentManager().popBackStackImmediate();
+        }
     }
 
     @Override

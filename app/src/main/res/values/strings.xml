@@ -42,7 +42,7 @@
     <string name="projects_with_item_text">Projects with this item…</string>
     <string name="new_content_save_text">Save</string>
     <string name="new_content_save_item_text">Save Item</string>
-
+    <string name="new_content_save_project_text">Save Project</string>
     <string name="disposal_recycle">Recycle</string>
     <string name="disposal_compost">Compost</string>
     <string name="disposal_landfill">Landfill</string>
@@ -53,6 +53,7 @@
     <string name="add_button_content_description">Add button with plus sign</string>
     <string name="recent_searches_text">Recent Searches</string>
     <string name="items_used_text">Items Used</string>
+    <string name="difficulty_text">Difficulty</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

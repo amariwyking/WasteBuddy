@@ -44,11 +44,11 @@ public class Project extends ParseObject {
         put(KEY_STEPS, steps);
     }
 
-    public Number getDifficulty() {
-        return getNumber(KEY_DIFFICULTY);
+    public String getDifficulty() {
+        return getString(KEY_DIFFICULTY);
     }
 
-    public void setDifficulty(int difficulty) {
+    public void setDifficulty(String difficulty) {
         put(KEY_DIFFICULTY, difficulty);
     }
 

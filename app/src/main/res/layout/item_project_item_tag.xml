@@ -7,7 +7,7 @@
     android:clickable="true"
     android:focusable="true"
     card_view:cardCornerRadius="8dp"
-    card_view:cardElevation="2dp">
+    card_view:cardElevation="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

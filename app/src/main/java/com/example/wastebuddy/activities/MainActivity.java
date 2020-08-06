@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
         // Specify which class to query
         ParseQuery<Item> parseQuery = ParseQuery.getQuery(Item.class);
         parseQuery.include(Item.KEY_AUTHOR);
-        parseQuery.whereContains(Item.KEY_NAME, input);
+        parseQuery.whereContains(Item.KEY_NAME_LOWERCASE, input.toLowerCase());
         parseQuery.findInBackground((items, e) -> {
             if (e != null) {
                 Log.e(TAG, "Problem  with querying items", e);

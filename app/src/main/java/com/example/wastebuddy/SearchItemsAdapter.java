@@ -46,7 +46,7 @@ public class SearchItemsAdapter extends RecyclerView.Adapter<SearchItemsAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.binding.itemCardView.setAnimation(AnimationUtils.loadAnimation(mContext,
-                R.anim.fade_in));
+                R.anim.fade_in_fast));
         Item item = mItems.get(position);
         holder.bind(item);
     }

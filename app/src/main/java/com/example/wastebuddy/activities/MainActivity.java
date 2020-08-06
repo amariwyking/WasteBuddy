@@ -62,9 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void replaceFragment(Fragment fragment) {
-        if (fragment instanceof HomeFragment || fragment instanceof SearchFragment) {
-            showSearchView();
-        } else {
+        if (!(fragment instanceof HomeFragment) && !(fragment instanceof SearchFragment)) {
             hideSearchView();
         }
 

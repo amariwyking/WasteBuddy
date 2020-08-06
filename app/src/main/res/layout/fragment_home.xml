@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="64dp"
     tools:context=".fragments.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -42,7 +43,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/topItemsRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="184dp"
                 android:clipToPadding="false"
                 android:paddingVertical="@dimen/margin_padding_size_small"
                 app:layout_constraintBottom_toTopOf="@+id/topProjectsTextView"
@@ -85,7 +86,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/projectsRecyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="184dp"
                 android:layout_marginBottom="12dp"
                 android:clipToPadding="false"
                 android:paddingVertical="@dimen/margin_padding_size_small"

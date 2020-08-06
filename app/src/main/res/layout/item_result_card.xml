@@ -2,44 +2,61 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/itemCardView"
     android:layout_width="match_parent"
     android:layout_height="64dp"
-    card_view:cardCornerRadius="8dp"
-    card_view:cardElevation="2dp"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="1dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/disposalImageView"
+            android:contentDescription="@string/item_card_image_view_description"
+            android:id="@+id/itemImageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/ic_round_trash_24"
-            android:background="@color/colorLandfill"
-            android:padding="8dp"
-            card_view:layout_constraintDimensionRatio="1:1"
             card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintDimensionRatio="1:1"
             card_view:layout_constraintStart_toStartOf="parent"
-            card_view:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@string/disposal_image_view_description"/>
+            card_view:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/disposalImageView"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="@dimen/margin_padding_size_small"
+            android:background="@drawable/item_details_disposal_background"
+            android:contentDescription="@string/disposal_image_view_description"
+            android:padding="@dimen/margin_padding_size_small"
+            android:src="@drawable/ic_round_trash_24"
+            card_view:layout_constraintBottom_toBottomOf="parent"
+            card_view:layout_constraintDimensionRatio="1:1"
+            card_view:layout_constraintStart_toEndOf="@id/itemImageView"
+            card_view:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/itemNameTextView"
+            style="@style/textAppearanceSubtitle1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
+            android:ellipsize="none"
+            android:fadingEdgeLength="64dp"
             android:paddingHorizontal="16dp"
             android:paddingVertical="4dp"
+            android:requiresFadingEdge="horizontal"
+            android:singleLine="true"
             android:textSize="18sp"
             android:textStyle="bold"
             card_view:layout_constraintBottom_toBottomOf="parent"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toEndOf="@+id/disposalImageView"
             card_view:layout_constraintTop_toTopOf="parent"
-            tools:text="Plastic bottle" />
+            tools:text="@tools:sample/lorem[6]" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

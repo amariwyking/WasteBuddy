@@ -13,6 +13,8 @@
     <color name="primaryTextColor">#000000</color>
     <color name="secondaryTextColor">#000000</color>
 
+    <color name="surfaceColor">#FAFAFA</color>
+
     <color name="colorCompost">#44962A</color>
     <color name="colorLandfill">#ADADAD</color>
     <color name="colorRecycle">#5ACAFA</color>

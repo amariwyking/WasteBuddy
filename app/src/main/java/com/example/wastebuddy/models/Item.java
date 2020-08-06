@@ -10,6 +10,7 @@ public class Item extends ParseObject {
 
     public static final String KEY_BARCODE_ID = "barcodeId";
     public static final String KEY_NAME = "name";
+    public static final String KEY_NAME_LOWERCASE = "name_lowercase";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_DISPOSAL = "disposal";
     public static final String KEY_IMAGE = "image";
@@ -30,6 +31,7 @@ public class Item extends ParseObject {
 
     public void setName(String name) {
         put(KEY_NAME, name);
+        put(KEY_NAME_LOWERCASE, name.toLowerCase());
     }
 
     public String getDisposal() {

@@ -80,7 +80,7 @@
                 <!--                app:layout_constraintTop_toTopOf="parent" />-->
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/textField"
+                    android:id="@+id/descriptionInputLayout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="0dp"
                     android:layout_height="128dp"
@@ -106,17 +106,41 @@
                         android:textAppearance="@style/textAppearanceBody1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/difficultyInputLayout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:textAppearance="@style/textAppearanceBody1"
+                    app:boxStrokeColor="@color/secondaryColor"
+                    app:boxStrokeWidth="2dp"
+                    app:hintTextColor="@color/secondaryColor"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/descriptionInputLayout">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/difficultyTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/difficulty_text"
+                        android:inputType="none"
+                        android:textAppearance="@style/textAppearanceBody1" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <View
                     android:id="@+id/detailsDivider"
                     android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:alpha="0.6"
-                    android:background="@color/primaryDarkColor"
+                    android:layout_height="0.5dp"
                     android:layout_marginHorizontal="@dimen/margin_padding_size_large"
                     android:layout_marginVertical="@dimen/margin_padding_size_medium"
+                    android:alpha="0.6"
+                    android:background="@color/primaryDarkColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textField" />
+                    app:layout_constraintTop_toBottomOf="@id/difficultyInputLayout" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout2"
@@ -125,7 +149,7 @@
                     android:layout_marginTop="@dimen/margin_padding_size_medium"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textField">
+                    app:layout_constraintTop_toBottomOf="@id/detailsDivider">
 
                     <TextView
                         android:id="@+id/addItemTextView"
@@ -168,12 +192,12 @@
             android:layout_width="wrap_content"
             android:layout_height="64dp"
             android:layout_gravity="start"
-            android:elevation="4dp"
-            android:paddingHorizontal="@dimen/margin_padding_size_xlarge"
-            android:minHeight="@dimen/standard_touch_size"
             android:layout_margin="16dp"
             android:backgroundTint="@color/secondaryColor"
-            android:text="@string/new_content_save_item_text"
+            android:elevation="4dp"
+            android:minHeight="@dimen/standard_touch_size"
+            android:paddingHorizontal="@dimen/margin_padding_size_xlarge"
+            android:text="@string/new_content_save_project_text"
             android:textAppearance="@style/textAppearanceButton"
             android:textColor="@android:color/white"
             app:cornerRadius="50pt"

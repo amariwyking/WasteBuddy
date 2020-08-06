@@ -2,23 +2,21 @@ package com.example.wastebuddy.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RatingBar;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wastebuddy.GridSpaceItemDecoration;
 import com.example.wastebuddy.ProjectItemsAdapter;
@@ -49,7 +47,6 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
     EditText mNameEditText;
     EditText mDescriptionEditText;
-//    RatingBar mRatingBar;
     Button mShareButton;
     ImageButton mAddItemImageButton;
 
@@ -57,6 +54,8 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
     List<String> mItemIdList;
     ProjectItemsAdapter mItemsAdapter;
+
+    private ProjectItemsAdapter.OnLongClickListener onLongClickListener;
 
     public CreateProjectFragment() {
         // Required empty public constructor
@@ -80,23 +79,24 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
         mItemIdList = new ArrayList<>();
 
-        ProjectItemsAdapter.OnLongClickListener onLongClickListener = position -> {
-            // Delete the item from the model
-            mItemIdList.remove(position);
+        ArrayList<String> difficulties = new ArrayList<>();
+        difficulties.add("Easy");
+        difficulties.add("Medium");
+        difficulties.add("Hard");
+        ArrayAdapter adapter = new ArrayAdapter<>(requireContext(),
+                R.layout.difficulty_list_item,
+                difficulties);
+        mBinding.difficultyTextView.setAdapter(adapter);
+        configureRecyclerView(onLongClickListener);
+        setOnClickListeners();
+    }
 
-            // Notify the adapter
-            mItemsAdapter.notifyItemRemoved(position);
-            Toast.makeText(getApplicationContext(), "Item was removed", Toast.LENGTH_SHORT).show();
-        };
-
+    private void configureRecyclerView(ProjectItemsAdapter.OnLongClickListener onLongClickListener) {
         mItemsAdapter = new ProjectItemsAdapter(getContext(), mItemIdList, onLongClickListener);
         mItemsRecyclerView.setAdapter(mItemsAdapter);
         mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 RecyclerView.VERTICAL, false));
-
         GridSpaceItemDecoration.spaceEvenly(Objects.requireNonNull(getContext()), mItemsRecyclerView);
-
-        setOnClickListeners();
     }
 
     @Override
@@ -131,6 +131,15 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
         mAddItemImageButton.setOnClickListener(view -> showAddItemDialog());
 
+        onLongClickListener = position -> {
+            // Delete the item from the model
+            mItemIdList.remove(position);
+
+            // Notify the adapter
+            mItemsAdapter.notifyItemRemoved(position);
+            Toast.makeText(getApplicationContext(), "Item was removed", Toast.LENGTH_SHORT).show();
+        };
+
         mShareButton.setOnClickListener(view -> {
             if (mNameEditText.getText().toString().isEmpty()) {
                 notifyInvalidField("Name cannot be empty");
@@ -155,7 +164,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
     private void saveProject(ParseUser currentUser, File mPhotoFile) {
         Project project = new Project();
         project.setName(mNameEditText.getText().toString());
-//        project.setDifficulty((int) mRatingBar.getRating());
+        project.setDifficulty(mBinding.difficultyTextView.getText().toString().toLowerCase());
         project.setDescription(mDescriptionEditText.getText().toString());
         project.setItems(mItemIdList);
         project.setImage(new ParseFile(mPhotoFile));

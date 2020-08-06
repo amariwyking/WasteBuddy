@@ -106,6 +106,18 @@
                         android:textAppearance="@style/textAppearanceBody1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <View
+                    android:id="@+id/detailsDivider"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:alpha="0.6"
+                    android:background="@color/primaryDarkColor"
+                    android:layout_marginHorizontal="@dimen/margin_padding_size_large"
+                    android:layout_marginVertical="@dimen/margin_padding_size_medium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/textField" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout2"
                     android:layout_width="0dp"

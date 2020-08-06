@@ -17,7 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -136,7 +136,8 @@ public class ProjectDetailsFragment extends Fragment {
     private void loadItems() {
         mItemsAdapter = new ProjectItemsAdapter(getContext(), mProject.getItems());
         mItemsRecyclerView.setAdapter(mItemsAdapter);
-        mItemsRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
+                RecyclerView.VERTICAL, false));
 
         final int spacing =
                 getResources().getDimensionPixelSize(R.dimen.margin_padding_size_medium) / 2;

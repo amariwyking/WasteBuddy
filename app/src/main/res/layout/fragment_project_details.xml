@@ -22,97 +22,144 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <ScrollView
+            android:id="@+id/scrollView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="@dimen/margin_padding_size_medium"
+            android:fadingEdge="vertical"
+            android:scrollbars="none"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/projectImageView">
+            app:layout_constraintTop_toBottomOf="@id/projectImageView">
 
-            <TextView
-                android:id="@+id/authorTextView"
-                style="@style/TextAppearance.MaterialComponents.Overline"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="Posted by User" />
 
-            <TextView
-                android:id="@+id/nameTextView"
-                style="@style/textAppearanceHeadline4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/authorTextView"
-                tools:text="Project Name" />
-
-            <TextView
-                android:id="@+id/likesTextView"
-                style="@style/textAppearanceHeadline6"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_small"
-                app:layout_constraintEnd_toStartOf="@+id/likeImageButton"
-                app:layout_constraintTop_toBottomOf="@+id/nameTextView"
-                tools:text="57" />
-
-            <ImageButton
-                android:id="@+id/likeImageButton"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/like_project_image_button_description"
-                android:scaleType="centerInside"
-                android:src="@drawable/ic_round_favorite_border_24"
-                android:tint="@color/colorCompost"
-                app:layout_constraintBottom_toBottomOf="@+id/likesTextView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/likesTextView" />
-
-            <TextView
-                android:id="@+id/difficultyTextView"
-                style="@style/textAppearanceHeadline6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/difficulty_hard"
-                android:textColor="@color/colorDifficulty5"
-                app:layout_constraintBottom_toBottomOf="@+id/likesTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/likesTextView" />
-
-            <TextView
-                android:id="@+id/descriptionTextView"
-                style="@style/textAppearanceBody1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_padding_size_medium"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/likesTextView" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/itemsRecyclerView"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/descriptionTextView" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/stepsRecyclerView"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemsRecyclerView" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                app:layout_constraintTop_toBottomOf="@+id/projectImageView">
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/detailsContainer"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/margin_padding_size_medium"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/authorTextView"
+                        style="@style/TextAppearance.MaterialComponents.Overline"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Posted by User" />
+
+                    <TextView
+                        android:id="@+id/nameTextView"
+                        style="@style/textAppearanceHeadline4"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/authorTextView"
+                        tools:text="Project Name" />
+
+                    <TextView
+                        android:id="@+id/likesTextView"
+                        style="@style/textAppearanceHeadline6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_small"
+                        app:layout_constraintEnd_toStartOf="@+id/likeImageButton"
+                        app:layout_constraintTop_toBottomOf="@+id/nameTextView"
+                        tools:text="57" />
+
+                    <ImageButton
+                        android:id="@+id/likeImageButton"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:contentDescription="@string/like_project_image_button_description"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_round_favorite_border_24"
+                        android:tint="@color/colorCompost"
+                        app:layout_constraintBottom_toBottomOf="@+id/likesTextView"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/likesTextView" />
+
+                    <TextView
+                        android:id="@+id/difficultyTextView"
+                        style="@style/textAppearanceHeadline6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/difficulty_hard"
+                        android:textColor="@color/colorDifficulty5"
+                        app:layout_constraintBottom_toBottomOf="@+id/likesTextView"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/likesTextView" />
+
+                    <TextView
+                        android:id="@+id/descriptionTextView"
+                        style="@style/textAppearanceBody1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_padding_size_medium"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/likesTextView"
+                        tools:text="@tools:sample/lorem[20]"/>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <View
+                    android:id="@+id/detailsDivider"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:alpha="0.6"
+                    android:background="@color/primaryDarkColor"
+                    android:layout_marginHorizontal="@dimen/margin_padding_size_large"
+                    android:layout_marginVertical="@dimen/margin_padding_size_medium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detailsContainer" />
+
+                <TextView
+                    android:id="@+id/projectItemsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_padding_size_medium"
+                    android:layout_marginStart="@dimen/margin_padding_size_medium"
+                    style="@style/textAppearanceHeadline6"
+                    android:text="@string/items_used_text"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/detailsDivider" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/itemsRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_padding_size_small"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/projectItemsTextView" />
+
+<!--                <androidx.recyclerview.widget.RecyclerView-->
+<!--                    android:id="@+id/stepsRecyclerView"-->
+<!--                    android:layout_width="0dp"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                    app:layout_constraintEnd_toEndOf="parent"-->
+<!--                    app:layout_constraintStart_toStartOf="parent"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/itemsRecyclerView" />-->
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

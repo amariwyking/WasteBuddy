@@ -51,6 +51,8 @@
     <string name="log_out_button_text">Log out</string>
     <string name="add_item_text">Add Item</string>
     <string name="add_button_content_description">Add button with plus sign</string>
+    <string name="recent_searches_text">Recent Searches</string>
+    <string name="items_used_text">Items Used</string>
 
     <string-array name="disposal_array">
         <item>Recycle</item>

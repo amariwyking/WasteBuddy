@@ -26,4 +26,5 @@
     <color name="colorDifficulty3">#FFE500</color>
     <color name="colorDifficulty4">#FF7700</color>
     <color name="colorDifficulty5">#FF006A</color>
+    <color name="ic_launcher_background">#FFFFFF</color>
 </resources>

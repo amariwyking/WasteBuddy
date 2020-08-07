@@ -12,6 +12,7 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -20,7 +21,7 @@
 
             <TextView
                 android:id="@+id/itemsTextView"
-                style="@style/textAppearanceHeadline5"
+                style="@style/textAppearanceHeadline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/margin_padding_size_medium"
@@ -52,7 +53,7 @@
 
             <TextView
                 android:id="@+id/topProjectsTextView"
-                style="@style/textAppearanceHeadline5"
+                style="@style/textAppearanceHeadline6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/margin_padding_size_medium"

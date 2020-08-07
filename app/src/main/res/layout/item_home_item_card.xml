@@ -16,10 +16,11 @@
 
         <ImageView
             android:id="@+id/itemImageView"
+            android:padding="@dimen/margin_padding_size_small"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:contentDescription="@string/item_card_image_view_description"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             card_view:layout_constraintDimensionRatio="1:1"
             card_view:layout_constraintEnd_toEndOf="parent"
             card_view:layout_constraintStart_toStartOf="parent"

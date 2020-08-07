@@ -90,7 +90,7 @@ public class SearchItemsAdapter extends RecyclerView.Adapter<SearchItemsAdapter.
             ParseFile image = item.getImage();
 
             if (image != null) {
-                Glide.with(mContext).load(image.getUrl()).centerCrop().into(binding.itemImageView);
+                Glide.with(mContext).load(image.getUrl()).into(binding.itemImageView);
             }
 
             itemNameTextView.setText(item.getName());

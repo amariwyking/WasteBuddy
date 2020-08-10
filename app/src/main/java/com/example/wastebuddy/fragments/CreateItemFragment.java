@@ -137,16 +137,15 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
                 return;
             }
 
-            if (mDescriptionEditText.getText().toString().isEmpty()) {
-                notifyInvalidField("Description cannot be empty");
-                return;
-            }
+//            if (mDescriptionEditText.getText().toString().isEmpty()) {
+//                notifyInvalidField("Description cannot be empty");
+//                return;
+//            }
 
             if (mPhotoFile == null || mImageView.getDrawable() == null) {
                 notifyInvalidField("There is no image");
                 return;
             }
-
 
             ParseUser currentUser = ParseUser.getCurrentUser();
             saveItem(currentUser, mPhotoFile);

@@ -31,7 +31,6 @@ public class LoginActivity extends AppCompatActivity {
     EditText mEmailEditText;
     EditText mPasswordEditText;
     Button mLoginButton;
-    Button mSignUpButton;
     ProgressBar mProgressBar;
     TextView mGuestTextView;
 
@@ -41,11 +40,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
-
-        // Check if user is already signed in
-        if (ParseUser.getCurrentUser() != null) {
-            Navigation.goMainActivity(LoginActivity.this);
-        }
 
         bind();
         setOnClickListeners();
@@ -59,8 +53,6 @@ public class LoginActivity extends AppCompatActivity {
             loginUser(email, password);
         });
 
-        mSignUpButton.setOnClickListener(view -> Navigation.goSignUpActivity(LoginActivity.this));
-
         mGuestTextView.setOnClickListener(view -> Navigation.goMainActivity(LoginActivity.this));
     }
 
@@ -69,7 +61,6 @@ public class LoginActivity extends AppCompatActivity {
         mEmailEditText = mBinding.emailEditText;
         mPasswordEditText = mBinding.passwordEditText;
         mLoginButton = mBinding.loginButton;
-        mSignUpButton = mBinding.signUpButton;
         mGuestTextView = mBinding.guestTextView;
         mProgressBar = mBinding.loadingProgressBar;
     }

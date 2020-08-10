@@ -21,13 +21,11 @@ public class Navigation {
     public static void goSignUpActivity(Activity activity) {
         Intent i = new Intent(activity, SignUpActivity.class);
         activity.startActivity(i);
-        activity.finish();
     }
 
     public static void goLoginActivity(Activity activity) {
         Intent i = new Intent(activity, LoginActivity.class);
         activity.startActivity(i);
-        activity.finish();
     }
 
     public static void switchFragment(Context context, Fragment fragment) {

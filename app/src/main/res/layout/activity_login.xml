@@ -56,8 +56,9 @@
                 android:layout_height="wrap_content"
                 android:textColorHint="@color/primaryColor"
                 app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/secondaryColor"
+                app:boxStrokeColor="@color/primaryColor"
                 app:boxStrokeWidth="2dp"
+                app:hintTextColor="@color/primaryColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -71,8 +72,7 @@
                     android:inputType="textEmailAddress"
                     android:selectAllOnFocus="true"
                     android:textAppearance="@style/textAppearanceSubtitle1"
-                    android:textColor="@color/primaryColor"
-                    android:textCursorDrawable="@drawable/color_cursor" />
+                    android:textColor="@color/primaryColor" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -83,8 +83,9 @@
                 android:layout_marginTop="@dimen/margin_padding_size_medium"
                 android:textColorHint="@color/primaryColor"
                 app:boxBackgroundMode="outline"
-                app:boxStrokeColor="@color/secondaryColor"
+                app:boxStrokeColor="@color/primaryColor"
                 app:boxStrokeWidth="2dp"
+                app:hintTextColor="@color/primaryColor"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -124,25 +125,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/textInputContainer" />
-
-        <Button
-            android:id="@+id/signUpButton"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
-            android:layout_height="64dp"
-            android:layout_gravity="start"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="64dp"
-            android:text="@string/sign_up_text"
-            android:textAppearance="@style/textAppearanceHeadline6"
-            android:textColor="@color/primaryColor"
-            app:cornerRadius="128dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/loginButton"
-            app:rippleColor="#1FFFFFFF"
-            app:strokeColor="@color/primaryColor"
-            app:strokeWidth="2dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

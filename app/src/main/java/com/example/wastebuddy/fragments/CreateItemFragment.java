@@ -40,7 +40,6 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
     TextInputLayout mBarcodeInputLayout;
     TextInputEditText mBarcodeEditText;
     TextInputEditText mNameEditText;
-    Spinner mDisposalSpinner;
     EditText mDescriptionEditText;
     ImageButton mBarcodeButton;
     Button mShareButton;
@@ -74,7 +73,6 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
         super.onViewCreated(view, savedInstanceState);
 
         bind();
-        configureSpinner();
         setOnClickListeners();
     }
 
@@ -120,7 +118,6 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
                                 CreateItemFragment.this.getResources().getString(R.string.disposal_special);
                         mDisposalImageView.setBackgroundTintList(CreateItemFragment.this.getResources().getColorStateList(R.color.colorSpecial));
                         mDisposalImageView.setImageResource(R.drawable.ic_round_warning_24);
-//                            mDisposalImageView.setColorFilter(Color.BLACK);
                         break;
                     default:
                         return false;
@@ -167,7 +164,7 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
     private void saveItem(ParseUser currentUser, File mPhotoFile) {
         Item item = new Item();
         item.setName(Objects.requireNonNull(mNameEditText.getText()).toString());
-        item.setDisposal(mDisposalSpinner.getSelectedItem().toString());
+        item.setDisposal(mDisposal.toLowerCase());
         item.setDescription(mDescriptionEditText.getText().toString());
         item.setBarcodeId(mBarcode);
         item.setImage(new ParseFile(mPhotoFile));
@@ -182,6 +179,7 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
             mDescriptionEditText.setText("");
             mBarcodeEditText.setText("");
             mDisposalImageView.setBackground(getResources().getDrawable(R.drawable.item_details_disposal_background));
+            mDisposalImageView.setBackgroundTintList(null);
             mDisposalImageView.setImageResource(R.drawable.ic_unknown_disposal_24px);
             mImageView.setPadding(16, 16, 16, 16);
             mImageView.setBackgroundColor(getResources().getColor(R.color.primaryDarkColor));
@@ -193,21 +191,11 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
         mBarcodeInputLayout = mBinding.barcodeInputLayout;
         mBarcodeEditText = mBinding.barcodeEditText;
         mNameEditText = mBinding.nameEditText;
-        mDisposalSpinner = mBinding.disposalSpinner;
         mDisposalImageView = mBinding.disposalImageView;
         mDescriptionEditText = mBinding.descriptionEditText;
         mImageView = mBinding.imageView;
         mBarcodeButton = mBinding.barcodeButton;
         mShareButton = mBinding.shareButton;
-    }
-
-    private void configureSpinner() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
-                R.array.disposal_array, android.R.layout.simple_spinner_item);
-        // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        // Apply the adapter to the spinner
-        mDisposalSpinner.setAdapter(adapter);
     }
 
     @Override

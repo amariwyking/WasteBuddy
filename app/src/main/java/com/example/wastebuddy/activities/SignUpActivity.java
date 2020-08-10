@@ -28,7 +28,6 @@ public class SignUpActivity extends AppCompatActivity {
     EditText mConfirmPasswordEditText;
     TextInputLayout mEmailLayout;
     TextInputLayout mConfirmPasswordLayout;
-    Button mLoginButton;
     Button mSignUpButton;
     ProgressBar mProgressBar;
     TextView guestTextView;
@@ -52,8 +51,6 @@ public class SignUpActivity extends AppCompatActivity {
             Log.i(TAG, "onClick login button");
             if (isInputValid()) signUpUser();
         });
-
-        mLoginButton.setOnClickListener(view -> Navigation.goLoginActivity(SignUpActivity.this));
 
         guestTextView.setOnClickListener(view -> Navigation.goMainActivity(SignUpActivity.this));
     }
@@ -82,7 +79,6 @@ public class SignUpActivity extends AppCompatActivity {
         mConfirmPasswordEditText = mBinding.confirmPasswordEditText;
         mEmailLayout = mBinding.emailEditTextLayout;
         mConfirmPasswordLayout = mBinding.confirmPasswordEditTextLayout;
-        mLoginButton = mBinding.loginButton;
         mSignUpButton = mBinding.signUpButton;
         guestTextView = mBinding.logInTextView;
         mProgressBar = mBinding.loadingProgressBar;
@@ -112,7 +108,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private boolean passwordsDoNotMatch() {
-        return !mConfirmPasswordEditText.getText().equals(mPasswordEditText.getText());
+        return !mConfirmPasswordEditText.getText().toString().equals(mPasswordEditText.getText().toString());
     }
 
     public boolean isInvalidEmail() {

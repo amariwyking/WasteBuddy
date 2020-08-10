@@ -23,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.ProjectsAdapter;
 import com.example.wastebuddy.R;
+import com.example.wastebuddy.activities.LandingPageActivity;
 import com.example.wastebuddy.activities.LoginActivity;
 import com.example.wastebuddy.databinding.FragmentUserBinding;
 import com.example.wastebuddy.models.Item;
@@ -175,7 +176,7 @@ public class UserFragment extends Fragment {
 
         mLogoutButton.setOnClickListener(view -> {
             ParseUser.logOut();
-            Intent intent = new Intent(getContext(), LoginActivity.class);
+            Intent intent = new Intent(getContext(), LandingPageActivity.class);
             startActivity(intent);
             Objects.requireNonNull(getActivity()).finish();
         });

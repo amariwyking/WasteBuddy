@@ -1,6 +1,7 @@
 package com.example.wastebuddy.fragments;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Html;
@@ -32,6 +33,7 @@ import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
+import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class ProjectDetailsFragment extends Fragment {
@@ -48,6 +50,7 @@ public class ProjectDetailsFragment extends Fragment {
     TextView mNameTextView;
     TextView mAuthorTextView;
     TextView mLikesTextView;
+    TextView mDifficultyTextView;
     TextView mDescriptionTextView;
 
     ImageView mProjectImageView;
@@ -92,6 +95,7 @@ public class ProjectDetailsFragment extends Fragment {
         mNameTextView = mBinding.nameTextView;
         mAuthorTextView = mBinding.authorTextView;
         mLikesTextView = mBinding.likesTextView;
+        mDifficultyTextView = mBinding.difficultyTextView;
         mDescriptionTextView = mBinding.descriptionTextView;
         mProjectImageView = mBinding.projectImageView;
         mLikeImageButton = mBinding.likeImageButton;
@@ -106,6 +110,7 @@ public class ProjectDetailsFragment extends Fragment {
         mAuthorTextView.setText(username);
         mLikesTextView.setText(String.valueOf(mProject.getLikes()));
         setLikeState();
+        configureDifficulty();
         mDescriptionTextView.setText(mProject.getDescription());
 
         if (mProject.getItems() != null) {
@@ -116,6 +121,25 @@ public class ProjectDetailsFragment extends Fragment {
 
         if (image != null) {
             Glide.with(this).load(image.getUrl()).into(mProjectImageView);
+        }
+    }
+
+    private void configureDifficulty() {
+        String difficulty = mProject.getDifficulty();
+        mDifficultyTextView.setText(WordUtils.capitalize(difficulty));
+
+        switch (difficulty) {
+            case "easy":
+                mDifficultyTextView.setTextColor(getResources().getColor(R.color.colorDifficulty2));
+                break;
+            case "medium":
+                mDifficultyTextView.setTextColor(getResources().getColor(R.color.colorDifficulty4));
+                break;
+            case "hard":
+                mDifficultyTextView.setTextColor(getResources().getColor(R.color.colorDifficulty5));
+                break;
+            default:
+                break;
         }
     }
 

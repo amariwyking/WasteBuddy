@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wastebuddy.GridSpaceItemDecoration;
+import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.ProjectItemsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentCreateProjectBinding;
@@ -171,23 +172,16 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
         project.setAuthor(currentUser);
         project.saveInBackground(e -> {
             if (e == null) {
-                Log.i(TAG, "Item saved successfully!");
-                clearInput();
+                Log.i(TAG, "Project saved successfully!");
+                Navigation.switchFragment(mContext,
+                        ProjectDetailsFragment.newInstance(Project.KEY_OBJECT_ID,
+                                project.getObjectId()));
+                Toast.makeText(mContext, "Project Created", Toast.LENGTH_SHORT).show();
             } else {
                 Log.e(TAG, "Error while saving project", e);
                 Toast.makeText(getContext(), "Error while saving :(", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    private void clearInput() {
-        mNameEditText.setText("");
-        mDescriptionEditText.setText("");
-        mImageView.setPadding(16, 16, 16, 16);
-        mImageView.setBackgroundColor(getResources().getColor(R.color.primaryDarkColor));
-        mImageView.setImageResource(R.drawable.ic_round_add_a_photo_64);
-        mItemIdList.clear();
-        mItemsAdapter.notifyDataSetChanged();
     }
 
     private void showAddItemDialog() {

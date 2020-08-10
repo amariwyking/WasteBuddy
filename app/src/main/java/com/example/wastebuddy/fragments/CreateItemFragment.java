@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.PopupMenu;
 
+import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentCreateItemBinding;
 import com.example.wastebuddy.models.Item;
@@ -175,15 +176,9 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
                 Toast.makeText(getContext(), "Error while saving :(", Toast.LENGTH_SHORT).show();
             }
             Log.i(TAG, "Item saved successfully!");
-            mNameEditText.setText("");
-            mDescriptionEditText.setText("");
-            mBarcodeEditText.setText("");
-            mDisposalImageView.setBackground(getResources().getDrawable(R.drawable.item_details_disposal_background));
-            mDisposalImageView.setBackgroundTintList(null);
-            mDisposalImageView.setImageResource(R.drawable.ic_unknown_disposal_24px);
-            mImageView.setPadding(16, 16, 16, 16);
-            mImageView.setBackgroundColor(getResources().getColor(R.color.primaryDarkColor));
-            mImageView.setImageResource(R.drawable.ic_round_add_a_photo_64);
+            Navigation.switchFragment(mContext,
+                    ItemDetailsFragment.newInstance(Item.KEY_OBJECT_ID, item.getObjectId()));
+            Toast.makeText(mContext, "Item Created", Toast.LENGTH_SHORT).show();
         });
     }
 

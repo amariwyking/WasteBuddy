@@ -100,11 +100,11 @@
                         style="@style/textAppearanceHeadline6"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/difficulty_hard"
-                        android:textColor="@color/colorDifficulty5"
                         app:layout_constraintBottom_toBottomOf="@+id/likesTextView"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/likesTextView" />
+                        app:layout_constraintTop_toTopOf="@+id/likesTextView"
+                        tools:text="@string/difficulty_hard"
+                        tools:textColor="@color/colorDifficulty5"/>
 
                     <TextView
                         android:id="@+id/descriptionTextView"

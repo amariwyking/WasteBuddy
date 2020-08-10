@@ -12,6 +12,35 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="@dimen/margin_padding_size_medium"
+            app:layout_constraintBottom_toTopOf="@+id/constraintLayout5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Did you know..."
+                android:textAppearance="@style/textAppearanceHeadline4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_padding_size_small"
+                android:text="If you recycle but don't compost – food scraps probably make up about 25% of your trash. Composting can be a quick way to reduce your waste."
+                android:textAppearance="@style/textAppearanceBody1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintLayout5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/margin_padding_size_medium"
-                android:paddingVertical="@dimen/margin_padding_size_small"
+                android:paddingVertical="@dimen/margin_padding_size_micro"
                 android:text="@string/top_items_text_view"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/topItemsRecyclerView"
@@ -57,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/margin_padding_size_medium"
-                android:paddingVertical="@dimen/margin_padding_size_small"
+                android:paddingVertical="@dimen/margin_padding_size_micro"
                 android:text="@string/top_projects_text_view"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@id/projectsRecyclerView"
@@ -78,7 +107,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="@dimen/margin_padding_size_medium"
-                android:paddingVertical="@dimen/margin_padding_size_small"
+                android:paddingVertical="@dimen/margin_padding_size_micro"
                 android:text="@string/more_projects_text_view"
                 app:layout_constraintBottom_toBottomOf="@+id/topProjectsTextView"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -63,6 +63,15 @@ public class ProjectDetailsFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static ProjectDetailsFragment newInstance(String key, String id) {
+        Bundle args = new Bundle();
+        args.putString(key, id);
+
+        ProjectDetailsFragment fragment = new ProjectDetailsFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

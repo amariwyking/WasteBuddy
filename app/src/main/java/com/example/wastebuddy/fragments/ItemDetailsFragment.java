@@ -163,6 +163,7 @@ public class ItemDetailsFragment extends Fragment {
                 if (!objects.isEmpty()) {
                     // Item with barcode is found
                     mItem = objects.get(0);
+                    mItemId = mItem.getObjectId();
                     bindData();
                 } else {
                     itemNotFound();

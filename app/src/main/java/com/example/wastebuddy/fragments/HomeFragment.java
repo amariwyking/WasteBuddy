@@ -121,14 +121,11 @@ public class HomeFragment extends Fragment {
     private void queryItems() {
         // Specify which class to query
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.include(Item.KEY_AUTHOR);
+        query.setLimit(10);
         query.findInBackground((items, e) -> {
             if (e != null) {
                 Log.e(TAG, "Problem  with getting items", e);
                 return;
-            }
-            for (Item item : items) {
-                Log.i(TAG, "Item: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
             }
             mItems.addAll(items);
             mItemsAdapter.notifyDataSetChanged();

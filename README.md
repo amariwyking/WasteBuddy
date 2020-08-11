@@ -8,7 +8,7 @@
 
 # Overview
 ## Description
-WasteBuddy is a tool created to help people sort their trash and a platform for people to share DIY projects.
+WasteBuddy is a tool design to help people learn how to recycle and compost. Users can scan the barcode on an item to search for an item, or search by typing the item name. However, upcycling is even better than recycling, thus WasteBuddy provides a platform for users to upload and share their own DIY projects with the community.
 
 ## App Evaluation
 - **Category:** Lifestyle/Reference

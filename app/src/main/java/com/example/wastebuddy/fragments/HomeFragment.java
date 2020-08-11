@@ -138,15 +138,12 @@ public class HomeFragment extends Fragment {
     private void queryProjects() {
         // Specify which class to query
         ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
-        query.include(Item.KEY_AUTHOR);
+        query.addDescendingOrder(Project.KEY_LIKES);
+        query.setLimit(10);
         query.findInBackground((projects, e) -> {
             if (e != null) {
                 Log.e(TAG, "Problem  with getting projects", e);
                 return;
-            }
-            for (Project item : projects) {
-                Log.i(TAG,
-                        "Project: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
             }
             mProjects.addAll(projects);
             mProjectsAdapter.notifyDataSetChanged();

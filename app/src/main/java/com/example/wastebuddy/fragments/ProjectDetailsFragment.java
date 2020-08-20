@@ -93,7 +93,7 @@ public class ProjectDetailsFragment extends Fragment {
         try {
             getProject();
             Log.i(TAG, "Found project with the Object ID: " + mProjectId);
-            bindData();
+//            bindData();
         } catch (ParseException e) {
             e.printStackTrace();
             Log.e(TAG, "Could not find project with the Object ID: " + mProjectId, e);
@@ -192,7 +192,10 @@ public class ProjectDetailsFragment extends Fragment {
         // Specify which class to query
         ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
         query.include(Project.KEY_AUTHOR);
-        mProject = query.get(mProjectId);
+        query.getInBackground(mProjectId,  (object, e) -> {
+            mProject = object;
+            bindData();
+        });
     }
 
     private void setOnClickListeners() {

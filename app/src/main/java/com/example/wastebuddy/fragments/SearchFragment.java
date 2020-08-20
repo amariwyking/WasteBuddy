@@ -92,9 +92,6 @@ public class SearchFragment extends Fragment {
                 Log.e(TAG, "Problem  with getting items", e);
                 return;
             }
-            for (Item item : items) {
-                Log.i(TAG, "Item: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
-            }
             mItems.clear();
             mItems.addAll(items);
             mItemsAdapter.notifyDataSetChanged();

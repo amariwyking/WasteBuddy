@@ -33,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ellipsize="none"
-            android:fadingEdgeLength="100dp"
+            android:fadingEdgeLength="40dp"
             android:padding="8dp"
             android:requiresFadingEdge="horizontal"
             android:singleLine="true"

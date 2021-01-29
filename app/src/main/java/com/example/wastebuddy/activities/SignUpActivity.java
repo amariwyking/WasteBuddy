@@ -8,17 +8,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.databinding.ActivitySignUpBinding;
+import com.example.wastebuddy.models.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.parse.ParseUser;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private static final String TAG = "SignUpActivity";
+
+    private FirebaseAuth mAuth;
 
     ActivitySignUpBinding mBinding;
 
@@ -37,6 +48,8 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
+
+        mAuth = FirebaseAuth.getInstance();
 
         if (ParseUser.getCurrentUser() != null) {
             Navigation.goMainActivity(SignUpActivity.this);
@@ -87,14 +100,10 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUpUser() {
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
         Log.i(TAG, "Attempting to sign user up" + mUsernameEditText.getText().toString());
-        // Create the ParseUser
-        ParseUser user = new ParseUser();
-        // Set core properties
-        user.setUsername(mUsernameEditText.getText().toString());
-        user.setEmail(mEmailEditText.getText().toString());
-        user.setPassword(mPasswordEditText.getText().toString());
 
-        // Invoke signUpInBackground
+
+
+        /*// Invoke signUpInBackground
         user.signUpInBackground(e -> {
             if (e != null) {
                 Log.e(TAG, "Issue with login: ", e);
@@ -104,7 +113,45 @@ public class SignUpActivity extends AppCompatActivity {
 
             mProgressBar.setVisibility(ProgressBar.INVISIBLE);
             Navigation.goMainActivity(SignUpActivity.this);
-        });
+        });*/
+
+        mAuth.createUserWithEmailAndPassword(mEmailEditText.getText().toString(),
+                mPasswordEditText.getText().toString())
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            // Set core properties
+                            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                    .setDisplayName(mUsernameEditText.getText().toString())
+                                    .build();
+
+                            user.updateProfile(profileUpdates)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "User profile updated.");
+                                            }
+                                        }
+                                    });
+
+                            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                            Navigation.goMainActivity(SignUpActivity.this);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.d(TAG, "signInWithEmail:failure");
+                            Log.e(TAG, "Issue with login: ", task.getException());
+                            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                        }
+
+                        // ...
+                    }
+                });
     }
 
     private boolean passwordsDoNotMatch() {

@@ -1,5 +1,6 @@
 package com.example.wastebuddy.models;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -110,6 +111,6 @@ public class User {
     }
 
     public static boolean isSignedIn() {
-        return ParseUser.getCurrentUser() != null;
+        return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 }

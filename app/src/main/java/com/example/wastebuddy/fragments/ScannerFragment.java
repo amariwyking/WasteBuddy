@@ -183,7 +183,7 @@ public class ScannerFragment extends DialogFragment {
                 preview);
 
         camera.getCameraControl().enableTorch(true);
-        preview.setSurfaceProvider(mBinding.previewView.createSurfaceProvider());
+        preview.setSurfaceProvider(mBinding.previewView.getSurfaceProvider());
     }
 
     private void startImageAnalysis() {

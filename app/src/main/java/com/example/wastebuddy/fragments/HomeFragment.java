@@ -20,9 +20,9 @@ import com.example.wastebuddy.HorizontalSpaceItemDecoration;
 import com.example.wastebuddy.ItemsAdapter;
 import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.databinding.FragmentHomeBinding;
+import com.example.wastebuddy.models.User;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
-import com.example.wastebuddy.models.User;
 import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;

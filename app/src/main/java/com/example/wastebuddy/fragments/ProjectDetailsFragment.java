@@ -26,8 +26,13 @@ import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.ProjectItemsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentProjectDetailsBinding;
+import com.example.wastebuddy.models.User;
 import com.example.wastebuddy.models.Project;
 import com.example.wastebuddy.models.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -59,6 +64,8 @@ public class ProjectDetailsFragment extends Fragment {
     RecyclerView mItemsRecyclerView;
     ProjectItemsAdapter mItemsAdapter;
 
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     public ProjectDetailsFragment() {
         // Required empty public constructor
     }
@@ -77,7 +84,23 @@ public class ProjectDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         mBinding = FragmentProjectDetailsBinding.inflate(inflater, container, false);
         mContext = getContext();
-        mCurrentUser = new User(ParseUser.getCurrentUser());
+
+        DocumentReference docRef = db.collection("users")
+                .document(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "Snapshot of user data: " + document.getData());
+                    mCurrentUser = new User(document);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
         // Inflate the layout for this fragment
         bindViews();
         setOnClickListeners();
@@ -221,8 +244,6 @@ public class ProjectDetailsFragment extends Fragment {
     }
 
     private void toggleLike() {
-        mCurrentUser.fetch();
-
         try {
             mProject = mProject.fetch();
         } catch (ParseException e) {

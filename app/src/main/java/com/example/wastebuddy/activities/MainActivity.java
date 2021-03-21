@@ -20,12 +20,13 @@ import com.example.wastebuddy.fragments.UserFragment;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.parse.ParseQuery;
-import com.parse.ParseUser;
 import com.paulrybitskyi.persistentsearchview.PersistentSearchView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -80,22 +81,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void setBottomNavItemSelectedListener() {
         mBottomNavigationView.setOnNavigationItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.homeMenuItem:
-                    mActiveFragment = new HomeFragment();
-                    break;
-                case R.id.searchMenuItem:
-                    mActiveFragment = new SearchFragment();
-                    break;
-                case R.id.profileMenuItem:
-                    UserFragment fragment = new UserFragment();
-                    Bundle bundle = new Bundle();
-                    bundle.putString(ParseUser.KEY_OBJECT_ID,
-                            ParseUser.getCurrentUser().getObjectId());
-                    fragment.setArguments(bundle);
-                    mActiveFragment = fragment;
-                default:
+            if (item.getItemId() == R.id.homeMenuItem) {
+                mActiveFragment = new HomeFragment();
+            } else if (item.getItemId() == R.id.searchMenuItem) {
+                mActiveFragment = new SearchFragment();
+            } else if (item.getItemId() == R.id.profileMenuItem) {
+                UserFragment fragment = new UserFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString(User.KEY_UID,
+                        Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+                fragment.setArguments(bundle);
+                mActiveFragment = fragment;
             }
+
             replaceFragment(mActiveFragment);
             return true;
         });

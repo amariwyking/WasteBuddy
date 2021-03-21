@@ -12,11 +12,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.databinding.ActivityLoginBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
@@ -24,6 +30,8 @@ import com.parse.ParseUser;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
+
+    private FirebaseAuth mAuth;
 
     ActivityLoginBinding mBinding;
 
@@ -37,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
 
         mBinding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(mBinding.getRoot());
@@ -69,7 +79,27 @@ public class LoginActivity extends AppCompatActivity {
         mProgressBar.setVisibility(ProgressBar.VISIBLE);
         Log.i(TAG, "Attempting to login user " + email);
         // check credentials and progress user
-        ParseUser.logInInBackground(email, password, (user, e) -> {
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithEmail:success");
+                            Navigation.goMainActivity(LoginActivity.this);
+                        } else {
+                            Log.d(TAG, "signInWithEmail:failure");
+                            Log.e(TAG, "Issue with login: ", task.getException());
+                            mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                            mTextInputLayout.setError("Invalid username/password");
+                        }
+
+                        // ...
+                    }
+                });
+
+        /*ParseUser.logInInBackground(email, password, (user, e) -> {
             // TODO: Show error a proper error message to the user
             if (e != null) {
                 Log.e(TAG, "Issue with login: ", e);
@@ -78,7 +108,7 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
             Navigation.goMainActivity(LoginActivity.this);
-        });
+        });*/
     }
 
 }

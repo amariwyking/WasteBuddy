@@ -26,9 +26,15 @@ import com.example.wastebuddy.R;
 import com.example.wastebuddy.activities.LandingPageActivity;
 import com.example.wastebuddy.activities.LoginActivity;
 import com.example.wastebuddy.databinding.FragmentUserBinding;
+import com.example.wastebuddy.models.User;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
 import com.example.wastebuddy.models.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -44,14 +50,17 @@ public class UserFragment extends Fragment {
 
     FragmentUserBinding mBinding;
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
     //    ImageView mProfileImageView;
     TextView mUsernameTextView;
     Button mLogoutButton;
     Button mFollowButton;
     RecyclerView mProjectsRecyclerView;
 
+    User mUser;
     User mCurrentUser;
-    ParseUser mUser;
+
     List<Project> mProjects;
     ProjectsAdapter mProjectsAdapter;
 
@@ -64,21 +73,18 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getUsersFromDatabase();
+
         // Inflate the layout for this fragment
         mBinding = FragmentUserBinding.inflate(inflater, container, false);
-        mCurrentUser = new User(ParseUser.getCurrentUser());
-
-        // Check if we are showing the profile of the current user
-        showingProfile = isShowingProfile();
 
         mProjects = new ArrayList<>();
         mProjectsAdapter = new ProjectsAdapter(getContext(), mProjects);
-        getUserFromDatabase();
         return mBinding.getRoot();
     }
 
     private boolean isShowingProfile() {
-        return User.isSignedIn() && Objects.equals(Objects.requireNonNull(getArguments()).getString(ParseUser.KEY_OBJECT_ID), mCurrentUser.getObjectId());
+        return User.isSignedIn() && Objects.equals(Objects.requireNonNull(getArguments()).getString(User.KEY_UID), mCurrentUser.getObjectId());
     }
 
     @Override
@@ -91,20 +97,49 @@ public class UserFragment extends Fragment {
 //    private void getProfileImage() {
 //        Glide.with(Objects.requireNonNull(getContext()))
 //                .load(mProfileImageView.getDrawable())
-//                .transform(new CircleCrop())
+//                .transform(new CircleCrop())a
 //                .into(mProfileImageView);
 //    }
 
-    private void getUserFromDatabase() {
-        String userId = Objects.requireNonNull(getArguments()).getString(ParseUser.KEY_OBJECT_ID);
-        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
-        query.whereEqualTo(ParseUser.KEY_OBJECT_ID, userId);
-        if (getArguments() != null) {
-            query.getInBackground(userId, (object, e) -> {
-                mUser = object;
-                bindData();
-            });
-        }
+    private void getUsersFromDatabase() {
+        String userId = Objects.requireNonNull(getArguments()).getString(User.KEY_UID);
+
+        DocumentReference docRef = db.collection("users")
+                .document(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid());
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "Snapshot of user data: " + document.getData());
+                    mCurrentUser = new User(document);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
+
+        docRef = db.collection("users")
+                .document(userId);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "Snapshot of user data: " + document.getData());
+                    mUser = new User(document);
+                    // Check if we are showing the profile of the current user
+                    showingProfile = isShowingProfile();
+
+                    bindData(mUser);
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
     }
 
     private void bind() {
@@ -116,14 +151,17 @@ public class UserFragment extends Fragment {
         configureRecyclerView(mProjectsRecyclerView, mProjectsAdapter);
     }
 
-    private void bindData() {
+    private void bindData(User user) {
         if (!showingProfile) mFollowButton.setVisibility(View.VISIBLE);
         else mLogoutButton.setVisibility(View.VISIBLE);
 
 //        getProfileImage();
-        mUsernameTextView.setText(mUser.getUsername());
+        String username = user.getUsername();
+        mUsernameTextView.setText(username);
         mFollowButton.setText(getFollowingStatus());
-        queryProjects();
+//
+//        0
+//        queryProjects();
     }
 
     private void queryProjects() {
@@ -175,7 +213,7 @@ public class UserFragment extends Fragment {
         });
 
         mLogoutButton.setOnClickListener(view -> {
-            ParseUser.logOut();
+            FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(getContext(), LandingPageActivity.class);
             startActivity(intent);
             Objects.requireNonNull(getActivity()).finish();
@@ -183,7 +221,6 @@ public class UserFragment extends Fragment {
     }
 
     private void toggleFollowing() {
-        mCurrentUser.fetch();
         // Follow or unfollow
         if (isFollowing()) {
             unfollow();
@@ -197,12 +234,12 @@ public class UserFragment extends Fragment {
     }
 
     private void follow() {
-        mCurrentUser.follow(mUser);
+        mCurrentUser.follow(mUser.getObjectId());
         mFollowButton.setText(getResources().getText(R.string.unfollow_button_text));
     }
 
     private void unfollow() {
-        mCurrentUser.unfollow(mUser);
+        mCurrentUser.unfollow(mUser.getObjectId());
         mFollowButton.setText(getResources().getText(R.string.follow_button_text));
     }
 

@@ -1,24 +1,41 @@
 package com.example.wastebuddy.models;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.parse.ParseClassName;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
-@ParseClassName("User")
-public class User {
-    private ParseUser user;
+import java.util.List;
 
-    public static final String KEY_USERNAME = "username";
+@SuppressWarnings("unchecked")
+public class User {
+    private static final String TAG = "User";
+
+    public static final String KEY_UID = "uid";
+    public static final String KEY_USERNAME = "name";
     public static final String KEY_FOLLOWERS = "followers";
     public static final String KEY_FOLLOWING = "following";
     public static final String KEY_LIKED_PROJECTS = "likedProjects";
 
-    public User(ParseUser obj) {
-        user = obj;
+    private final DocumentSnapshot user;
+    private final DocumentReference docRef;
+
+    public User(DocumentSnapshot document) {
+        user = document;
+        docRef = FirebaseFirestore.getInstance()
+                .collection("users")
+                .document(getObjectId());
+    }
+
+    public String getObjectId() {
+        return user.getId();
     }
 
     public String getUsername() {
@@ -26,88 +43,65 @@ public class User {
     }
 
     public void setUsername(String username) {
-        user.put(KEY_USERNAME, username);
-    }
-    
-    public String getFollowers() {
-        return user.getString(KEY_FOLLOWERS);
+        docRef.update(KEY_USERNAME, username)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Username successfully updated"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error updating username", e));
     }
 
-    public void setFollowers(String followers) {
-        user.put(KEY_FOLLOWERS, followers);
-        user.saveInBackground();
+    public List<String> getFollowers() {
+        return (List<String>) user.get(KEY_FOLLOWERS);
     }
 
-    public JSONArray getFollowing() {
-        return user.getJSONArray(KEY_FOLLOWING);
+    public void setFollowers(List<String> followers) {
+        docRef.update(KEY_FOLLOWERS, followers)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Followers successfully updated"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error updating followers", e));
     }
 
-    public void setFollowing(JSONArray following) {
-        user.put(KEY_FOLLOWING, following);
-        user.saveInBackground();
+    public List<String> getFollowing() {
+        return (List<String>) user.get(KEY_FOLLOWING);
     }
 
-    public JSONArray getLikedProjects() {
-        return user.getJSONArray(KEY_LIKED_PROJECTS);
+    public void setFollowing(List<String> following) {
+        docRef.update(KEY_FOLLOWING, following)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Following successfully updated"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error updating following", e));
     }
 
-    public void setLikedProjects(JSONArray likedProjects) {
-        user.put(KEY_LIKED_PROJECTS, likedProjects);
-        user.saveInBackground();
-    }
-
-    public String getObjectId() {
-        return user.getObjectId();
-    }
-
-    public void likeProject(String projectId) {
-        JSONArray likedProjects = getLikedProjects();
-        likedProjects.put(projectId);
-        setLikedProjects(likedProjects);
-    }
-
-    public void unlikeProject(String projectId) {
-        String oldLikedProjects = getLikedProjects().toString();
-
-        String regex1 = String.format(",\"%s\"", projectId);
-        String regex2 = String.format("\"%s\"", projectId);
-
-        String newLikedProjects = oldLikedProjects
-                .replaceAll(regex1, "")
-                .replaceAll(regex2, "");
-        try {
-            setLikedProjects(new JSONArray(newLikedProjects));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void follow(ParseUser user) {
-        JSONArray following = getFollowing();
-        following.put(user.getUsername());
+    public void follow(String userId) {
+        List<String> following = getFollowing();
+        following.add(userId);
         setFollowing(following);
     }
 
-    public void unfollow(ParseUser user) {
-        String oldFollowing = getFollowing().toString();
-
-        String regex1 = String.format(",\"%s\"", user.getUsername());
-        String regex2 = String.format("\"%s\"", user.getUsername());
-
-        String newFollowing = oldFollowing.replaceAll(regex1, "").replaceAll(regex2, "");
-        try {
-            setFollowing(new JSONArray(newFollowing));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void unfollow(String userId) {
+        List<String> following = getFollowing();
+        following.remove(userId);
+        setFollowing(following);
     }
 
-    public void fetch() {
-        try {
-            user = ParseUser.getCurrentUser().fetch();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+    public List<String> getLikedProjects() {
+        return (List<String>) user.get(KEY_LIKED_PROJECTS);
+    }
+
+    public void setLikedProjects(List<String> likedProjects) {
+        docRef.update(KEY_FOLLOWERS, likedProjects)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Liked projects successfully updated"))
+                .addOnFailureListener(e -> Log.w(TAG, "Error updating liked projects", e));
+    }
+
+    public void likeProject(String projectId) {
+        List<String> likedProjects = getLikedProjects();
+        likedProjects.add(projectId);
+        docRef.update(KEY_LIKED_PROJECTS, likedProjects)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Project liked successfully"))
+                .addOnFailureListener(e -> Log.w(TAG, "Failed to like project", e));
+    }
+
+    public void unlikeProject(String projectId) {
+        List<String> likedProjects = getLikedProjects();
+        likedProjects.remove(projectId);
+        setLikedProjects(likedProjects);
     }
 
     public static boolean isSignedIn() {

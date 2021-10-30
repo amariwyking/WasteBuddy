@@ -102,6 +102,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
     @Override
     public void onFinishAddItemDialog(String barcode) {
+/*
         ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.whereEqualTo(Item.KEY_BARCODE_ID, barcode);
         query.findInBackground((objects, e) -> {
@@ -115,6 +116,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
                 Toast.makeText(mContext, "There is no item with this barcode in the database.", Toast.LENGTH_SHORT).show();
             }
         });
+*/
     }
 
     private void bind() {

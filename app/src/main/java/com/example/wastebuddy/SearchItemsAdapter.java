@@ -1,18 +1,14 @@
 package com.example.wastebuddy;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -76,7 +72,7 @@ public class SearchItemsAdapter extends RecyclerView.Adapter<SearchItemsAdapter.
                 if (position != RecyclerView.NO_POSITION) {
                     ItemDetailsFragment fragment = new ItemDetailsFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString(Item.KEY_OBJECT_ID, item.getObjectId());
+                    bundle.putString(Item.KEY_BARCODE, item.getBarcodeId());
                     fragment.setArguments(bundle);
                     switchContent(fragment);
                 }
@@ -87,11 +83,12 @@ public class SearchItemsAdapter extends RecyclerView.Adapter<SearchItemsAdapter.
             TextView itemNameTextView = binding.itemNameTextView;
             ImageView disposalImageView = binding.disposalImageView;
 
-            ParseFile image = item.getImage();
-
-            if (image != null) {
-                Glide.with(mContext).load(image.getUrl()).into(binding.itemImageView);
-            }
+            Item.getImage(item.getBarcodeId(), mContext, binding.itemImageView);
+//            ParseFile image = item.getImage();
+//
+//            if (image != null) {
+//                Glide.with(mContext).load(image.getUrl()).into(binding.itemImageView);
+//            }
 
             itemNameTextView.setText(item.getName());
             setDisposal(item, disposalImageView);

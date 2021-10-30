@@ -135,9 +135,10 @@ public class MainActivity extends AppCompatActivity {
         // the simple implementation
     }
 
+    // TODO: Reimplement with Firestore Query
     private void query(String input) {
         // Specify which class to query
-        ParseQuery<Item> parseQuery = ParseQuery.getQuery(Item.class);
+        /*ParseQuery<Item> parseQuery = ParseQuery.getQuery(Item.class);
         parseQuery.include(Item.KEY_AUTHOR);
         parseQuery.whereContains(Item.KEY_NAME_LOWERCASE, input.toLowerCase());
         parseQuery.findInBackground((items, e) -> {
@@ -146,12 +147,12 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             for (Item item : items) {
-                Log.i(TAG,
-                        "Item: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
+//                Log.i(TAG,
+//                        "Item: " + item.getName() + ", Name: " + item.getAuthor().getUsername());
             }
             mResults.clear();
             mSearchFragment.updateData(items);
-        });
+        });*/
     }
 
     public void showBottomNav() {

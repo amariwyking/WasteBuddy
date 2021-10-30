@@ -24,7 +24,6 @@ import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
@@ -38,8 +37,6 @@ import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -260,7 +257,7 @@ public class ScannerFragment extends DialogFragment {
                 sendBackResult(barcode);
             } else if (getArguments().getInt(TASK) == TASK_SEARCH) {
                 Navigation.switchFragment(getContext(),
-                        ItemDetailsFragment.newInstance(Item.KEY_BARCODE_ID, barcode));
+                        ItemDetailsFragment.newInstance(Item.KEY_BARCODE, barcode));
             }
         }
 
@@ -286,12 +283,12 @@ public class ScannerFragment extends DialogFragment {
     }
 
     private void checkBarcode(String barcode) {
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+        /*ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.whereEqualTo(Item.KEY_BARCODE_ID, barcode);
         try {
             mBarcodeKnown = query.find().size() != 0;
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 }

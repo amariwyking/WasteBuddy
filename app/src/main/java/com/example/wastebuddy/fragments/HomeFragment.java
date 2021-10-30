@@ -120,7 +120,7 @@ public class HomeFragment extends Fragment {
 
     private void queryItems() {
         // Specify which class to query
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+        /*ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.setLimit(10);
         query.findInBackground((items, e) -> {
             if (e != null) {
@@ -129,21 +129,21 @@ public class HomeFragment extends Fragment {
             }
             mItems.addAll(items);
             mItemsAdapter.notifyDataSetChanged();
-        });
+        });*/
     }
 
     private void queryProjects() {
         // Specify which class to query
-        ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
+        /*ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
         query.addDescendingOrder(Project.KEY_LIKES);
         query.setLimit(10);
         query.findInBackground((projects, e) -> {
             if (e != null) {
-                Log.e(TAG, "Problem  with getting projects", e);
+                Log.e(TAG, "Problem with getting projects", e);
                 return;
             }
             mProjects.addAll(projects);
             mProjectsAdapter.notifyDataSetChanged();
-        });
+        });*/
     }
 }

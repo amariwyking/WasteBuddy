@@ -88,11 +88,6 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
             itemNameTextView.setText(WordUtils.capitalizeFully(item.getName()));
 
             Item.getImage(item.getBarcodeId(), mContext, itemImageView);
-//            ParseFile image = item.getImage();
-//
-//            if (image != null) {
-//                Glide.with(mContext).load(image.getUrl()).into(itemImageView);
-//            }
         }
 
         public void switchContent(Fragment fragment) {

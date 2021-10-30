@@ -9,12 +9,11 @@ import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -38,8 +37,6 @@ public class Item {
 
     Map<String, Object> itemData = new HashMap<>();
 
-    private final CollectionReference collRef = FirebaseFirestore.getInstance().collection("items");
-    private final DocumentReference docRef;
     private DocumentSnapshot item;
 
     private StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child("images");
@@ -48,7 +45,7 @@ public class Item {
     public Item(String barcode) {
         mBarcode = barcode;
 
-        docRef = FirebaseFirestore.getInstance()
+        DocumentReference docRef = FirebaseFirestore.getInstance()
                 .collection("items")
                 .document(mBarcode);
 
@@ -65,6 +62,10 @@ public class Item {
                 Log.d(TAG, "get failed with ", task.getException());
             }
         });
+    }
+
+    public Item(QueryDocumentSnapshot document) {
+        item = document;
     }
 
     public String getBarcodeId() {
@@ -142,12 +143,9 @@ public class Item {
                         "photo.jpg");
 
         // Delete the file
-        storageReference.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                // File deleted successfully
-                Log.d(TAG, "Image for item w/ barcode \"" + barcode + "\" successfully deleted!");
-            }
+        storageReference.delete().addOnSuccessListener(aVoid -> {
+            // File deleted successfully
+            Log.d(TAG, "Image for item w/ barcode \"" + barcode + "\" successfully deleted!");
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
@@ -158,6 +156,10 @@ public class Item {
     }
 
     public void create() {
+        DocumentReference docRef = FirebaseFirestore.getInstance()
+                .collection("items")
+                .document(mBarcode);
+
         docRef.set(itemData).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d(TAG, "Item uploaded successfully");
@@ -175,19 +177,11 @@ public class Item {
         FirebaseFirestore.getInstance()
                 .collection("items")
                 .document(barcode).delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        deleteImage(barcode);
-                        Log.d(TAG, "Item w/ barcode \"" + barcode + "\" successfully deleted!");
-                    }
+                .addOnSuccessListener(aVoid -> {
+                    deleteImage(barcode);
+                    Log.d(TAG, "Item w/ barcode \"" + barcode + "\" successfully deleted!");
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error deleting item w/ barcode \"" + barcode + "\"", e);
-                    }
-                });
+                .addOnFailureListener(e -> Log.w(TAG, "Error deleting item w/ barcode \"" + barcode + "\"", e));
     }
 
 }

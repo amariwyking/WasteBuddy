@@ -1,93 +1,245 @@
 package com.example.wastebuddy.models;
 
-import com.parse.ParseClassName;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseObject;
-import com.parse.ParseUser;
+import android.content.Context;
+import android.net.Uri;
+import android.util.Log;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.example.wastebuddy.Navigation;
+import com.example.wastebuddy.fragments.ProjectDetailsFragment;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.parse.ParseClassName;
+
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @ParseClassName("Project")
-public class Project extends ParseObject {
+public class Project {
+    private static final String TAG = "Project";
 
     public static final String KEY_NAME = "name";
+    public static final String KEY_NAME_LOWERCASE = "name_lowercase";
     public static final String KEY_DESCRIPTION = "description";
     public static final String KEY_STEPS = "steps";
-    public static final String KEY_DIFFICULTY= "difficulty";
-    public static final String KEY_LIKES= "likesCount";
-    public static final String KEY_ITEMS= "items";
+    public static final String KEY_DIFFICULTY = "difficulty";
+    public static final String KEY_LIKES = "likesCount";
+    public static final String KEY_ITEMS = "items";
     public static final String KEY_IMAGE = "image";
-    public static final String KEY_AUTHOR = "author";
+    public static final String KEY_AUTHOR_ID = "author";
+    public static final String KEY_PROJECT_ID = "project_id";
+    private static final String KEY_CREATED_AT = "createdAt";
+
+    private Map<String, Object> projectData = new HashMap<>();
+
+    private String mProjectId;
+
+    public Project() {}
+
+    public Project(Map<String, Object> data) {
+        projectData = data;
+    }
+
+    // TODO: create a constructor that takes in the project id and retrieves hashmap
+    public Project(String projectId) {
+        DocumentReference docRef = FirebaseFirestore.getInstance()
+                .collection("projects")
+                .document(projectId);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "Snapshot of project data: " + document.getData());
+                    projectData = document.getData();
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "Get failed with ", task.getException());
+            }
+        });
+    }
+
+    // TODO: Solve issue of project being null when getters are called
+//    public Project(String name, String difficulty, String description, List<Item> items,
+//                   String authorId) {
+//        setName(name);
+//        setDifficulty(difficulty);
+//        setDescription(description);
+//        setItems(items);
+//        setAuthorId(authorId);
+//    }
+
+    // *TODO: change all getters to retrieve data from local HashMap
+
+    public String getProjectId() {
+        return (String) projectData.get(KEY_PROJECT_ID);
+    }
 
     public String getName() {
-        return getString(KEY_NAME);
+        return (String) projectData.get(KEY_NAME);
     }
 
     public void setName(String name) {
-        put(KEY_NAME, name);
+        projectData.put(KEY_NAME, name);
+        projectData.put(KEY_NAME_LOWERCASE, name.toLowerCase());
     }
 
     public String getDescription() {
-        return getString(KEY_DESCRIPTION);
+        return (String) projectData.get(KEY_DESCRIPTION);
     }
 
     public void setDescription(String description) {
-        put(KEY_DESCRIPTION, description);
+        projectData.put(KEY_DESCRIPTION, description);
     }
 
-    public String getSteps() {
-        return getString(KEY_STEPS);
+    public List<String> getSteps() {
+        return (List<String>) projectData.get(KEY_STEPS);
     }
 
     public void setSteps(List<String> steps) {
-        put(KEY_STEPS, steps);
+        projectData.put(KEY_STEPS, steps);
     }
 
     public String getDifficulty() {
-        return getString(KEY_DIFFICULTY);
+        return (String) projectData.get(KEY_DIFFICULTY);
     }
 
     public void setDifficulty(String difficulty) {
-        put(KEY_DIFFICULTY, difficulty);
+        projectData.put(KEY_DIFFICULTY, difficulty);
+    }
+
+    public void initLikes() {
+        projectData.put(KEY_LIKES, 0);
     }
 
     public int getLikes() {
-        return getInt(KEY_LIKES);
+        Long likes = (long)projectData.get(KEY_LIKES);
+        return likes.intValue();
     }
 
     public void like() {
-        increment(KEY_LIKES);
-        saveInBackground();
+        DocumentReference projectRef =
+                FirebaseFirestore.getInstance().collection("projects").document(mProjectId);
+
+        projectRef.update("KEY_LIKES", FieldValue.increment(1));
     }
 
     public void unlike() {
-        increment(KEY_LIKES, -1);
-        saveInBackground();
+        DocumentReference projectRef =
+                FirebaseFirestore.getInstance().collection("projects").document(mProjectId);
+
+        projectRef.update("KEY_LIKES", FieldValue.increment(-1));
     }
 
     public List getItems() {
-        return getList(KEY_ITEMS);
+        return (List<String>) projectData.get(KEY_ITEMS);
     }
 
-    public void setItems (List items) {
-        put(KEY_ITEMS, items);
+    public void setItems(List<String> items) {
+        projectData.put(KEY_ITEMS, items);
     }
 
-    public ParseFile getImage() {
-        return getParseFile(KEY_IMAGE);
+    public static void getImage(String projectId, Context context, ImageView imageView) {
+        StorageReference storageReference =
+                FirebaseStorage.getInstance().getReference().child("images").child("projects").child(projectId).child(
+                        "photo.jpg");
+
+        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+            // Got the download URL for the item image
+            Glide.with(context).load(uri).into(imageView);
+            Log.d(TAG, "Image retrieved successfully");
+        }).addOnFailureListener(e -> {
+            // Handle any errors
+            Log.e(TAG, "Image retrieval failed", e);
+        });
     }
 
-    public void setImage(ParseFile image) {
-        put(KEY_IMAGE, image);
+    public void setImage(File image, String projectId) {
+        Uri file = Uri.fromFile(image);
+        Log.d(TAG, file.getLastPathSegment());
+        StorageReference projectStorageRef = FirebaseStorage.getInstance().getReference().child("images").child("projects");
+
+        String s = file.getLastPathSegment();
+
+        UploadTask uploadTask =
+                projectStorageRef.child(projectId).child(s).putFile(file);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask
+                .addOnFailureListener(e -> Log.d(TAG, "Project image successfully updated"))
+                .addOnSuccessListener(taskSnapshot -> Log.w(TAG, "Error updating project image"));
     }
 
-    public ParseUser getAuthor() {
-        return getParseUser(KEY_AUTHOR);
+    public static void deleteImage(String projectId) {
+        // Create a storage reference from our app
+        StorageReference storageReference =
+                FirebaseStorage.getInstance().getReference().child("images").child("projects").child(projectId).child(
+                        "photo.jpg");
+
+        // Delete the file
+        storageReference.delete().addOnSuccessListener(aVoid -> {
+            // File deleted successfully
+            Log.d(TAG, "Image for project \"" + projectId + "\" successfully deleted!");
+        }).addOnFailureListener(exception -> {
+            // Uh-oh, an error occurred!
+            Log.e(TAG, "Failed to delete image for project w/ id \"" + projectId + "\".");
+        });
     }
 
-    public void setAuthor(ParseUser author) {
-        put(KEY_AUTHOR, author);
+    public String getAuthorId() {
+        return (String) projectData.get(KEY_AUTHOR_ID);
     }
 
+    public void setAuthorId(String userId) {
+        projectData.put(KEY_AUTHOR_ID, userId);
+    }
+
+    public void create(File image, Context context) {
+        FirebaseFirestore.getInstance()
+                .collection("projects")
+                .add(projectData)
+                .addOnSuccessListener(docRef -> {
+                    mProjectId = docRef.getId();
+                    setImage(image, mProjectId);
+                    docRef.update(KEY_PROJECT_ID, mProjectId);
+
+                    Timestamp createdAt = Timestamp.now();
+                    docRef.update(KEY_CREATED_AT, createdAt);
+
+                    Navigation.switchFragment(context,
+                            ProjectDetailsFragment.newInstance(Project.KEY_PROJECT_ID,
+                                    mProjectId));
+                })
+                .addOnFailureListener(e -> Log.w(TAG, "Error adding document", e));
+    }
+
+    public void update() {
+        FirebaseFirestore.getInstance()
+                .collection("projects")
+                .document(mProjectId)
+                .update(projectData);
+    }
+
+    public static void delete(String projectId) {
+        FirebaseFirestore.getInstance()
+                .collection("projects")
+                .document(projectId).delete()
+                .addOnSuccessListener(aVoid -> {
+                    deleteImage(projectId);
+                    Log.d(TAG, "Projects w/ id \"" + projectId + "\" successfully deleted!");
+                })
+                .addOnFailureListener(e -> Log.w(TAG,
+                        "Error deleting item w/ barcode \"" + projectId + "\"", e));
+    }
 }

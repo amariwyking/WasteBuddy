@@ -76,7 +76,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
                 if (position != RecyclerView.NO_POSITION) {
                     ProjectDetailsFragment fragment = new ProjectDetailsFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString(Project.KEY_OBJECT_ID, project.getObjectId());
+                    bundle.putString(Project.KEY_PROJECT_ID, project.getProjectId());
                     fragment.setArguments(bundle);
                     switchContent(fragment);
                 }
@@ -89,11 +89,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 
             projectNameTextView.setText(WordUtils.capitalizeFully(project.getName()));
 
-            ParseFile image = project.getImage();
-
-            if (image != null) {
-                Glide.with(mContext).load(image.getUrl()).into(projectImageView);
-            }
+            Project.getImage(project.getProjectId(), mContext, projectImageView);
         }
 
         public void switchContent(Fragment fragment) {

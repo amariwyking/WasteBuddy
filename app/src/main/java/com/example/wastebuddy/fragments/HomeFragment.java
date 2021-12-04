@@ -137,17 +137,18 @@ public class HomeFragment extends Fragment {
     }
 
     private void queryProjects() {
-        // Specify which class to query
-        /*ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
-        query.addDescendingOrder(Project.KEY_LIKES);
-        query.setLimit(10);
-        query.findInBackground((projects, e) -> {
-            if (e != null) {
-                Log.e(TAG, "Problem with getting projects", e);
-                return;
-            }
-            mProjects.addAll(projects);
-            mProjectsAdapter.notifyDataSetChanged();
-        });*/
+//        Query query = FirebaseFirestore.getInstance().collection("projects").limit(5);
+//
+//        query.get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                for (QueryDocumentSnapshot document : task.getResult()) {
+//                    mProjects.add(document.toObject(Project.class));
+//                    mItemsAdapter.notifyDataSetChanged();
+//                    Log.d(TAG, document.getId() + " => " + document.getData());
+//                }
+//            } else {
+//                Log.d(TAG, "Error getting projects: ", task.getException());
+//            }
+//        });
     }
 }

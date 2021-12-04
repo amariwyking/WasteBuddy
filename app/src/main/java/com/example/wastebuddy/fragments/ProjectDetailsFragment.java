@@ -1,7 +1,6 @@
 package com.example.wastebuddy.fragments;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Html;
@@ -17,26 +16,21 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.ProjectItemsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentProjectDetailsBinding;
-import com.example.wastebuddy.models.User;
 import com.example.wastebuddy.models.Project;
 import com.example.wastebuddy.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.parse.ParseException;
-import com.parse.ParseFile;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
 
 import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
@@ -110,17 +104,10 @@ public class ProjectDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         if (getArguments() != null) {
-            mProjectId = getArguments().getString(Project.KEY_OBJECT_ID);
+            mProjectId = getArguments().getString(Project.KEY_PROJECT_ID);
         }
 
-        try {
-            getProject();
-            Log.i(TAG, "Found project with the Object ID: " + mProjectId);
-//            bindData();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Could not find project with the Object ID: " + mProjectId, e);
-        }
+        getProject();
     }
 
     private void bindViews() {
@@ -137,23 +124,35 @@ public class ProjectDetailsFragment extends Fragment {
     private void bindData() {
         // Bind the project data to the view elements
         mNameTextView.setText(mProject.getName());
-        Spanned username = Html.fromHtml(String.format("Posted by <b>%s</b>",
-                mProject.getAuthor().getUsername()));
-        mAuthorTextView.setText(username);
+
         mLikesTextView.setText(String.valueOf(mProject.getLikes()));
         setLikeState();
         configureDifficulty();
         mDescriptionTextView.setText(mProject.getDescription());
 
+        FirebaseFirestore.getInstance().collection("users").document(mProject.getAuthorId()).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Log.d(TAG, "Snapshot of item data: " + document.getData());
+                            Spanned username = Html.fromHtml(String.format("Posted by <b>%s</b>",
+                                    document.getString(Project.KEY_NAME)));
+
+                            mAuthorTextView.setText(username);
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                });
+
         if (mProject.getItems() != null) {
             loadItems();
         }
 
-        ParseFile image = mProject.getImage();
-
-        if (image != null) {
-            Glide.with(this).load(image.getUrl()).into(mProjectImageView);
-        }
+        Project.getImage(mProjectId, getContext(), mProjectImageView);
     }
 
     private void configureDifficulty() {
@@ -177,15 +176,17 @@ public class ProjectDetailsFragment extends Fragment {
 
     private void setLikeState() {
         mLikesTextView.setText(String.valueOf(mProject.getLikes()));
+        ContextCompat.getDrawable(mContext, R.drawable.ic_round_favorite_fill_24);
+        return;
 
-        if (!User.isSignedIn()) {
-            mContext.getDrawable(R.drawable.ic_round_favorite_fill_24);
-            return;
-        }
-
-        mLikeImageButton.setImageDrawable(isLiked()
-                ? mContext.getDrawable(R.drawable.ic_round_favorite_fill_24)
-                : mContext.getDrawable(R.drawable.ic_round_favorite_border_24));
+//        if (!User.isSignedIn()) {
+//            mContext.getDrawable(R.drawable.ic_round_favorite_fill_24);
+//            return;
+//        }
+//
+//        mLikeImageButton.setImageDrawable(isLiked()
+//                ? mContext.getDrawable(R.drawable.ic_round_favorite_fill_24)
+//                : mContext.getDrawable(R.drawable.ic_round_favorite_border_24));
     }
 
     @SuppressWarnings("unchecked")
@@ -211,13 +212,22 @@ public class ProjectDetailsFragment extends Fragment {
         });
     }
 
-    protected void getProject() throws ParseException {
-        // Specify which class to query
-        ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
-        query.include(Project.KEY_AUTHOR);
-        query.getInBackground(mProjectId,  (object, e) -> {
-            mProject = object;
-            bindData();
+    protected void getProject() {
+        FirebaseFirestore.getInstance()
+                .collection("projects")
+                .document(mProjectId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    mProject = new Project(document.getData());
+                    bindData();
+                } else {
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
         });
     }
 
@@ -237,19 +247,13 @@ public class ProjectDetailsFragment extends Fragment {
             // Bundle Author and send to next fragment
             Fragment fragment = new UserFragment();
             Bundle bundle = new Bundle();
-            bundle.putString(ParseUser.KEY_OBJECT_ID, mProject.getAuthor().getObjectId());
+            bundle.putString(User.KEY_UID, mProject.getAuthorId());
             fragment.setArguments(bundle);
             Navigation.switchFragment(mContext, fragment);
         });
     }
 
     private void toggleLike() {
-        try {
-            mProject = mProject.fetch();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
         // Like or unlike
         if (isLiked()) {
             unlike();
@@ -268,7 +272,7 @@ public class ProjectDetailsFragment extends Fragment {
         return mCurrentUser
                 .getLikedProjects()
                 .toString()
-                .contains(mProject.getObjectId());
+                .contains(mProject.getProjectId());
     }
 
     private void like() {

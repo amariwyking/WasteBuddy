@@ -41,6 +41,8 @@ public class Item {
 
     private String mBarcode;
 
+    public Item () {}
+
     public Item(String barcode) {
         mBarcode = barcode;
 
@@ -63,7 +65,7 @@ public class Item {
         });
     }
 
-    public Item(QueryDocumentSnapshot document) {
+    public Item(DocumentSnapshot document) {
         item = document;
     }
 

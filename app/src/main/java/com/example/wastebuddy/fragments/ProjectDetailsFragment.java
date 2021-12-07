@@ -25,15 +25,20 @@ import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.ProjectItemsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentProjectDetailsBinding;
+import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
 import com.example.wastebuddy.models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProjectDetailsFragment extends Fragment {
 
@@ -59,6 +64,7 @@ public class ProjectDetailsFragment extends Fragment {
     ProjectItemsAdapter mItemsAdapter;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
+    List<Item> mItems;
 
     public ProjectDetailsFragment() {
         // Required empty public constructor
@@ -107,6 +113,7 @@ public class ProjectDetailsFragment extends Fragment {
             mProjectId = getArguments().getString(Project.KEY_PROJECT_ID);
         }
 
+        mItems = new ArrayList<>();
         getProject();
     }
 
@@ -148,7 +155,7 @@ public class ProjectDetailsFragment extends Fragment {
                     }
                 });
 
-        if (mProject.getItems() != null) {
+        if (mProject.getItemIdList() != null) {
             loadItems();
         }
 
@@ -191,7 +198,8 @@ public class ProjectDetailsFragment extends Fragment {
 
     @SuppressWarnings("unchecked")
     private void loadItems() {
-        mItemsAdapter = new ProjectItemsAdapter(getContext(), mProject.getItems());
+        Log.d(TAG, "loadItems(): " + mProject.getItemIdList().toString());
+        mItemsAdapter = new ProjectItemsAdapter(getContext(), mItems);
         mItemsRecyclerView.setAdapter(mItemsAdapter);
         mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 RecyclerView.VERTICAL, false));
@@ -210,6 +218,29 @@ public class ProjectDetailsFragment extends Fragment {
                 outRect.set(spacing, spacing, spacing, spacing);
             }
         });
+
+        CollectionReference collRef = FirebaseFirestore.getInstance().collection("items");
+
+        for (String itemId :
+                mProject.getItemIdList()) {
+            DocumentReference docRef = collRef.document(itemId);
+            docRef.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        Log.d(TAG, "Snapshot of item data: " + document.getData());
+                        // Item with barcode is found
+                        mItems.add(new Item(document));
+                        mItemsAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.d(TAG, "No such document");
+                        Toast.makeText(mContext, "There is no item with this barcode in the database.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.d(TAG, "get failed with ", task.getException());
+                }
+            });
+        }
     }
 
     protected void getProject() {

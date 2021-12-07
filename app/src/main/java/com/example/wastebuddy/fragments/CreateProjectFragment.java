@@ -19,10 +19,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wastebuddy.GridSpaceItemDecoration;
-import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.ProjectItemsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentCreateProjectBinding;
+import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -53,6 +53,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
     RecyclerView mItemsRecyclerView;
 
+    List<Item> mItems;
     List<String> mItemIdList;
     ProjectItemsAdapter mItemsAdapter;
 
@@ -79,6 +80,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
         bind();
 
         mItemIdList = new ArrayList<>();
+        mItems = new ArrayList<>();
 
         ArrayList<String> difficulties = new ArrayList<>();
         difficulties.add("Easy");
@@ -93,7 +95,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
     }
 
     private void configureRecyclerView(ProjectItemsAdapter.OnLongClickListener onLongClickListener) {
-        mItemsAdapter = new ProjectItemsAdapter(getContext(), mItemIdList, onLongClickListener);
+        mItemsAdapter = new ProjectItemsAdapter(getContext(), mItems, onLongClickListener);
         mItemsRecyclerView.setAdapter(mItemsAdapter);
         mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 RecyclerView.VERTICAL, false));
@@ -113,6 +115,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
                     Log.d(TAG, "Snapshot of item data: " + document.getData());
                     // Item with barcode is found
                     mItemIdList.add(document.getId());
+                    mItems.add(new Item(document));
                     mItemsAdapter.notifyDataSetChanged();
                     mBinding.scrollView.setSmoothScrollingEnabled(true);
                     mBinding.scrollView.post(() -> mBinding.scrollView.fullScroll(View.FOCUS_DOWN));
@@ -143,7 +146,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
         onLongClickListener = position -> {
             // Delete the item from the model
-            mItemIdList.remove(position);
+            mItems.remove(position);
 
             // Notify the adapter
             mItemsAdapter.notifyItemRemoved(position);
@@ -175,7 +178,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
         project.setName(mNameEditText.getText().toString());
         project.setDifficulty(mBinding.difficultyTextView.getText().toString().toLowerCase());
         project.setDescription(mDescriptionEditText.getText().toString());
-        project.setItems(mItemIdList);
+        project.setItemIdList(mItemIdList);
         project.setAuthorId(FirebaseAuth.getInstance().getCurrentUser().getUid());
         project.initLikes();
         project.create(mPhotoFile, mContext);

@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
@@ -137,18 +138,19 @@ public class HomeFragment extends Fragment {
     }
 
     private void queryProjects() {
-//        Query query = FirebaseFirestore.getInstance().collection("projects").limit(5);
-//
-//        query.get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                for (QueryDocumentSnapshot document : task.getResult()) {
-//                    mProjects.add(document.toObject(Project.class));
-//                    mItemsAdapter.notifyDataSetChanged();
-//                    Log.d(TAG, document.getId() + " => " + document.getData());
-//                }
-//            } else {
-//                Log.d(TAG, "Error getting projects: ", task.getException());
-//            }
-//        });
+        Query query = FirebaseFirestore.getInstance().collection("projects").limit(5);
+
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Map data = document.getData();
+                    mProjects.add(new Project(data));
+                    mProjectsAdapter.notifyDataSetChanged();
+                    Log.d(TAG, document.getId() + " => " + document.getData());
+                }
+            } else {
+                Log.d(TAG, "Error getting projects: ", task.getException());
+            }
+        });
     }
 }

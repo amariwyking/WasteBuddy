@@ -5,17 +5,16 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.wastebuddy.databinding.ItemProjectItemTagBinding;
 import com.example.wastebuddy.fragments.ItemDetailsFragment;
 import com.example.wastebuddy.models.Item;
-import com.parse.ParseFile;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,18 +27,19 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
     }
 
     private Context mContext;
-    private List<String> mItemIdList;
+    private List<Item> mItems;
     private OnLongClickListener longClickListener;
 
-    public ProjectItemsAdapter(Context mContext, @NotNull List<String> itemIdList) {
+    public ProjectItemsAdapter(Context mContext, @NotNull List<Item> items) {
         this.mContext = mContext;
-        this.mItemIdList = itemIdList;
+        this.mItems = items;
         this.longClickListener = null;
     }
 
-    public ProjectItemsAdapter(Context mContext, @NotNull List<String> itemIdList, OnLongClickListener longClickListener) {
+    public ProjectItemsAdapter(Context mContext, @NotNull List<Item> items,
+                               OnLongClickListener longClickListener) {
         this.mContext = mContext;
-        this.mItemIdList = itemIdList;
+        this.mItems = items;
         this.longClickListener = longClickListener;
     }
 
@@ -53,13 +53,13 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        /*ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.getInBackground(mItemIdList.get(position), (object, e) -> holder.bind(object));*/
+        Item item = mItems.get(position);
+        holder.bind(item);
     }
 
     @Override
     public int getItemCount() {
-        return mItemIdList.size();
+        return mItems.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -78,21 +78,16 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
             TextView textView = binding.itemNameTextView;
 
             Item.getImage(item.getBarcodeId(), mContext, imageView);
-//            ParseFile image = item.getImage();
-//
-//            if (image != null) {
-//                Glide.with(mContext).load(image.getUrl()).into(imageView);
-//            }
-//
-//            textView.setText(item.getName());
-//            setDisposal(item, textView);
+
+            textView.setText(item.getName());
+            setDisposal(item, textView);
         }
 
         private void setOnClickListener(@NonNull ItemProjectItemTagBinding binding) {
             binding.getRoot().setOnClickListener(view -> {
                 int position = getAdapterPosition();
 
-                String itemId = mItemIdList.get(position);
+                String itemId = mItems.get(position).getBarcodeId();
 
                 if (position != RecyclerView.NO_POSITION) {
                     ItemDetailsFragment fragment = new ItemDetailsFragment();
@@ -119,12 +114,15 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
             switch (item.getDisposal().toLowerCase()) {
                 case "recycle":
                     textView.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorRecycle));
+                    textView.setTextColor(Color.WHITE);
                     break;
                 case "compost":
                     textView.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorCompost));
+                    textView.setTextColor(Color.WHITE);
                     break;
                 case "landfill":
                     textView.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorLandfill));
+                    textView.setTextColor(Color.WHITE);
                     break;
                 case "special":
                     textView.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorSpecial));

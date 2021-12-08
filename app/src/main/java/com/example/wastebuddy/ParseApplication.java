@@ -24,6 +24,6 @@ public class ParseApplication extends Application {
 
     private void registerParseModels() {
 //        ParseObject.registerSubclass(Item.class);
-        ParseObject.registerSubclass(Project.class);
+//        ParseObject.registerSubclass(Project.class);
     }
 }

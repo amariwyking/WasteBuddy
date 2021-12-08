@@ -81,7 +81,7 @@ public class ProjectsFeedFragment extends Fragment {
 
     private void queryProjects() {
         // Specify which class to query
-        ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
+/*        ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
         query.findInBackground((projects, e) -> {
             if (e != null) {
                 Log.e(TAG, "Problem  with getting projects", e);
@@ -89,6 +89,6 @@ public class ProjectsFeedFragment extends Fragment {
             }
             mProjects.addAll(projects);
             mProjectsAdapter.notifyDataSetChanged();
-        });
+        });*/
     }
 }

@@ -39,8 +39,9 @@ public class Item {
 
     private DocumentSnapshot item;
 
-    private StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child("images");
     private String mBarcode;
+
+    public Item () {}
 
     public Item(String barcode) {
         mBarcode = barcode;
@@ -64,7 +65,7 @@ public class Item {
         });
     }
 
-    public Item(QueryDocumentSnapshot document) {
+    public Item(DocumentSnapshot document) {
         item = document;
     }
 
@@ -127,6 +128,8 @@ public class Item {
     public void setImage(File image) {
         Uri file = Uri.fromFile(image);
         Log.d(TAG, file.getLastPathSegment());
+        StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child("images");
+
         UploadTask uploadTask =
                 imageStorageRef.child(mBarcode).child(file.getLastPathSegment()).putFile(file);
 
@@ -169,7 +172,6 @@ public class Item {
         });
 
         Timestamp createdAt = Timestamp.now();
-        docRef.update(KEY_CREATED_AT, createdAt);
         docRef.update(KEY_UPDATED_AT, createdAt);
     }
 

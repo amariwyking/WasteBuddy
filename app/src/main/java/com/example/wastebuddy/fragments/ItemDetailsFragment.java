@@ -210,7 +210,7 @@ public class ItemDetailsFragment extends Fragment {
         }
     }
 
-    private void queryProjects() {
+/*    private void queryProjects() {
         // Specify which class to query
         ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
         query.whereEqualTo(Project.KEY_ITEMS, mBarcode);
@@ -226,5 +226,5 @@ public class ItemDetailsFragment extends Fragment {
                 mProjectsAdapter.notifyDataSetChanged();
             }
         });
-    }
+    }*/
 }

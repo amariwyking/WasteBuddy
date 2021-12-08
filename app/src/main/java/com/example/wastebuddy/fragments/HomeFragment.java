@@ -20,10 +20,12 @@ import com.example.wastebuddy.HorizontalSpaceItemDecoration;
 import com.example.wastebuddy.ItemsAdapter;
 import com.example.wastebuddy.activities.MainActivity;
 import com.example.wastebuddy.databinding.FragmentHomeBinding;
-import com.example.wastebuddy.models.User;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
-import com.parse.ParseQuery;
+import com.example.wastebuddy.models.User;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -119,31 +121,33 @@ public class HomeFragment extends Fragment {
     }
 
     private void queryItems() {
-        // Specify which class to query
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.setLimit(10);
-        query.findInBackground((items, e) -> {
-            if (e != null) {
-                Log.e(TAG, "Problem  with getting items", e);
-                return;
+        Query query = FirebaseFirestore.getInstance().collection("items").limit(5);
+
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    mItems.add(new Item(document));
+                    mItemsAdapter.notifyDataSetChanged();
+                    Log.d(TAG, document.getId() + " => " + document.getData());
+                }
+            } else {
+                Log.d(TAG, "Error getting documents: ", task.getException());
             }
-            mItems.addAll(items);
-            mItemsAdapter.notifyDataSetChanged();
         });
     }
 
     private void queryProjects() {
         // Specify which class to query
-        ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
+        /*ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
         query.addDescendingOrder(Project.KEY_LIKES);
         query.setLimit(10);
         query.findInBackground((projects, e) -> {
             if (e != null) {
-                Log.e(TAG, "Problem  with getting projects", e);
+                Log.e(TAG, "Problem with getting projects", e);
                 return;
             }
             mProjects.addAll(projects);
             mProjectsAdapter.notifyDataSetChanged();
-        });
+        });*/
     }
 }

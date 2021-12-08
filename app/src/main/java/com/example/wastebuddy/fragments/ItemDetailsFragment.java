@@ -3,6 +3,7 @@ package com.example.wastebuddy.fragments;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,16 +24,20 @@ import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentItemDetailsBinding;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
-import com.parse.ParseException;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 
-import org.apache.commons.text.WordUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ItemDetailsFragment extends Fragment {
 
@@ -41,11 +46,13 @@ public class ItemDetailsFragment extends Fragment {
     public static final String BARCODE_ID = "barcodeId";
     public static final String OBJECT_ID = "objectId";
 
+
     FragmentItemDetailsBinding mBinding;
     Context mContext;
 
     Item mItem;
-    String mItemId;
+    DocumentSnapshot mItemSnapshot;
+    String mBarcode;
 
     TextView mNameTextView;
     TextView mDescriptionTextView;
@@ -87,15 +94,10 @@ public class ItemDetailsFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         if (getArguments() != null) {
-            mItemId = getArguments().getString(Item.KEY_OBJECT_ID);
+            mBarcode = getArguments().getString(Item.KEY_BARCODE);
         }
 
-        try {
-            getItem();
-        } catch (ParseException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Could not find item with the Object ID: " + mItemId, e);
-        }
+        getItem();
     }
 
     private void bindViews() {
@@ -110,18 +112,28 @@ public class ItemDetailsFragment extends Fragment {
     }
 
     private void bindData() {
-        queryProjects();
+//        queryProjects();
 
         // Bind the item data to the view elements
-        mNameTextView.setText(WordUtils.capitalizeFully(mItem.getName()));
-        mDescriptionTextView.setText(mItem.getDescription());
-        setDisposal(mItem, mDisposalImageView);
+        mNameTextView.setText((String) mItemSnapshot.get(Item.KEY_NAME));
+        mDescriptionTextView.setText((String) mItemSnapshot.get(Item.KEY_DESCRIPTION));
+        setDisposal(mDisposalImageView);
 
-        ParseFile image = mItem.getImage();
+//        StorageReference storageReference =
+//                FirebaseStorage.getInstance().getReference().child("images").child(mBarcode).child(
+//                        "photo.jpg");
+//
+//        storageReference.getDownloadUrl().addOnSuccessListener(uri -> {
+//            // Got the download URL for the item image
+//            Glide.with(getContext()).load(uri).into(mItemImageView);
+//            Log.e(TAG, "Image retrieved successfully");
+//        }).addOnFailureListener(e -> {
+//            // Handle any errors
+//            Log.e(TAG, "Image retrieval failed", e);
+//        });
 
-        if (image != null) {
-            Glide.with(this).load(image.getUrl()).into(mItemImageView);
-        }
+        Item.getImage(mBarcode, getContext(), mItemImageView);
+
     }
 
     private void configureRecyclerView(RecyclerView recyclerView, ProjectsAdapter adapter) {
@@ -146,30 +158,26 @@ public class ItemDetailsFragment extends Fragment {
         });
     }
 
-    private void getItem() throws ParseException {
-        // Specify which class to query
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.include(Item.KEY_AUTHOR);
+    private void getItem() {
+        DocumentReference docRef = FirebaseFirestore.getInstance()
+                .collection("items")
+                .document(mBarcode);
 
-        if (Objects.requireNonNull(getArguments()).getString(Item.KEY_OBJECT_ID) != null) {
-            // Query using the object id if it exists
-            mItem = query.get(mItemId);
-            bindData();
-        } else if (getArguments().getString(Item.KEY_BARCODE_ID) != null) {
-            // Object id is not available. Query using barcode id.
-            String barcode = getArguments().getString(Item.KEY_BARCODE_ID);
-            query.whereEqualTo(Item.KEY_BARCODE_ID, barcode);
-            query.findInBackground((objects, e) -> {
-                if (!objects.isEmpty()) {
-                    // Item with barcode is found
-                    mItem = objects.get(0);
-                    mItemId = mItem.getObjectId();
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "Snapshot of item data: " + document.getData());
+                    mItemSnapshot = document;
                     bindData();
                 } else {
                     itemNotFound();
+                    Log.d(TAG, "No such document");
                 }
-            });
-        }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
     }
 
     private void itemNotFound() {
@@ -178,8 +186,8 @@ public class ItemDetailsFragment extends Fragment {
         mItemNotFoundTextView.setVisibility(View.VISIBLE);
     }
 
-    private void setDisposal(Item item, ImageView disposalImageView) {
-        switch (item.getDisposal().toLowerCase()) {
+    private void setDisposal(ImageView disposalImageView) {
+        switch (((String) mItemSnapshot.get(Item.KEY_DISPOSAL)).toLowerCase()) {
             case "recycle":
                 disposalImageView.setBackgroundTintList(getResources().getColorStateList(R.color.colorRecycle));
                 disposalImageView.setImageResource(R.drawable.ic_recycle_24);
@@ -205,7 +213,7 @@ public class ItemDetailsFragment extends Fragment {
     private void queryProjects() {
         // Specify which class to query
         ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
-        query.whereEqualTo(Project.KEY_ITEMS, mItemId);
+        query.whereEqualTo(Project.KEY_ITEMS, mBarcode);
         query.findInBackground((projects, e) -> {
             if (e != null) {
                 Log.e(TAG, "Problem  with getting projects", e);

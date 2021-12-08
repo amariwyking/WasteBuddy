@@ -83,9 +83,10 @@ public class SearchFragment extends Fragment {
         mItemsRecyclerView = mBinding.searchRecyclerView;
     }
 
+    // TODO: Reimplement with Firestore Query
     public void showRecentItems() {
         // Specify which class to query
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+        /*ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
         query.include(Item.KEY_AUTHOR);
         query.findInBackground((items, e) -> {
             if (e != null) {
@@ -95,7 +96,7 @@ public class SearchFragment extends Fragment {
             mItems.clear();
             mItems.addAll(items);
             mItemsAdapter.notifyDataSetChanged();
-        });
+        });*/
 
     }
 }

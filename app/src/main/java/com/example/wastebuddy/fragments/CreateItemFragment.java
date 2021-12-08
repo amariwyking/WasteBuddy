@@ -2,16 +2,13 @@ package com.example.wastebuddy.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.widget.PopupMenu;
@@ -22,8 +19,7 @@ import com.example.wastebuddy.databinding.FragmentCreateItemBinding;
 import com.example.wastebuddy.models.Item;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.parse.ParseFile;
-import com.parse.ParseUser;
+import com.google.firebase.auth.FirebaseAuth;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -135,18 +131,17 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
                 return;
             }
 
-//            if (mDescriptionEditText.getText().toString().isEmpty()) {
-//                notifyInvalidField("Description cannot be empty");
-//                return;
-//            }
+            if (mDescriptionEditText.getText().toString().isEmpty()) {
+                notifyInvalidField("Description cannot be empty");
+                return;
+            }
 
             if (mPhotoFile == null || mImageView.getDrawable() == null) {
                 notifyInvalidField("There is no image");
                 return;
             }
 
-            ParseUser currentUser = ParseUser.getCurrentUser();
-            saveItem(currentUser, mPhotoFile);
+            saveItem(mPhotoFile);
         });
 
         mBarcodeInputLayout.setEndIconOnClickListener(view -> launchScanFragment());
@@ -162,24 +157,19 @@ public class CreateItemFragment extends NewContentFragment implements ScannerFra
         scannerFragment.show(Objects.requireNonNull(getFragmentManager()), tag);
     }
 
-    private void saveItem(ParseUser currentUser, File mPhotoFile) {
-        Item item = new Item();
+    private void saveItem(File mPhotoFile) {
+        Item item = new Item(mBarcode);
         item.setName(Objects.requireNonNull(mNameEditText.getText()).toString());
         item.setDisposal(mDisposal.toLowerCase());
         item.setDescription(mDescriptionEditText.getText().toString());
         item.setBarcodeId(mBarcode);
-        item.setImage(new ParseFile(mPhotoFile));
-        item.setUser(currentUser);
-        item.saveInBackground(e -> {
-            if (e != null) {
-                Log.e(TAG, "Error while saving item", e);
-                Toast.makeText(getContext(), "Error while saving :(", Toast.LENGTH_SHORT).show();
-            }
-            Log.i(TAG, "Item saved successfully!");
-            Navigation.switchFragment(mContext,
-                    ItemDetailsFragment.newInstance(Item.KEY_OBJECT_ID, item.getObjectId()));
-            Toast.makeText(mContext, "Item Created", Toast.LENGTH_SHORT).show();
-        });
+        item.setImage(mPhotoFile);
+        item.setAuthor(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        item.create();
+
+        Navigation.switchFragment(mContext,
+                ItemDetailsFragment.newInstance(Item.KEY_BARCODE, mBarcode));
+        Toast.makeText(mContext, "Item Created", Toast.LENGTH_SHORT).show();
     }
 
     private void bind() {

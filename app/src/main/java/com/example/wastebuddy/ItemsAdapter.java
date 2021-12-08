@@ -3,9 +3,7 @@ package com.example.wastebuddy;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,7 +74,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
                 if (position != RecyclerView.NO_POSITION) {
                     ItemDetailsFragment fragment = new ItemDetailsFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString(Item.KEY_OBJECT_ID, item.getObjectId());
+                    bundle.putString(Item.KEY_BARCODE, item.getBarcodeId());
                     fragment.setArguments(bundle);
                     switchContent(fragment);
                 }
@@ -89,11 +87,7 @@ public class ItemsAdapter extends RecyclerView.Adapter<ItemsAdapter.ViewHolder> 
 
             itemNameTextView.setText(WordUtils.capitalizeFully(item.getName()));
 
-            ParseFile image = item.getImage();
-
-            if (image != null) {
-                Glide.with(mContext).load(image.getUrl()).into(itemImageView);
-            }
+            Item.getImage(item.getBarcodeId(), mContext, itemImageView);
         }
 
         public void switchContent(Fragment fragment) {

@@ -16,7 +16,6 @@ import com.example.wastebuddy.databinding.ItemProjectItemTagBinding;
 import com.example.wastebuddy.fragments.ItemDetailsFragment;
 import com.example.wastebuddy.models.Item;
 import com.parse.ParseFile;
-import com.parse.ParseQuery;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,8 +53,8 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.getInBackground(mItemIdList.get(position), (object, e) -> holder.bind(object));
+        /*ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
+        query.getInBackground(mItemIdList.get(position), (object, e) -> holder.bind(object));*/
     }
 
     @Override
@@ -78,13 +77,14 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
             ImageView imageView = binding.disposalImageView;
             TextView textView = binding.itemNameTextView;
 
-            ParseFile image = item.getImage();
-
-            if (image != null) {
-                Glide.with(mContext).load(image.getUrl()).into(imageView);
-            }
-
-            textView.setText(item.getName());
+            Item.getImage(item.getBarcodeId(), mContext, imageView);
+//            ParseFile image = item.getImage();
+//
+//            if (image != null) {
+//                Glide.with(mContext).load(image.getUrl()).into(imageView);
+//            }
+//
+//            textView.setText(item.getName());
 //            setDisposal(item, textView);
         }
 
@@ -97,7 +97,7 @@ public class ProjectItemsAdapter extends RecyclerView.Adapter<ProjectItemsAdapte
                 if (position != RecyclerView.NO_POSITION) {
                     ItemDetailsFragment fragment = new ItemDetailsFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString(Item.KEY_OBJECT_ID, itemId);
+                    bundle.putString(Item.KEY_BARCODE, itemId);
                     fragment.setArguments(bundle);
                     Navigation.switchFragment(mContext, fragment);
                 }

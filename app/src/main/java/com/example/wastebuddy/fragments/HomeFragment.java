@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
@@ -137,17 +138,19 @@ public class HomeFragment extends Fragment {
     }
 
     private void queryProjects() {
-        // Specify which class to query
-        /*ParseQuery<Project> query = ParseQuery.getQuery(Project.class);
-        query.addDescendingOrder(Project.KEY_LIKES);
-        query.setLimit(10);
-        query.findInBackground((projects, e) -> {
-            if (e != null) {
-                Log.e(TAG, "Problem with getting projects", e);
-                return;
+        Query query = FirebaseFirestore.getInstance().collection("projects").limit(5);
+
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    Map data = document.getData();
+                    mProjects.add(new Project(data));
+                    mProjectsAdapter.notifyDataSetChanged();
+                    Log.d(TAG, document.getId() + " => " + document.getData());
+                }
+            } else {
+                Log.d(TAG, "Error getting projects: ", task.getException());
             }
-            mProjects.addAll(projects);
-            mProjectsAdapter.notifyDataSetChanged();
-        });*/
+        });
     }
 }

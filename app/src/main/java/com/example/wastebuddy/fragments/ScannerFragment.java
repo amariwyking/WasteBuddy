@@ -32,6 +32,9 @@ import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentScanBinding;
 import com.example.wastebuddy.models.Item;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
@@ -242,10 +245,6 @@ public class ScannerFragment extends DialogFragment {
                 Log.i(TAG, "Barcode: " + barcode);
 
                 checkBarcode(barcode);
-                if (!mBarcodeKnown) {
-                    Toast.makeText(getContext(), "Unknown barcode", Toast.LENGTH_SHORT).show();
-                    onBarcodeObserved(barcode);
-                }
 
                 vibrate();
                 closeScanner(barcode);
@@ -283,12 +282,24 @@ public class ScannerFragment extends DialogFragment {
     }
 
     private void checkBarcode(String barcode) {
-        /*ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.whereEqualTo(Item.KEY_BARCODE_ID, barcode);
-        try {
-            mBarcodeKnown = query.find().size() != 0;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }*/
+        DocumentReference docRef = FirebaseFirestore.getInstance()
+                .collection("items")
+                .document(barcode);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    mBarcodeKnown = true;
+                    Log.d(TAG, "Snapshot of item data: " + document.getData());
+                } else {
+                    mBarcodeKnown = false;
+//                    Toast.makeText(getContext(), "Unknown barcode", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "No such document");
+                }
+            } else {
+                Log.d(TAG, "get failed with ", task.getException());
+            }
+        });
     }
 }

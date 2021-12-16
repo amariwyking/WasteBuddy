@@ -19,15 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wastebuddy.GridSpaceItemDecoration;
-import com.example.wastebuddy.Navigation;
 import com.example.wastebuddy.ProjectItemsAdapter;
 import com.example.wastebuddy.R;
 import com.example.wastebuddy.databinding.FragmentCreateProjectBinding;
 import com.example.wastebuddy.models.Item;
 import com.example.wastebuddy.models.Project;
-import com.parse.ParseFile;
-import com.parse.ParseQuery;
-import com.parse.ParseUser;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -53,6 +53,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
     RecyclerView mItemsRecyclerView;
 
+    List<Item> mItems;
     List<String> mItemIdList;
     ProjectItemsAdapter mItemsAdapter;
 
@@ -79,6 +80,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
         bind();
 
         mItemIdList = new ArrayList<>();
+        mItems = new ArrayList<>();
 
         ArrayList<String> difficulties = new ArrayList<>();
         difficulties.add("Easy");
@@ -93,7 +95,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
     }
 
     private void configureRecyclerView(ProjectItemsAdapter.OnLongClickListener onLongClickListener) {
-        mItemsAdapter = new ProjectItemsAdapter(getContext(), mItemIdList, onLongClickListener);
+        mItemsAdapter = new ProjectItemsAdapter(getContext(), mItems, onLongClickListener);
         mItemsRecyclerView.setAdapter(mItemsAdapter);
         mItemsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(),
                 RecyclerView.VERTICAL, false));
@@ -102,21 +104,29 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
     @Override
     public void onFinishAddItemDialog(String barcode) {
-/*
-        ParseQuery<Item> query = ParseQuery.getQuery(Item.class);
-        query.whereEqualTo(Item.KEY_BARCODE_ID, barcode);
-        query.findInBackground((objects, e) -> {
-            if (!objects.isEmpty()) {
-                // Item with barcode is found
-                mItemIdList.add(objects.get(0).getObjectId());
-                mItemsAdapter.notifyDataSetChanged();
-                mBinding.scrollView.setSmoothScrollingEnabled(true);
-                mBinding.scrollView.post(() -> mBinding.scrollView.fullScroll(View.FOCUS_DOWN));
+        DocumentReference docRef = FirebaseFirestore.getInstance()
+                .collection("items")
+                .document(barcode);
+
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    Log.d(TAG, "Snapshot of item data: " + document.getData());
+                    // Item with barcode is found
+                    mItemIdList.add(document.getId());
+                    mItems.add(new Item(document));
+                    mItemsAdapter.notifyDataSetChanged();
+                    mBinding.scrollView.setSmoothScrollingEnabled(true);
+                    mBinding.scrollView.post(() -> mBinding.scrollView.fullScroll(View.FOCUS_DOWN));
+                } else {
+                    Log.d(TAG, "No such document");
+                    Toast.makeText(mContext, "There is no item with this barcode in the database.", Toast.LENGTH_SHORT).show();
+                }
             } else {
-                Toast.makeText(mContext, "There is no item with this barcode in the database.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "get failed with ", task.getException());
             }
         });
-*/
     }
 
     private void bind() {
@@ -136,7 +146,7 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
 
         onLongClickListener = position -> {
             // Delete the item from the model
-            mItemIdList.remove(position);
+            mItems.remove(position);
 
             // Notify the adapter
             mItemsAdapter.notifyItemRemoved(position);
@@ -159,31 +169,20 @@ public class CreateProjectFragment extends NewContentFragment implements AddItem
                 return;
             }
 
-            ParseUser currentUser = ParseUser.getCurrentUser();
-            saveProject(currentUser, mPhotoFile);
+            saveProject(mPhotoFile);
         });
     }
 
-    private void saveProject(ParseUser currentUser, File mPhotoFile) {
+    private void saveProject(File mPhotoFile) {
         Project project = new Project();
         project.setName(mNameEditText.getText().toString());
         project.setDifficulty(mBinding.difficultyTextView.getText().toString().toLowerCase());
         project.setDescription(mDescriptionEditText.getText().toString());
-        project.setItems(mItemIdList);
-        project.setImage(new ParseFile(mPhotoFile));
-        project.setAuthor(currentUser);
-        project.saveInBackground(e -> {
-            if (e == null) {
-                Log.i(TAG, "Project saved successfully!");
-                Navigation.switchFragment(mContext,
-                        ProjectDetailsFragment.newInstance(Project.KEY_OBJECT_ID,
-                                project.getObjectId()));
-                Toast.makeText(mContext, "Project Created", Toast.LENGTH_SHORT).show();
-            } else {
-                Log.e(TAG, "Error while saving project", e);
-                Toast.makeText(getContext(), "Error while saving :(", Toast.LENGTH_SHORT).show();
-            }
-        });
+        project.setItemIdList(mItemIdList);
+        project.setAuthorId(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        project.initLikes();
+        project.create(mPhotoFile, mContext);
+//        project.setImage(mPhotoFile, project.getProjectId());
     }
 
     private void showAddItemDialog() {

@@ -27,7 +27,8 @@
         <TextView
             android:id="@+id/itemNameTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
             android:background="@android:color/white"
             android:fadingEdgeLength="40dp"
             android:paddingHorizontal="16dp"

@@ -2,6 +2,7 @@ package com.example.wastebuddy.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
@@ -92,7 +93,7 @@ public class NewContentFragment extends Fragment implements PopupMenu.OnMenuItem
         mPhotoFile = getPhotoFileUri();
 
         // wrap File object into a content provider
-        Uri fileProvider = FileProvider.getUriForFile(Objects.requireNonNull(getActivity()), "com" +
+        Uri fileProvider = FileProvider.getUriForFile(requireActivity(), "com" +
                 ".example.fileprovider", mPhotoFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
@@ -112,7 +113,7 @@ public class NewContentFragment extends Fragment implements PopupMenu.OnMenuItem
         // If you call startActivityForResult() using an intent that no app can handle, your app
         // will crash.
         // So as long as the result is not null, it's safe to use the intent.
-        if (intent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
+        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
             // Bring up gallery to select a photo
             startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_PHOTO_CODE);
         }
@@ -142,7 +143,7 @@ public class NewContentFragment extends Fragment implements PopupMenu.OnMenuItem
     Bitmap loadFromUri(Uri photoUri) {
         try {
             InputStream inputStream =
-                    Objects.requireNonNull(getContext()).getContentResolver().openInputStream(photoUri);
+                    requireContext().getContentResolver().openInputStream(photoUri);
             FileUtils.copyInputStreamToFile(Objects.requireNonNull(inputStream), mPhotoFile);
         } catch (IOException e) {
             e.printStackTrace();
@@ -200,7 +201,11 @@ public class NewContentFragment extends Fragment implements PopupMenu.OnMenuItem
     // Create listener for image view to display menu
     @Override
     public void onClick(View view) {
-        PopupMenu popup = new PopupMenu(Objects.requireNonNull(getContext()), view);
+        if (!mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+            launchGallery();
+        }
+
+        PopupMenu popup = new PopupMenu(requireContext(), view);
         popup.setOnMenuItemClickListener(this);
         popup.inflate(R.menu.add_photo_menu);
         popup.show();
